@@ -7,6 +7,16 @@
 
 > 状态：**v1 已安装验证**（8 个预设 active，含内置 BMad 技能）。设计见 [DESIGN.md](./DESIGN.md)，安装与用法见 [SETUP.md](./SETUP.md)。
 
+## 安装
+
+从 GitHub 克隆或下载本仓库后，用 DSH 的**本地目录**方式安装即可（无需发布 npm、无需构建）：
+
+```bash
+git clone https://github.com/bei-qian/dsh-agent-teams.git   # 或 GitHub 页 Code → Download ZIP 解压
+```
+
+然后 DSH → **Plugins → Add plugin → 选择本地目录**（或让 agent 跑 `plugin_manager` 的 `install_bundle`，`target` 填该目录绝对路径）。完整步骤（前置条件、两种安装方式、成功标志、首次使用、更新、卸载、常见问题）见 [从 GitHub 安装](./SETUP.md#从-github-下载安装到-dsh)。
+
 ## 为什么是「在 Agent Teams 之上」，而不是重写
 
 DSH 已经自带 Agent Teams：
@@ -27,7 +37,7 @@ DSH 已经自带 Agent Teams：
 
 ## 目录
 
-- [SETUP.md](./SETUP.md) — 安装与使用（如何选预设、开 Team、跑一支小队）。
+- [SETUP.md](./SETUP.md) — 安装与使用；外部用户请看 [从 GitHub 安装](./SETUP.md#从-github-下载安装到-dsh)（含如何选预设、开 Team、跑一支小队）。
 - [DESIGN.md](./DESIGN.md) — 概念映射、架构（v1 配置型 / v2 Host+UI）、默认 BMad 编制、运行协议、约束与里程碑。
 - [ROADMAP.md](./ROADMAP.md) — 未来两条大改法：零依赖自包含 playbook；v2 小队 Web 面板。
 - [ATTRIBUTION.md](./ATTRIBUTION.md) — 内置 BMad 技能的来源与许可说明。

@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- 新增「从 GitHub 下载安装到 DSH」说明：`SETUP.md` 给出面向外部用户的完整流程（前置条件；`git clone` / ZIP 获取；Web「选择本地目录」与 `plugin_manager` 的 `install_bundle` 两种安装方式；成功标志；首次使用；更新；卸载；常见问题），并明确 DSH 只支持「本地目录」安装、无 git URL 直装、link 安装不可删移目录；同时把原「开发者改模板后重建（`build_patch.py`）」单列为开发者章节，与外部用户安装区分；`README.md` 增加安装入口指向该章节。
+
 ## 0.1.0 — 2026-11-21
 
 - 项目级 `AGENTS.md` 能力（本次新增）：新增零依赖 playbook `playbooks/bmad-project-context/`（`setup` / `adopt` / `refresh` / `record` / `audit`，受管 `<!-- bmad:context -->` block + provenance；去掉 `_bmad`/uv 依赖、`{output_folder}`→`bmad-output/`）；`bmad-squad-protocol` 增加「第 0 步 · AGENTS.md」条件触发（无/空/无受管 block→建/吸收，已有受管 block→按需 refresh/audit，不静默跳过）；architect 执行、Lead 中介访谈与写前批准、`AGENTS.md` 置项目根为唯一写入例外、`writeScopes=[AGENTS.md]`、不 commit；`prompts/architect.md`、`prompts/squad-lead.md` 增补能力与路由话术；`scripts/verify.py` 增补 playbook 存在性/零依赖断言并修正过时 docstring；真机走查（`squad-lab` setup）通过。

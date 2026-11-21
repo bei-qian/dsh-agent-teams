@@ -1,29 +1,104 @@
 # SETUP · 安装与使用 BMad 小队插件
 
 本插件是一个 **配置型 DSH bundle + 轻量客户端半边**：在 Host 侧只新增若干「agent 预设」（不写业务 Host 代码），并由浏览器半边 `client.js` 负责在选择器里隐藏成员预设。
-它复用 DSH 内置的 Agent Teams（共享任务板 + 子代理），所以你需要：
+它复用 DSH 内置的 Agent Teams（共享任务板 + 子代理）。
 
-- 一个能运行 DeepSeek Harness 的 profile（本机默认 `desktop`）；
-- 已在项目里装好 BMad 技能（可选，用于让成员能加载 `bmad-*` 技能；不影响预设本身工作）。
+> 两类读者，看不同章节：
+> - **外部用户**（从 GitHub 拿到本仓库，想装进自己的 DSH）：读 [从 GitHub 下载安装到 DSH](#从-github-下载安装到-dsh)。`cordis.patch.yml` 已随仓库提交，**无需 Python/Node 构建**。
+> - **开发者**（改了 `cordis.patch.tmpl.yml` / `prompts/*.md` 后要重建产物）：读 [开发者：改模板后重建](#开发者改模板后重建)。
 
-## 安装
+## 从 GitHub 下载安装到 DSH
 
-1. 生成/更新 `cordis.patch.yml`（模板改动后需要重跑）：
-   ```bash
-   cd dsh-agent-teams
-   python3 scripts/build_patch.py
-   ```
-2. 让 agent 用 `plugin_manager` 安装本目录（绝对路径）：
-   ```
-   install_bundle  target = /absolute/path/to/dsh-agent-teams
-   ```
-   或在 Web 的 **Plugins → Add plugin → 选择本地目录** 安装本目录。
-3. 安装后在 **Plugins** 列表里应能看到 8 个预设行：`preset-bmad-squad-lead` 及
-   `preset-bmad-analyst/-pm/-po/-ux/-architect/-dev/-tea`，状态为已激活。
-   每行显示各自的角色名与说明（如「〔内部成员〕BMad · Mary 业务分析师」），而不是统一的
-   「Agent 预设定义 / 声明一个 Agent 预设及其使用的插件组合。」——它们各自挂载
-   `dsh-agent-teams/rows/<role>` 薄模块并带自己的 locale。
-   此外列表里还会出现一个**插件本体条目** `dsh-agent-teams`（非预设行，属正常现象）。
+DSH 安装插件 bundle **只支持「本地目录」这一种来源**，**不支持**直接从 git URL 或 npm 包名安装。因此外部用户的正确流程是：先把仓库取到本地（`git clone` 或下载 ZIP 解压），再用「本地目录」方式安装。本节按此流程给出完整步骤。
+
+### 前置条件
+
+- 一个能运行的 **DeepSeek Harness（DSH）**，且已进入可用的 profile（本机默认 `desktop`）。
+- 本仓库的 `cordis.patch.yml` **已提交**（预生成）；**无需** Python/Node 即可安装。
+- **无需**把本插件发布到 npm。`package.json` 里的 peerDependency `@deepseek-ai/dsh-agent-preset` 由 DSH 安装过程自行解析；`private: true` 也不影响「本地目录」安装。
+- 可选：项目里已装好 BMad 技能，仅用于让成员加载 `bmad-*` 技能，不影响预设本身工作（本插件已内置零依赖 playbook，见文末「注意」）。
+
+### 第一步：把仓库取到本地
+
+任选其一：
+
+**方式 1：git clone**
+
+```bash
+git clone https://github.com/bei-qian/dsh-agent-teams.git
+```
+
+**方式 2：下载 ZIP**
+
+在 GitHub 仓库页点击 **Code → Download ZIP**，解压后得到 `dsh-agent-teams/` 目录。
+
+两种方式都会得到一个包含 `cordis.patch.yml` 的目录（即本仓库根 `dsh-agent-teams/`）。**请记住这个目录的绝对路径**，下一步要用。
+
+> ⚠️ **这个目录之后不能删除、不能移动。** DSH 是**链接（link）**这个本地目录来安装，而不是拷贝。移动或删除会让插件失效（见 [常见问题](#常见问题faq)）。建议放在一个稳定的位置，例如：
+> - macOS / Linux：`~/plugins/dsh-agent-teams`
+> - Windows：`C:\Users\<你>\plugins\dsh-agent-teams`
+
+### 第二步：用「本地目录」安装
+
+**安装方式 A：Web 图形界面**
+
+DSH → **Plugins** → **Add plugin** → **选择本地目录**，选中上一步得到的 `dsh-agent-teams` 目录。
+
+**安装方式 B：agent / `plugin_manager`**
+
+让 agent 调用 `plugin_manager` 的 `install_bundle`，`target` 填该目录的**绝对路径**（macOS / Linux / Windows 都用绝对路径）：
+
+```
+install_bundle  target = /绝对/路径/to/dsh-agent-teams
+# 例（macOS/Linux）：/Users/你的名字/plugins/dsh-agent-teams
+# 例（Windows）    ：C:\Users\你的名字\plugins\dsh-agent-teams
+```
+
+`install_bundle` 会自行完成 package 安装与 bundle 选择，**不要**用 shell 手动复刻这些步骤。
+
+### 成功标志
+
+安装后到 **Plugins** 列表确认出现：
+
+- **插件本体行** `dsh-agent-teams`（非预设行，属正常现象）；
+- **8 个预设行**，均处于激活（active）状态：`preset-bmad-squad-lead` 以及 `preset-bmad-analyst / -pm / -po / -ux / -architect / -dev / -tea`。
+
+每行显示各自的角色名与说明（如「〔内部成员〕BMad · Mary 业务分析师」），而不是统一的「Agent 预设定义 / 声明一个 Agent 预设及其使用的插件组合。」——它们各自挂载 `dsh-agent-teams/rows/<role>` 薄模块并带自己的 locale。
+
+### 首次使用
+
+1. 新建一个会话。
+2. 在 **模型/推理 → 预设** 里选 **「BMad 小队 · 调度」**（`bmad-squad-lead`）。
+3. **Agent Teams 会自动开启**（随预设走、不覆盖你的手动选择，详见下文「注意」）。
+4. 预设选择器**默认只显示「调度」**：7 个成员预设被 `client.js` 从选择器过滤掉（Host 端 8 个预设仍全部注册，供 `delegate_*` 使用）——日常只需选这一个，它会自动点名成员。
+
+### 更新
+
+```bash
+cd /你的/dsh-agent-teams
+git pull
+```
+
+然后在 **Plugins** 里把 `dsh-agent-teams` 插件**关开一次**，或**重启 DSH**，让新内容生效（Host 半边不像浏览器半边那样热更）。
+
+### 卸载
+
+在 **Plugins** 里移除 `dsh-agent-teams` bundle 即可（或在 profile 的 `cordis.patch.yml` 中删除对应插入）。
+
+## 常见问题（FAQ）
+
+- **为什么安装后不能删除 / 移动克隆下来的目录？**
+  DSH 的「本地目录」安装是**链接（link）**而非拷贝：插件运行时直接读这个 checkout 里的文件（`index.js` / `client.js` / `cordis.patch.yml` / `rows/` / `playbooks/` 等）。删除或移动目录会让插件失效。若要换位置，先在 **Plugins** 里卸载，把目录移到新位置后，再按上面步骤重新安装。
+- **能不能直接填 git URL / npm 包名安装？**
+  不能。DSH 目前只支持从**本地目录**安装插件 bundle，没有「从 git URL 或 npm spec 直接安装 bundle」的能力。务必先 `git clone` 或下载 ZIP 解压，再用本地目录方式安装。
+- **Windows 上 target 路径怎么写？**
+  用该目录的**绝对路径**，例如 `C:\Users\<你>\plugins\dsh-agent-teams`。不要用 `~` 或相对路径。
+- **`package.json` 里是 `private: true`，会不会装不上？**
+  不会。`private: true` 只影响发布到 npm；「本地目录」安装不经过 npm 发布，照常可用。
+- **需要先 `npm install` 或 `python3 scripts/build_patch.py` 吗？**
+  外部用户**不需要**。`cordis.patch.yml` 已随仓库提交，直接安装即可。Python/Node 仅用于开发者改模板后重建（见下节），以及可选地跑 `scripts/verify.py` 校验。
+- **peerDependency `@deepseek-ai/dsh-agent-preset` 要怎么装？**
+  无需手动处理，由 DSH 安装过程自行解析；**不用**把它发布到 npm。
 
 ## 使用一支小队
 
@@ -66,6 +141,21 @@
   在 `cordis.patch.tmpl.yml` 对应 `delegate_*` 行加 `agentOptions: { provider, model, reasoningEffort }`，
   再跑 `python3 scripts/build_patch.py`。
 
-## 卸载
+## 开发者：改模板后重建
 
-在 **Plugins** 里移除 `dsh-agent-teams` bundle，或在 profile 的 `cordis.patch.yml` 中删除对应插入即可。
+> 仅当你**改动了 `cordis.patch.tmpl.yml` 或 `prompts/*.md`** 时才需要这一节。普通外部用户装完即用，可忽略。
+
+1. 重新生成 `cordis.patch.yml`（模板 / 提示词改动后需要重跑）：
+   ```bash
+   cd dsh-agent-teams
+   python3 scripts/build_patch.py
+   ```
+2. 重新安装 / 刷新插件（与外部用户同样的「本地目录」方式）：
+   ```
+   install_bundle  target = /绝对/路径/to/dsh-agent-teams
+   ```
+   或在 Web 的 **Plugins → Add plugin → 选择本地目录** 选择本目录；已在 Plugins 里的，关开一次或重启 DSH 生效。
+3. 校验（可选；CI 也会跑）：
+   ```bash
+   python3 scripts/verify.py
+   ```
