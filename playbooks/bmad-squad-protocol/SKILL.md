@@ -12,8 +12,8 @@ description: BMad 小队的零依赖运行协议：固定 bmad-output/ 目录、
 
 ```
 bmad-output/
-  initiative.md        # 唯一真相：举措目标/范围/开放问题（Lead 维护）
-  index.md             # 唯一真相：票据清单（Lead 维护）
+  initiative.md        # 唯一真相：举措目标/范围/开放问题（Sofia 维护）
+  index.md             # 唯一真相：票据清单（Sofia 维护）
   research/            # Mary：调研笔记、brief
   prd.md               # John：PRD
   architecture.md      # Winston：架构 + ADR 摘要
@@ -56,7 +56,7 @@ node <本技能目录>/../../scripts/squad_validate.mjs ./bmad-output
 ## 规则
 
 1. **先读后写**：开工先读 `initiative.md` 与 `index.md`；只处理自己票据范围内的文件。
-2. **改状态走索引**：完成后更新 `index.md` 对应行（成员可改自己票据的行；派活/重排由 Lead 改）。
+2. **改状态走索引**：`index.md` 由 Sofia 维护（成员可改自己票据的行；派活/重排由 Lead 指示、Sofia 执行）。
 3. **不自创路径**：产出只写进上面的固定位置；需要新目录先与 Lead 确认。
 4. **交付前跑 Gate**：见上；不通过不算完成。
 5. **Lead 收尾**：整队目标达成时，Lead 跑一次校验并确保 0 警告，再向用户交付「可评审」。
