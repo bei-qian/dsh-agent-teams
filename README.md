@@ -29,6 +29,7 @@ DSH 已经自带 Agent Teams：
 
 - [SETUP.md](./SETUP.md) — 安装与使用（如何选预设、开 Team、跑一支小队）。
 - [DESIGN.md](./DESIGN.md) — 概念映射、架构（v1 配置型 / v2 Host+UI）、默认 BMad 编制、运行协议、约束与里程碑。
+- [ROADMAP.md](./ROADMAP.md) — 未来两条大改法：零依赖自包含 playbook；v2 小队 Web 面板。
 - [ATTRIBUTION.md](./ATTRIBUTION.md) — 内置 BMad 技能的来源与许可说明。
 - [CHANGELOG.md](./CHANGELOG.md) — 版本记录。
 - [LICENSE](./LICENSE) — MIT（本插件）；`skills/` 内的 BMad 技能版权归 BMad Code, LLC（MIT）。
