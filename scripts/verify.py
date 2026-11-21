@@ -5,7 +5,7 @@ Checks:
   - cordis.patch.yml is in sync with cordis.patch.tmpl.yml + prompts/*.md
   - 8 agent presets with the expected ids exist
   - the leader's 7 delegate tools point at existing member presets
-  - the 7 member presets wire the bundled skills/ dir
+  - the bundled skills/ is kept on disk, not wired (the enable path is playbooks/)
   - the bundled skills/ actually contains the BMad skills
   - display metadata (locale en/zh, icon, version, bundle patch) is present
 
@@ -82,6 +82,19 @@ def main() -> None:
     for need in ["bmad-squad-protocol", "bmad-research", "bmad-prd", "bmad-tickets",
                  "bmad-ux", "bmad-architecture", "bmad-build", "bmad-test-strategy"]:
         check((playbooks / need / "SKILL.md").exists(), f"missing playbook: {need}")
+    # 4b. bmad-project-context playbook (AGENTS.md capability) present + stays zero-dependency
+    pc = playbooks / "bmad-project-context"
+    check((pc / "SKILL.md").exists(),
+          "missing playbooks/bmad-project-context/SKILL.md")
+    check((pc / "references" / "best-practices.md").exists(),
+          "missing playbooks/bmad-project-context/references/best-practices.md")
+    check((pc / "references" / "template.md").exists(),
+          "missing playbooks/bmad-project-context/references/template.md")
+    if (pc / "SKILL.md").exists():
+        pc_text = (pc / "SKILL.md").read_text(encoding="utf-8")
+        check("uv run" not in pc_text and "_bmad" not in pc_text,
+              "playbooks/bmad-project-context/SKILL.md must stay zero-dependency "
+              "(no 'uv run' or '_bmad')")
     skills = ROOT / "skills"
     skill_dirs = [p for p in skills.iterdir() if p.is_dir() and (p / "SKILL.md").exists()] if skills.is_dir() else []
     check(len(skill_dirs) >= 38, f"expected >=38 bundled skills, found {len(skill_dirs)}")
@@ -177,6 +190,10 @@ def main() -> None:
         check(need in files, f"package.json files missing {need}")
         check((ROOT / need).exists() and (ROOT / need).stat().st_size > 0,
               f"{need} missing or empty")
+    #    The Host half also auto-enables Agent Teams for the squad-lead preset;
+    #    assert its syntax and its zero-dependency behavior test too.
+    check("apply" in (ROOT / "index.js").read_text(encoding="utf-8"),
+          "index.js should export the auto-enable hook (apply)")
     if _shutil.which("node"):
         r = subprocess.run(["node", "--check", str(ROOT / "client.js")],
                            capture_output=True, text=True)
@@ -186,6 +203,14 @@ def main() -> None:
                            capture_output=True, text=True)
         check(t.returncode == 0,
               "client.js behavior test failed: " + (t.stderr or t.stdout).strip())
+        hr = subprocess.run(["node", "--check", str(ROOT / "index.js")],
+                            capture_output=True, text=True)
+        check(hr.returncode == 0,
+              "index.js failed node --check: " + (hr.stderr or hr.stdout).strip())
+        ht = subprocess.run(["node", str(ROOT / "scripts" / "test_host.mjs")],
+                            capture_output=True, text=True)
+        check(ht.returncode == 0,
+              "index.js behavior test failed: " + (ht.stderr or ht.stdout).strip())
 
     # 9. zero-dependency squad kit (R1): validator + protocol playbook, and validator runs clean on the example
     import shutil

@@ -1,0 +1,21 @@
+# bmad-project-context · 工作流定制面（小队零依赖版）
+#
+# 本文件供 playbook 直接读取取默认值；**不走 resolver，缺省即用内置默认**。
+# 小队版不接上游 METHOD 的 custom 覆盖层；如需调整，直接编辑本文件即可。
+#
+# Merge rules（若将来接入覆盖层）：scalars 覆盖（后者胜出）；数组追加。
+
+[workflow]
+
+# --- Universal defaults ---
+activation_steps_prepend = []
+activation_steps_append = []
+# 故意留空：本技能自身的产出（AGENTS.md）由 harness 加载，不经此数组。
+# 用户可自行追加自己的 standing facts。
+persistent_facts = []
+on_complete = ""
+
+# 每次 setup / refresh 时可提供的外部来源（未验证前不可信，需对照仓库或用户确认）。
+# 仅追加。条目："file:{project-root}/..." 或 "file:/abs/path" 表示文档，
+# "skill:name" 表示参考某技能，纯文本表示一条 standing fact，"tool:name" 表示 MCP 知识库。
+external_sources = []

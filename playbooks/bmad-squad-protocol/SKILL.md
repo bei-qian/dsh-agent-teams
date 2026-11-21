@@ -24,6 +24,21 @@ bmad-output/
   tasks/task-*.md      # 可选：拆到 task
 ```
 
+## 第 0 步 · AGENTS.md（项目级 agent 指令）
+
+`AGENTS.md` 承载「项目级 agent 指令」，由 architect（Winston）用 `bmad-project-context` playbook 维护。它是**条件触发**，不是每次必跑：
+
+- 目标项目**无 `AGENTS.md` / 为空 / 有内容但无受管 block** → 走 `setup` / `adopt`（建 / 吸收）。
+- **已有受管 `<!-- bmad:context -->` block** → **不静默跳过**，按需 `refresh` / `audit`（不强制每次跑，防止指令腐烂）。
+- 用户点名要用（含 `record`）时随时可跑。
+
+纪律：
+
+- **仅 architect（Winston）执行**：由它加载 `bmad-project-context` playbook。Sofia 维护的 `index.md` / 票据流程不受影响（`AGENTS.md` 不是票据，不写 `index.md`）。
+- **`AGENTS.md` 在项目根**，是「一切产出写 `bmad-output/`」契约的**唯一明确例外**；除此之外仍只写 `bmad-output/`。
+- 派活前由 **Lead 用 `ask_user`** 访谈用户（治理 / 安全 / 禁改目录 / 术语 / 已知坑）；命令拿不准写 `TODO(待 Lead 补)`。
+- **写入前必须用户确认**；任务上标 `writeScopes=[AGENTS.md]`；**不 commit**。
+
 ## index.md 格式（票据真相）
 
 Markdown 表格，列顺序固定 `id | type | title | status | file`：

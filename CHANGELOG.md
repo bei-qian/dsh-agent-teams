@@ -1,6 +1,10 @@
 # Changelog
 
-## Unreleased (0.1.x)
+## 0.1.0 — 2026-11-21
+
+- 项目级 `AGENTS.md` 能力（本次新增）：新增零依赖 playbook `playbooks/bmad-project-context/`（`setup` / `adopt` / `refresh` / `record` / `audit`，受管 `<!-- bmad:context -->` block + provenance；去掉 `_bmad`/uv 依赖、`{output_folder}`→`bmad-output/`）；`bmad-squad-protocol` 增加「第 0 步 · AGENTS.md」条件触发（无/空/无受管 block→建/吸收，已有受管 block→按需 refresh/audit，不静默跳过）；architect 执行、Lead 中介访谈与写前批准、`AGENTS.md` 置项目根为唯一写入例外、`writeScopes=[AGENTS.md]`、不 commit；`prompts/architect.md`、`prompts/squad-lead.md` 增补能力与路由话术；`scripts/verify.py` 增补 playbook 存在性/零依赖断言并修正过时 docstring；真机走查（`squad-lab` setup）通过。
+- Agent Teams 开关改为「**跟着预设走，但不覆盖手动选择**」：**进入**团队预设（`TEAM_PRESETS`，默认 `['bmad-squad-lead']`，可用 Loader 行 `config.teamPresets` 覆盖）→强制开；**离开**团队预设回到非团队预设→恢复进入前的非团队选择（原先关→关、原先开→开）；**非团队预设之间切换**→保持当前开关不动（手动开着就一直开）。实现：Host 半边按会话记住「上一个已知预设」，在进入团队预设时用 `agentTeams.isEnabled(agent)` 捕获当时的实际值作为「非团队偏好」，离开时还原；`agent-preset/selected` 只带新预设、且此刻 `presetForSession` 可能已是新值，故自维护映射，未知历史的安全默认是不擅自翻转。触发点：`agent/created`（新建/clear 且为团队预设→开）、`agent-preset/selected`（按上述转移规则）、插件启用时仅对**空白**根会话补开团队预设（不擅自动非团队会话的手动状态）。沿用 `setTimeout(0)` 延后避开 `Session.append` 重入，事件均做兜底，`setEnabled` 交给服务端幂等。`scripts/test_host.mjs` 覆盖：S1–S5 矩阵（非团队开/关↔团队往返、非团队↔非团队保持、团队↔团队）/ 新建与 clear 开 / resume·compact 与子代理不动 / 启用巡检只补开空白 / `config.teamPresets` 覆盖与还原 / 异常兜底。
+- 早期迭代（已并入上条）：曾实现「切到调度预设自动开 Team」与「切预设无条件重置为该预设默认（其它预设一律关）」。后者会误关用户在非团队预设里手动开的 Team，且从团队切回非团队时无法还原原本偏好，已由上面的「按会话记忆非团队偏好」方案取代。
 
 - 成员独立选模型：7 个 `delegate_*` 工具开启 `modelSelection`，并在 `delegate-analyst` 上开启 `modelDiscovery`（每 scope 仅一个实例，注册 `list_subagent_models`）。调度可在委派时按成员传 `provider` / `model` / `reasoning_effort`，不传则跟随会话当前模型；需要给某成员固定默认模型时，在该 `delegate_*` 行加 `agentOptions`。DSH 的 preset 本身不声明模型，成员模型统一走 `dsh-tool-subagent`。`scripts/verify.py` 增加对应校验（7 个 modelSelection、1 个 modelDiscovery）。
 - 选择器只留「调度」：新增浏览器半边 `client.js`（`dsh.client` + `./client` 导出），在客户端包装 `remote.agentPresets.list()`，把 7 个 BMad 成员预设从「新建会话预设选择器」与「设置 → Agent 预设」中过滤掉，仅保留 `bmad-squad-lead`（及所有非 BMad 预设）。Host 端 8 个预设仍全部注册，`delegate_*` 委派不受影响。为让 `@deepseek-ai/dsh-client-modules` 发现 `dsh.client`，新增裸包名宿主行 `agent-teams`（`index.js` 为 no-op）与 `package.json` 的 `"."`/`"./client"` 导出。
@@ -11,9 +15,6 @@
 - 确定性校验器 `scripts/squad_validate.mjs`（Node，零依赖）+ `examples/bmad-output/` 示例；阶段门由 Lead 执行。
 - Lead 预设加 shell 以运行校验器；`scripts/verify.py` 与 CI 覆盖 playbook 与校验器。
 - 修复：为 7 个成员预设补齐 `tool-fs-search.sampleOverCapGlobResults: false` 与 `tool-todo.allowParallelInProgress: true` 必填配置（与 Lead 预设一致），解决新版 DSH 下 `delegate_*` 因成员预设配置校验失败而无法拉起队员的问题；`cordis.patch.yml` 已按模板重新生成。
-
-## 0.1.0 — 2026-11-21
-
 - 初始版本：BMad 小队（1 名负责人 + 7 名 BMad 专家）作为 DSH agent 预设，构建在内置 Agent Teams 之上。
 - 负责人用「一成员一个 `delegate_*` 工具」做零代码点名委派；成员共享任务板。
 - 随包携带 BMad 技能（core-tools / method / tea，MIT），安装本插件即无需单独安装 BMad 技能。
