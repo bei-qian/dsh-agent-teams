@@ -260,6 +260,7 @@ Leader 的 persona 承载 Multica 的 *Operating Protocol + Roster + Instruction
 | 约束 | 影响 | 决策 |
 |---|---|---|
 | `dsh-tool-subagent.agentPreset` 每个工具行固定 | 无法在单工具里动态选成员 | v1：每成员一个委托工具行；v2：`squad_delegate` 动态选预设 |
+| 每个成员独立选模型 | agent preset 只声明插件组合，不声明模型 | 走 `dsh-tool-subagent`：7 个 `delegate_*` 开 `modelSelection`（委派时传 `provider/model/reasoning_effort`）、`delegate-analyst` 开 `modelDiscovery`（`list_subagent_models`，每 scope 一个）；固定默认用 `agentOptions` |
 | Team 模式默认 off，按根会话开关 | 小队会话需先开「Use Agent Teams」 | v1：提示用户开启，或在**专用 squad profile** 里 override `defaultEnabled: true`（影响全 profile，慎用）；v2：`squad_run` 程序化开启 |
 | 预设行不能从选择器隐藏 | 用户可能误选成员预设单干 | 名称/描述显式标注「供小队使用」 |
 | Agent Teams 成员共享工作区、无 worktree | 并行写会互相覆盖 | Leader 分配 `writeScopes`；构建任务串行/分目录；最终 diff 由 Leader 复核 |

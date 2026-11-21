@@ -61,6 +61,16 @@ def main() -> None:
     for ap in delegates:
         check(ap in ids, f"delegate agentPreset '{ap}' has no matching preset id")
 
+    # 3b. per-member model selection: every delegate_* tool exposes optional
+    #     provider/model/reasoning_effort (modelSelection), and exactly one instance
+    #     per scope registers list_subagent_models (modelDiscovery).
+    n_model_selection = len(re.findall(r"^\s+modelSelection: true$", patch, re.M))
+    check(n_model_selection == 7,
+          f"expected 7 delegate tools with modelSelection: true, found {n_model_selection}")
+    n_model_discovery = len(re.findall(r"^\s+modelDiscovery: true$", patch, re.M))
+    check(n_model_discovery == 1,
+          f"expected exactly 1 modelDiscovery: true (one per scope), found {n_model_discovery}")
+
     # 4. playbook wiring + bundled skills content (full BMad kept on disk, not wired)
     check(patch.count("customSkillDirs") == 8,
           f"expected 8 customSkillDirs rows, found {patch.count('customSkillDirs')}")
@@ -94,7 +104,90 @@ def main() -> None:
     check(pkg.get("version") == "0.1.0", f"unexpected version {pkg.get('version')} (expected 0.1.0)")
     check(bool(pkg.get("dsh", {}).get("bundle", {}).get("patch")), "package.json missing dsh.bundle.patch")
 
-    # 6. zero-dependency squad kit (R1): validator + protocol playbook, and validator runs clean on the example
+    # 7. per-row plugin list identity: each preset mounts its own thin module + locale so
+    #    DSH's Plugins list shows the role name/description instead of the shared
+    #    "@deepseek-ai/dsh-agent-preset" text ("Agent 预设定义 / 声明一个 Agent 预设…").
+    # Expected per-row display titles (must match the preset copy in cordis.patch.yml,
+    # so a copy-paste that makes every row generic fails instead of silently shipping).
+    expected_rows = {
+        "bmad-squad-lead": ("squad-lead", "BMad 小队 · 调度", "BMad squad · Lead"),
+        "bmad-analyst": ("analyst", "〔内部成员〕BMad · Mary 业务分析师", "[Internal] BMad · Mary (Analyst)"),
+        "bmad-pm": ("pm", "〔内部成员〕BMad · John 产品经理", "[Internal] BMad · John (PM)"),
+        "bmad-po": ("po", "〔内部成员〕BMad · Sofia 产品负责人", "[Internal] BMad · Sofia (PO)"),
+        "bmad-ux": ("ux", "〔内部成员〕BMad · Sally UX 设计师", "[Internal] BMad · Sally (UX)"),
+        "bmad-architect": ("architect", "〔内部成员〕BMad · Winston 架构师", "[Internal] BMad · Winston (Architect)"),
+        "bmad-dev": ("dev", "〔内部成员〕BMad · Amelia 开发者", "[Internal] BMad · Amelia (Dev)"),
+        "bmad-tea": ("tea", "〔内部成员〕BMad · Murat 测试架构师", "[Internal] BMad · Murat (Test)"),
+    }
+    seen_titles: dict[str, set[str]] = {"en": set(), "zh": set()}
+    for preset, (role, zh_title, en_title) in expected_rows.items():
+        expected_title = {"zh": zh_title, "en": en_title}
+        module = f"dsh-agent-teams/rows/{role}"
+        check(f"- id: preset-{preset}\n      name: '{module}'" in patch,
+              f"preset-{preset} should mount {module}")
+        idx = ROOT / "rows" / role / "index.js"
+        check(idx.exists(), f"missing rows/{role}/index.js")
+        if idx.exists():
+            check("export { default }" in idx.read_text(encoding="utf-8"),
+                  f"rows/{role}/index.js should re-export the preset module")
+        check(f"./rows/{role}" in (pkg.get("exports") or {}),
+              f"package.json exports missing ./rows/{role}")
+        check(f"./rows/{role}/locale/*.json" in (pkg.get("exports") or {}),
+              f"package.json exports missing ./rows/{role}/locale/*.json")
+        check(f"./rows/{role}/icon" in (pkg.get("exports") or {}),
+              f"package.json exports missing ./rows/{role}/icon")
+        for loc in ("en", "zh"):
+            lp = ROOT / "rows" / role / "locale" / f"{loc}.json"
+            check(lp.exists(), f"missing rows/{role}/locale/{loc}.json")
+            if not lp.exists():
+                continue
+            try:
+                meta = json.loads(lp.read_text(encoding="utf-8")).get("meta", {})
+            except Exception as e:  # noqa: BLE001
+                errors.append(f"rows/{role}/locale/{loc}.json invalid JSON: {e}")
+                continue
+            title = meta.get("title")
+            check(title == expected_title[loc],
+                  f"rows/{role}/locale/{loc}.json title {title!r} != expected {expected_title[loc]!r}")
+            check(bool((meta.get("description") or "").strip()),
+                  f"rows/{role}/locale/{loc}.json missing meta.description")
+            if title:
+                seen_titles[loc].add(title)
+    for loc in ("en", "zh"):
+        check(len(seen_titles[loc]) == len(expected_rows),
+              f"per-row {loc} titles are not all distinct ({len(seen_titles[loc])}/{len(expected_rows)})")
+    check("@deepseek-ai/dsh-agent-preset" in (pkg.get("peerDependencies") or {}),
+          "package.json should declare @deepseek-ai/dsh-agent-preset as a peer dependency")
+    check((pkg.get("peerDependenciesMeta") or {}).get("@deepseek-ai/dsh-agent-preset", {}).get("optional") is not True,
+          "@deepseek-ai/dsh-agent-preset must not be an optional peer (rows hard-import it)")
+
+    # 8. client half (picker filter): the only mechanism that hides member presets is
+    #    client.js, discovered via the bare-package host row + dsh.client + exports.
+    #    Assert every link so deleting one cannot make the filter silently vanish.
+    import shutil as _shutil
+    check("- id: agent-teams\n      name: 'dsh-agent-teams'" in patch,
+          "cordis patch missing the bare 'agent-teams' host row that loads client.js")
+    check(pkg.get("dsh", {}).get("client", {}).get("platform") == "web",
+          "package.json missing dsh.client with platform 'web'")
+    exports = pkg.get("exports") or {}
+    check("." in exports, "package.json exports missing '.'")
+    check("./client" in exports, "package.json exports missing './client'")
+    files = pkg.get("files") or []
+    for need in ("client.js", "index.js"):
+        check(need in files, f"package.json files missing {need}")
+        check((ROOT / need).exists() and (ROOT / need).stat().st_size > 0,
+              f"{need} missing or empty")
+    if _shutil.which("node"):
+        r = subprocess.run(["node", "--check", str(ROOT / "client.js")],
+                           capture_output=True, text=True)
+        check(r.returncode == 0,
+              "client.js failed node --check: " + (r.stderr or r.stdout).strip())
+        t = subprocess.run(["node", str(ROOT / "scripts" / "test_client.mjs")],
+                           capture_output=True, text=True)
+        check(t.returncode == 0,
+              "client.js behavior test failed: " + (t.stderr or t.stdout).strip())
+
+    # 9. zero-dependency squad kit (R1): validator + protocol playbook, and validator runs clean on the example
     import shutil
     validator = ROOT / "scripts" / "squad_validate.mjs"
     check(validator.exists(), "missing scripts/squad_validate.mjs")

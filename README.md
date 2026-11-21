@@ -37,7 +37,7 @@ DSH 已经自带 Agent Teams：
 ## 版本
 
 - 包版本：**0.1.0**（见 `package.json`）。安装后可在 DSH「Plugins」里看到 `dsh-agent-teams` 及其版本。
-- 形态：**配置型 bundle**（无 Host 代码），新增 8 个 agent 预设 + 零依赖 `playbooks/`（默认启用）+ 完整 BMad 技能（`skills/`，保留未启用）。
+- 形态：**配置型 bundle + 轻量客户端半边**：新增 8 个 agent 预设 + 零依赖 `playbooks/`（默认启用）+ 完整 BMad 技能（`skills/`，保留未启用）；并带一个浏览器半边（`client.js`），把 7 个成员预设从预设选择器里过滤掉、只留「调度」一个（Host 端 8 个预设仍全部注册，供 `delegate_*` 委派）。
 - 版本策略：维持在 **0.1.x** 迭代，重大改动再升大版本（按维护者约定）。
 
 ## 小队编制（Roster）
@@ -59,6 +59,29 @@ DSH 已经自带 Agent Teams：
 > 每个角色一份 `SKILL.md` + 固定 `bmad-output/` 目录 + `index.md` 票据真相，收尾用 `scripts/squad_validate.mjs` 校验器把关（由 Lead 执行）。
 > 仓库仍完整保留 BMad 技能于 `skills/`（**未启用**，便于日后回退或参考；不需要可直接删）。
 > 技能来源与许可：MIT © 2025 BMad Code, LLC（见 `ATTRIBUTION.md`）。
+
+## 每个成员选择模型
+
+小队默认让成员跟随调度会话的当前模型；同时**每个成员都可以独立选用模型**，两种方式可叠加：
+
+1. **委派时临时指定（运行时）**：7 个 `delegate_*` 工具都开启了 `modelSelection`，并由 `delegate-analyst` 注册 `list_subagent_models`（`modelDiscovery`，每个 scope 只开一个实例）。调度的模型在委派时可给某个成员传 `provider` / `model` / `reasoning_effort`（例如「让 Amelia 用强模型实现」），不传则跟随会话当前模型。
+   > 前提：要让调度选到「会话当前模型之外」的模型，需先打开 **Plugins → Subagent → Model selection**，启用并勾选允许的模型路由。这是 DSH 的会话授权策略，插件无法绕过；未启用时只允许选择父会话当前的 provider/model 及其支持的 effort。
+2. **固定默认模型（配置）**：想给某角色钉一个默认模型，在该 `delegate_*` 行加 `agentOptions`，例如：
+
+   ```yaml
+   - id: delegate-dev
+     name: '@deepseek-ai/dsh-tool-subagent'
+     config:
+       provider: spawn
+       toolName: delegate_dev
+       agentPreset: bmad-dev
+       modelSelection: true        # 仍允许调度临时覆盖
+       agentOptions: { provider: deepseek, model: deepseek-chat, reasoningEffort: high }
+   ```
+
+   改完 `cordis.patch.tmpl.yml` 后跑 `python3 scripts/build_patch.py` 重新生成 `cordis.patch.yml`。
+
+> DSH 的 agent 预设本身不能声明模型（preset 只声明插件组合）；成员模型一律走 `dsh-tool-subagent` 的 `agentOptions` / `modelSelection`。
 
 ## 开发与校验
 

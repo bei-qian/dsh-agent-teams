@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "BMad squad · Lead",
+    "description": "Lead of the BMad squad: routes and delegates, never implements. Everyday use only needs this one; it dispatches work to the members below."
+  }
+}
