@@ -29,18 +29,23 @@
     "cordis.patch.tmpl.yml",
     "prompts",
     "skills",
+    "playbooks",
     "scripts",
     "locale",
     "icon.svg",
+    "examples",
     "README.md",
     "DESIGN.md",
     "SETUP.md",
+    "ROADMAP.md",
     "ATTRIBUTION.md",
     "CHANGELOG.md",
     "LICENSE"
   ],
   "scripts": {
     "build:patch": "python3 scripts/build_patch.py",
-    "verify": "python3 scripts/verify.py"
+    "verify": "python3 scripts/verify.py",
+    "validate": "node scripts/squad_validate.mjs",
+    "validate:sample": "node scripts/squad_validate.mjs examples/bmad-output"
   }
 }

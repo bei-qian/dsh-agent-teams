@@ -86,6 +86,18 @@ def main() -> None:
     check(pkg.get("version") == "0.1.0", f"unexpected version {pkg.get('version')} (expected 0.1.0)")
     check(bool(pkg.get("dsh", {}).get("bundle", {}).get("patch")), "package.json missing dsh.bundle.patch")
 
+    # 6. zero-dependency squad kit (R1): validator + protocol playbook, and validator runs clean on the example
+    import shutil
+    validator = ROOT / "scripts" / "squad_validate.mjs"
+    check(validator.exists(), "missing scripts/squad_validate.mjs")
+    check((ROOT / "playbooks" / "bmad-squad-protocol" / "SKILL.md").exists(),
+          "missing playbooks/bmad-squad-protocol/SKILL.md")
+    if validator.exists() and shutil.which("node"):
+        rr = subprocess.run(["node", str(validator), str(ROOT / "examples" / "bmad-output")],
+                            capture_output=True, text=True)
+        check(rr.returncode == 0,
+              "squad_validate failed on examples/bmad-output: " + (rr.stderr or rr.stdout).strip())
+
     if errors:
         print("VERIFY FAILED:")
         for e in errors:

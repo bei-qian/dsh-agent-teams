@@ -18,6 +18,19 @@ list_templates…）并调用兄弟技能，所以完整流程需要目标项目
 自动校验），能力更「轻」、更依赖提示词质量；上游 BMad 更新不会自动流入，模板需自行维护。
 **收益**：任意项目零安装即可用，仓库更小、更易读改。
 
+### R1 设计（已定：保留校验器）
+
+- **固定目录** `bmad-output/`：`initiative.md`（举措真相）+ `index.md`（票据真相）+ 固定产出位
+  `research/`、`prd.md`、`architecture.md`、`design.md`、`experience.md`、`epics/`、`stories/`。
+- **index.md 契约**：表格列固定 `id | type | title | status | file`；status ∈ `todo|in_progress|in_review|done|blocked`；
+  `file` 相对 `bmad-output/` 且必须存在；状态变化只改这一张索引。
+- **校验器（保留，Node 单文件、零 bmad 依赖）**：`scripts/squad_validate.mjs`。检查目录/文件存在、index 指向的文件、
+  重复 id、非法状态；对 `done` 的 story/task 提示缺「验收标准/实现/验证」。退出码 0/1 作为阶段门。
+  用法：`node scripts/squad_validate.mjs [./bmad-output]`。
+- **阶段门**：每阶段完成、或 story 置 `done` 前必须跑校验器且通过；Lead 收尾再跑一遍、0 警告才交付。
+- **状态**：✅ 校验器 + 协议技能 `playbooks/bmad-squad-protocol/SKILL.md` + 示例 `examples/bmad-output/` 已完成并跑通；
+  ⏳ 待办：把各角色技能改写为自包含 playbook（research/PRD/tickets/UX/architecture/build/test），并让成员预设扫描 `playbooks/`。
+
 ## R2 · v2 小队 Web 面板（Multica 完整形态）
 
 新增 `dsh-squad` Host 服务 + `dsh-client-ui-squad` Web 面板：
