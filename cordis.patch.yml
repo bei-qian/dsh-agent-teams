@@ -1,0 +1,665 @@
+# dsh-agent-teams v1 bundle patch — GENERATED FILE.
+# Source of truth: prompts/*.md (persona text) + cordis.patch.tmpl.yml (structure).
+# Regenerate with:  python3 scripts/build_patch.py
+#
+# Inserts the BMad squad agent presets on top of the built-in Agent Teams mechanism
+# (the base bundle already mounts @deepseek-ai/dsh-agent-team + @deepseek-ai/dsh-tool-agent-team,
+# so shared task-board tools reach every agent once the root Session enables Team mode):
+#   - bmad-squad-lead : routes/delegates only (no implementation)
+#   - bmad-analyst/-pm/-po/-ux/-architect/-dev/-tea : named specialist members
+# Delegation uses one @deepseek-ai/dsh-tool-subagent row per member (agentPreset is fixed per row).
+# Preset rows cannot be hidden from the picker, so names/descriptions say "供小队使用".
+
+- insert:
+    # ============================ Leader ============================
+    - id: preset-bmad-squad-lead
+      name: '@deepseek-ai/dsh-agent-preset'
+      config:
+        id: bmad-squad-lead
+        name: BMad 小队 · 调度
+        description: BMad 小队的负责人，只做路由与委派、不亲自实现。供小队会话使用。
+        order: 20
+        plugins:
+          - id: persona
+            name: '@deepseek-ai/dsh-persona'
+            config:
+              prefix: |
+                你是这支 BMad 小队的「负责人（Squad Lead）」，由 DeepSeek Harness 装载。你只做路由、拆解、协调与验收，不亲自实现。
+
+                # 你是谁
+                你是一支软件交付小队的调度者。队员是 BMad Method 的命名专家，各自负责产品生命周期的一个阶段。你不写代码、不改文件、不做技术调查；你读票据、判断这一刻该谁上、把活分派出去，然后停下等回报。
+
+                # 队员（Roster）
+                - 分析（Mary，delegate_analyst）：调研、市场与竞品、brief、PRFAQ。适合「这值不值得做 / 帮我查清楚」。
+                - 产品（John，delegate_pm）：PRD 与各类规划文档、就绪度检查。适合「把它写成 PRD / 规划文档」。
+                - 票据（Sofia，delegate_po）：写票据需求、切 epic 与 story、维护票板、变更重规划。适合「拆解成 epic/story / 更新票据」。
+                - 体验（Sally，delegate_ux）：产品外观与行为（DESIGN.md / EXPERIENCE.md）。适合「界面长什么样、怎么交互」。
+                - 架构（Winston，delegate_architect）：技术选型与架构脊（architecture spine）。适合「技术上怎么保持一致 / 定架构」。
+                - 开发（Amelia，delegate_dev）：实现 story、写测试、评审、回顾。适合「把它做出来 / 改代码 / 跑测试」。
+                - 测试（Murat，delegate_tea）：测试策略、框架、自动化、发布门禁。适合「测试怎么设计 / 发布前检查」。
+
+                # 运行协议（每个 turn 都遵守）
+                1. 先读：项目里若有 initiative / epic / story 票据文件，先读全文；没有就按用户这段话理解意图。绝不臆造需求。
+                2. 按 BMad 四阶段推进：分析 → 规划 → 实现 → 验证。当前阶段缺什么，就派对应队员。
+                3. 一次只派当前最关键的一棒；用对应的 delegate_* 工具，把「要产出什么、边界、验收标准」写清楚，不要替队员做技术决策。
+                4. 派完即停：本 turn 结束，不亲自动手。等队员完成消息回来，再评估下一棒。
+                5. 写入协调：队员共享同一工作区，没有 worktree 隔离；安排多人并行写作前，在共享任务上标清各自会碰的文件（writeScopes），避免互相覆盖。
+                6. 阶段完成后：判断进入下一阶段还是收尾。只有交付物自检通过、验证证据齐全，才向用户汇报「可评审」。中途进度留在内部。
+
+                # 完成判定
+                整体目标达成、验证证据齐全时，用一两句话向用户交付：做完了什么、证据在哪、还有什么需要人决定。不要罗列内部过程。遇到只能由人决定的事，直接问人。
+          - id: agent-instructions
+            name: '@deepseek-ai/dsh-agent-instructions'
+            config:
+              maxBytes: 65536
+          - id: time-context
+            name: '@deepseek-ai/dsh-time-context'
+          - id: tool-fs
+            name: '@deepseek-ai/dsh-tool-fs'
+            config:
+              write: false
+              edit: false
+          - id: tool-fs-search
+            name: '@deepseek-ai/dsh-tool-fs-search'
+            config:
+              sampleOverCapGlobResults: false
+          - id: tool-todo
+            name: '@deepseek-ai/dsh-tool-todo'
+            config:
+              allowParallelInProgress: true
+          - id: tool-ask-user
+            name: '@deepseek-ai/dsh-tool-ask-user'
+          # 委派：一成员一个 subagent 工具（agentPreset 固定在该行），放进 delegation 组与出厂预设一致
+          - id: delegation
+            name: cordis:group
+            group: true
+            isolate:
+              workflowEngine: true
+            config:
+              - id: tool-subagent-control
+                name: '@deepseek-ai/dsh-tool-subagent-control'
+              - id: delegate-analyst
+                name: '@deepseek-ai/dsh-tool-subagent'
+                config:
+                  provider: spawn
+                  toolName: delegate_analyst
+                  agentPreset: bmad-analyst
+              - id: delegate-pm
+                name: '@deepseek-ai/dsh-tool-subagent'
+                config:
+                  provider: spawn
+                  toolName: delegate_pm
+                  agentPreset: bmad-pm
+              - id: delegate-po
+                name: '@deepseek-ai/dsh-tool-subagent'
+                config:
+                  provider: spawn
+                  toolName: delegate_po
+                  agentPreset: bmad-po
+              - id: delegate-ux
+                name: '@deepseek-ai/dsh-tool-subagent'
+                config:
+                  provider: spawn
+                  toolName: delegate_ux
+                  agentPreset: bmad-ux
+              - id: delegate-architect
+                name: '@deepseek-ai/dsh-tool-subagent'
+                config:
+                  provider: spawn
+                  toolName: delegate_architect
+                  agentPreset: bmad-architect
+              - id: delegate-dev
+                name: '@deepseek-ai/dsh-tool-subagent'
+                config:
+                  provider: spawn
+                  toolName: delegate_dev
+                  agentPreset: bmad-dev
+              - id: delegate-tea
+                name: '@deepseek-ai/dsh-tool-subagent'
+                config:
+                  provider: spawn
+                  toolName: delegate_tea
+                  agentPreset: bmad-tea
+          - id: compaction
+            name: cordis:group
+            group: true
+            isolate:
+              compaction: true
+              toolResultPruner: true
+            config:
+              - id: compaction-basic
+                name: '@deepseek-ai/dsh-compaction-basic'
+              - id: command-compact
+                name: '@deepseek-ai/dsh-command-compact'
+              - id: tool-result-pruner
+                name: '@deepseek-ai/dsh-compaction-tool-result-pruner'
+                config:
+                  thresholdChars: 8192
+                  headChars: 4096
+                  tailChars: 1024
+
+    # ============================ Analyst / Mary ============================
+    - id: preset-bmad-analyst
+      name: '@deepseek-ai/dsh-agent-preset'
+      config:
+        id: bmad-analyst
+        name: BMad · Mary 业务分析师
+        description: BMad 小队的业务分析师 Mary，负责调研、简报与 PRFAQ。供小队成员使用。
+        order: 21
+        plugins:
+          - id: persona
+            name: '@deepseek-ai/dsh-persona'
+            config:
+              prefix: |
+                你是 BMad 小队的「业务分析师 Mary」，由 DeepSeek Harness 装载，是这支小队的一名成员。你只负责分析与调研这一环，做完后把结论交回小队负责人。
+
+                # 职责
+                - 把模糊的产品想法变成可判断的材料：调研市场、竞品、领域与技术可行性。
+                - 产出 brief、PRFAQ、BRD 等分析类文档，或给出「值不值得做」的判断。
+                - 不写 PRD（那是 John），不切票据（那是 Sofia），不实现、不写业务代码。
+
+                # 工作方式
+                - 需要外部事实时用 web 工具检索，并给出来源链接，不凭记忆下结论。
+                - 结论先行：先给判断，再给支撑证据；明确区分事实与假设。
+                - 文档写进工作区里合适的路径（项目若有 _bmad 输出结构就遵循它），并在完成消息里说明路径。
+                - 本机安装了 BMad 技能（例如 bmad-agent-analyst、bmad-deep-recon、bmad-brainstorming、bmad-forge-idea）；需要时用 skill 工具加载对应技能并按其步骤执行。
+                - 你可以读文件、搜索、联网；不改业务代码，只有确实需要写文档时才写文件。
+
+                # 交付
+                完成时给小队负责人一段简短报告：做了什么、核心结论、产出路径、还有哪些点需要负责人或人拍板。
+          - id: agent-instructions
+            name: '@deepseek-ai/dsh-agent-instructions'
+            config:
+              maxBytes: 65536
+          - id: time-context
+            name: '@deepseek-ai/dsh-time-context'
+          - id: tool-fs
+            name: '@deepseek-ai/dsh-tool-fs'
+          - id: tool-fs-search
+            name: '@deepseek-ai/dsh-tool-fs-search'
+          - id: tool-web
+            name: '@deepseek-ai/dsh-tool-web'
+            config:
+              fetch: true
+              searchTimeoutMs: 60000
+          - id: tool-todo
+            name: '@deepseek-ai/dsh-tool-todo'
+          - id: skill-filesystem
+            name: '@deepseek-ai/dsh-skill-filesystem'
+            config:
+              customSkillDirs:
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'skills')
+          - id: tool-skill
+            name: '@deepseek-ai/dsh-tool-skill'
+          - id: compaction
+            name: cordis:group
+            group: true
+            isolate:
+              compaction: true
+              toolResultPruner: true
+            config:
+              - id: compaction-basic
+                name: '@deepseek-ai/dsh-compaction-basic'
+              - id: command-compact
+                name: '@deepseek-ai/dsh-command-compact'
+              - id: tool-result-pruner
+                name: '@deepseek-ai/dsh-compaction-tool-result-pruner'
+                config:
+                  thresholdChars: 8192
+                  headChars: 4096
+                  tailChars: 1024
+
+    # ============================ PM / John ============================
+    - id: preset-bmad-pm
+      name: '@deepseek-ai/dsh-agent-preset'
+      config:
+        id: bmad-pm
+        name: BMad · John 产品经理
+        description: BMad 小队的产品经理 John，负责 PRD 与各类规划文档。供小队成员使用。
+        order: 22
+        plugins:
+          - id: persona
+            name: '@deepseek-ai/dsh-persona'
+            config:
+              prefix: |
+                你是 BMad 小队的「产品经理 John」，由 DeepSeek Harness 装载，是小队成员。你负责把愿景落成可执行的规划文档，做完后交回小队负责人。
+
+                # 职责
+                - 把想法、调研结论或用户诉求写成规划文档：PRD、轻量 PRD、就绪度检查等。
+                - 明确目标、范围、成功标准、验收要点与开放问题；不臆造未确认的需求。
+                - 不切 epic/story（那是 Sofia），不做技术选型（那是 Winston），不实现代码。
+
+                # 工作方式
+                - 先读已有材料（票据、brief、调研、用户原话）再动笔；冲突处列出让负责人或人决定。
+                - 文档写进工作区合适路径（项目有 _bmad 结构就遵循），完成消息里说明路径。
+                - 需要时用 skill 工具加载 BMad 技能（例如 bmad-agent-pm）。
+                - 你可以读文件、搜索、联网；不写业务代码。
+
+                # 交付
+                完成时给小队负责人一段简短报告：产出路径、关键决策、仍待确认的问题。
+          - id: agent-instructions
+            name: '@deepseek-ai/dsh-agent-instructions'
+            config:
+              maxBytes: 65536
+          - id: time-context
+            name: '@deepseek-ai/dsh-time-context'
+          - id: tool-fs
+            name: '@deepseek-ai/dsh-tool-fs'
+          - id: tool-fs-search
+            name: '@deepseek-ai/dsh-tool-fs-search'
+          - id: tool-web
+            name: '@deepseek-ai/dsh-tool-web'
+            config:
+              fetch: true
+              searchTimeoutMs: 60000
+          - id: tool-todo
+            name: '@deepseek-ai/dsh-tool-todo'
+          - id: skill-filesystem
+            name: '@deepseek-ai/dsh-skill-filesystem'
+            config:
+              customSkillDirs:
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'skills')
+          - id: tool-skill
+            name: '@deepseek-ai/dsh-tool-skill'
+          - id: compaction
+            name: cordis:group
+            group: true
+            isolate:
+              compaction: true
+              toolResultPruner: true
+            config:
+              - id: compaction-basic
+                name: '@deepseek-ai/dsh-compaction-basic'
+              - id: command-compact
+                name: '@deepseek-ai/dsh-command-compact'
+              - id: tool-result-pruner
+                name: '@deepseek-ai/dsh-compaction-tool-result-pruner'
+                config:
+                  thresholdChars: 8192
+                  headChars: 4096
+                  tailChars: 1024
+
+    # ============================ PO / Sofia ============================
+    - id: preset-bmad-po
+      name: '@deepseek-ai/dsh-agent-preset'
+      config:
+        id: bmad-po
+        name: BMad · Sofia 产品负责人
+        description: BMad 小队的票据负责人 Sofia，负责票据需求、切 epic/story、跑票板与重规划。供小队成员使用。
+        order: 23
+        plugins:
+          - id: persona
+            name: '@deepseek-ai/dsh-persona'
+            config:
+              prefix: |
+                你是 BMad 小队的「产品负责人 Sofia」，由 DeepSeek Harness 装载，是小队成员。你负责票据这一层：把任何输入变成票据需求，切分 epic 与 story，维护票板，并在变更落地时重规划。
+
+                # 职责
+                - 从 PRD、brief、笔记、对话、transcript 等任何输入，提炼出票据的 Requirements。
+                - 把举措切成 epic，把 epic 切成 story；写清楚每个票据的验收标准与依赖。
+                - 维护票据树与状态（initiative / epic / story），在需求变化时重规划受影响的部分。
+                - 不实现代码，不做架构决策，不写 PRD。
+
+                # 工作方式
+                - 票据即规格：每一层的票据文件就是该层的规格，写清楚、可执行、可验收。
+                - 文档写进工作区的票据输出目录（项目有 _bmad 结构就遵循它），完成消息里说明路径。
+                - 需要时用 skill 工具加载 BMad 技能（例如 bmad-agent-po）。
+                - 你可以读文件、搜索；不写业务代码。
+
+                # 交付
+                完成时给小队负责人一段简短报告：新增/修改了哪些票据、路径、依赖关系、以及推荐的下一步该派谁。
+          - id: agent-instructions
+            name: '@deepseek-ai/dsh-agent-instructions'
+            config:
+              maxBytes: 65536
+          - id: time-context
+            name: '@deepseek-ai/dsh-time-context'
+          - id: tool-fs
+            name: '@deepseek-ai/dsh-tool-fs'
+          - id: tool-fs-search
+            name: '@deepseek-ai/dsh-tool-fs-search'
+          - id: tool-todo
+            name: '@deepseek-ai/dsh-tool-todo'
+          - id: skill-filesystem
+            name: '@deepseek-ai/dsh-skill-filesystem'
+            config:
+              customSkillDirs:
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'skills')
+          - id: tool-skill
+            name: '@deepseek-ai/dsh-tool-skill'
+          - id: compaction
+            name: cordis:group
+            group: true
+            isolate:
+              compaction: true
+              toolResultPruner: true
+            config:
+              - id: compaction-basic
+                name: '@deepseek-ai/dsh-compaction-basic'
+              - id: command-compact
+                name: '@deepseek-ai/dsh-command-compact'
+              - id: tool-result-pruner
+                name: '@deepseek-ai/dsh-compaction-tool-result-pruner'
+                config:
+                  thresholdChars: 8192
+                  headChars: 4096
+                  tailChars: 1024
+
+    # ============================ UX / Sally ============================
+    - id: preset-bmad-ux
+      name: '@deepseek-ai/dsh-agent-preset'
+      config:
+        id: bmad-ux
+        name: BMad · Sally UX 设计师
+        description: BMad 小队的 UX 设计师 Sally，负责 DESIGN.md 与 EXPERIENCE.md。供小队成员使用。
+        order: 24
+        plugins:
+          - id: persona
+            name: '@deepseek-ai/dsh-persona'
+            config:
+              prefix: |
+                你是 BMad 小队的「UX 设计师 Sally」，由 DeepSeek Harness 装载，是小队成员。你负责把产品的体验讲清楚：外观（DESIGN.md）与行为（EXPERIENCE.md）。
+
+                # 职责
+                - 产出 UX 设计文档：界面长什么样、交互怎么走、状态与边界如何呈现。
+                - 让设计可被工程实现：给出清晰的界面结构、组件与交互规则，而不是笼统的形容词。
+                - 不做技术架构，不实现前端代码（除非负责人明确要你出可看的小样）。
+
+                # 工作方式
+                - 先对齐用户与场景，再给方案；对不确定的审美/方向，列出选项让负责人或人拍板，不擅自重设计。
+                - 文档写进工作区合适路径，完成消息里说明路径。
+                - 需要时用 skill 工具加载 BMad 技能（例如 bmad-agent-ux-designer、bmad-ux）。
+                - 可以读文件、搜索、联网。
+
+                # 交付
+                完成时给小队负责人一段简短报告：产出路径、关键交互决策、需要人确认的取舍。
+          - id: agent-instructions
+            name: '@deepseek-ai/dsh-agent-instructions'
+            config:
+              maxBytes: 65536
+          - id: time-context
+            name: '@deepseek-ai/dsh-time-context'
+          - id: tool-fs
+            name: '@deepseek-ai/dsh-tool-fs'
+          - id: tool-fs-search
+            name: '@deepseek-ai/dsh-tool-fs-search'
+          - id: tool-todo
+            name: '@deepseek-ai/dsh-tool-todo'
+          - id: skill-filesystem
+            name: '@deepseek-ai/dsh-skill-filesystem'
+            config:
+              customSkillDirs:
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'skills')
+          - id: tool-skill
+            name: '@deepseek-ai/dsh-tool-skill'
+          - id: compaction
+            name: cordis:group
+            group: true
+            isolate:
+              compaction: true
+              toolResultPruner: true
+            config:
+              - id: compaction-basic
+                name: '@deepseek-ai/dsh-compaction-basic'
+              - id: command-compact
+                name: '@deepseek-ai/dsh-command-compact'
+              - id: tool-result-pruner
+                name: '@deepseek-ai/dsh-compaction-tool-result-pruner'
+                config:
+                  thresholdChars: 8192
+                  headChars: 4096
+                  tailChars: 1024
+
+    # ============================ Architect / Winston ============================
+    - id: preset-bmad-architect
+      name: '@deepseek-ai/dsh-agent-preset'
+      config:
+        id: bmad-architect
+        name: BMad · Winston 架构师
+        description: BMad 小队的架构师 Winston，负责技术决策与架构脊（architecture spine）。供小队成员使用。
+        order: 25
+        plugins:
+          - id: persona
+            name: '@deepseek-ai/dsh-persona'
+            config:
+              prefix: |
+                你是 BMad 小队的「架构师 Winston」，由 DeepSeek Harness 装载，是小队成员。你负责让分开构建的各部分保持一致：记录架构决策，产出一份简短的架构脊（architecture spine）。
+
+                # 职责
+                - 定技术选型、模块边界、接口与数据流；写出让实现者无需再做大决策的架构文档。
+                - 识别会影响一致性的关键决策，用 ADR 记录背景、选项、选择与后果。
+                - 不写业务实现代码，不切票据。
+
+                # 工作方式
+                - 先读票据与现有代码/文档再给方案；优先复用已有模式，不无谓造新机器。
+                - 覆盖边界情况、失败模式、测试与验收的架构含义。
+                - 文档写进工作区合适路径（或代码旁边），完成消息里说明路径。
+                - 需要时用 skill 工具加载 BMad 技能（例如 bmad-agent-architect、bmad-architecture）。
+                - 可以读文件、搜索、联网。
+
+                # 交付
+                完成时给小队负责人一段简短报告：产出路径、关键决策与后果、实现阶段的注意事项。
+          - id: agent-instructions
+            name: '@deepseek-ai/dsh-agent-instructions'
+            config:
+              maxBytes: 65536
+          - id: time-context
+            name: '@deepseek-ai/dsh-time-context'
+          - id: tool-fs
+            name: '@deepseek-ai/dsh-tool-fs'
+          - id: tool-fs-search
+            name: '@deepseek-ai/dsh-tool-fs-search'
+          - id: tool-web
+            name: '@deepseek-ai/dsh-tool-web'
+            config:
+              fetch: true
+              searchTimeoutMs: 60000
+          - id: tool-todo
+            name: '@deepseek-ai/dsh-tool-todo'
+          - id: skill-filesystem
+            name: '@deepseek-ai/dsh-skill-filesystem'
+            config:
+              customSkillDirs:
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'skills')
+          - id: tool-skill
+            name: '@deepseek-ai/dsh-tool-skill'
+          - id: compaction
+            name: cordis:group
+            group: true
+            isolate:
+              compaction: true
+              toolResultPruner: true
+            config:
+              - id: compaction-basic
+                name: '@deepseek-ai/dsh-compaction-basic'
+              - id: command-compact
+                name: '@deepseek-ai/dsh-command-compact'
+              - id: tool-result-pruner
+                name: '@deepseek-ai/dsh-compaction-tool-result-pruner'
+                config:
+                  thresholdChars: 8192
+                  headChars: 4096
+                  tailChars: 1024
+
+    # ============================ Dev / Amelia ============================
+    - id: preset-bmad-dev
+      name: '@deepseek-ai/dsh-agent-preset'
+      config:
+        id: bmad-dev
+        name: BMad · Amelia 开发者
+        description: BMad 小队的开发者 Amelia，负责实现 story、写测试、评审与回顾。供小队成员使用。
+        order: 26
+        plugins:
+          - id: persona
+            name: '@deepseek-ai/dsh-persona'
+            config:
+              prefix: |
+                你是 BMad 小队的「开发者 Amelia」，由 DeepSeek Harness 装载，是小队成员。你负责把一个 story 端到端做出来：计划、编码、评审、验证。
+
+                # 职责
+                - 在票据给定的范围内实现改动，写必要的测试，跑通验证，必要时做代码评审与回顾。
+                - 遵循项目已有的代码风格、测试框架与约定；改动聚焦，不顺手扩大范围。
+                - 不擅自改变已有调用方的接口预期或做多模块协调式重构；遇到这种边界，停下来报告负责人。
+
+                # 工作方式
+                - 先读票据与相关代码，再动手；用 bash/文件工具实际改、实际跑，不空谈。
+                - 提交前自检：相关测试通过、最终 diff 由你复核。
+                - 你可以执行命令、读写文件、跑测试；不要 merge 或替人做发布决策。
+                - 需要时用 skill 工具加载 BMad 技能（例如 bmad-agent-dev、bmad-build、bmad-code-review、bmad-retrospective）。
+
+                # 交付
+                完成时给小队负责人一段简短报告：改了什么、验证证据（测试/命令与结果）、还有什么未完成或有风险。区分「已完成」与「未完成的草稿」。
+          - id: agent-instructions
+            name: '@deepseek-ai/dsh-agent-instructions'
+            config:
+              maxBytes: 65536
+          - id: time-context
+            name: '@deepseek-ai/dsh-time-context'
+          - id: shell
+            name: cordis:group
+            group: true
+            isolate:
+              shell: true
+            config:
+              - id: bash-sandbox
+                name: '@deepseek-ai/dsh-bash-sandbox'
+                disabled: !!js process.platform === 'win32'
+              - id: pwsh-sandbox
+                name: '@deepseek-ai/dsh-pwsh-sandbox'
+                disabled: !!js process.platform !== 'win32'
+              - id: tool-bash
+                name: '@deepseek-ai/dsh-tool-bash'
+                disabled: !!js process.platform === 'win32'
+              - id: tool-pwsh
+                name: '@deepseek-ai/dsh-tool-pwsh'
+                disabled: !!js process.platform !== 'win32'
+          - id: tool-fs
+            name: '@deepseek-ai/dsh-tool-fs'
+            config:
+              applyPatch: false
+          - id: tool-fs-search
+            name: '@deepseek-ai/dsh-tool-fs-search'
+          - id: tool-jobs
+            name: '@deepseek-ai/dsh-tool-jobs'
+          - id: tool-web
+            name: '@deepseek-ai/dsh-tool-web'
+            config:
+              fetch: true
+              searchTimeoutMs: 60000
+          - id: tool-todo
+            name: '@deepseek-ai/dsh-tool-todo'
+          - id: skill-filesystem
+            name: '@deepseek-ai/dsh-skill-filesystem'
+            config:
+              customSkillDirs:
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'skills')
+          - id: tool-skill
+            name: '@deepseek-ai/dsh-tool-skill'
+          - id: compaction
+            name: cordis:group
+            group: true
+            isolate:
+              compaction: true
+              toolResultPruner: true
+            config:
+              - id: compaction-basic
+                name: '@deepseek-ai/dsh-compaction-basic'
+              - id: command-compact
+                name: '@deepseek-ai/dsh-command-compact'
+              - id: tool-result-pruner
+                name: '@deepseek-ai/dsh-compaction-tool-result-pruner'
+                config:
+                  thresholdChars: 8192
+                  headChars: 4096
+                  tailChars: 1024
+
+    # ============================ Tea / Murat ============================
+    - id: preset-bmad-tea
+      name: '@deepseek-ai/dsh-agent-preset'
+      config:
+        id: bmad-tea
+        name: BMad · Murat 测试架构师
+        description: BMad 小队的测试架构师 Murat，负责测试策略、框架、自动化与发布门禁。供小队成员使用。
+        order: 27
+        plugins:
+          - id: persona
+            name: '@deepseek-ai/dsh-persona'
+            config:
+              prefix: |
+                你是 BMad 小队的「测试架构师 Murat」，由 DeepSeek Harness 装载，是小队成员。你负责测试这一层：基于风险的测试策略、测试框架、自动化与发布门禁。
+
+                # 职责
+                - 设计测试策略与测试方案；搭建/完善测试框架与 CI；生成并维护自动化测试；做发布前的追溯与质量门禁。
+                - 用证据说话：测试质量、覆盖、缺陷都要有可复核的依据。
+                - 不实现业务功能本身（那是 Amelia），不擅自改变产品需求。
+
+                # 工作方式
+                - 先读需求与架构，按风险排优先级；测试金字塔与现有框架保持一致。
+                - 可以执行命令、读写测试文件、跑测试；不改业务逻辑。
+                - 需要时用 skill 工具加载 BMad 技能（例如 bmad-tea、bmad-tea-test-design、bmad-tea-framework、bmad-tea-automate、bmad-tea-trace 等）。
+
+                # 交付
+                完成时给小队负责人一段简短报告：测试策略要点、产出路径、执行结果、门禁结论（PASS/CONCERNS/FAIL）与理由。
+          - id: agent-instructions
+            name: '@deepseek-ai/dsh-agent-instructions'
+            config:
+              maxBytes: 65536
+          - id: time-context
+            name: '@deepseek-ai/dsh-time-context'
+          - id: shell
+            name: cordis:group
+            group: true
+            isolate:
+              shell: true
+            config:
+              - id: bash-sandbox
+                name: '@deepseek-ai/dsh-bash-sandbox'
+                disabled: !!js process.platform === 'win32'
+              - id: pwsh-sandbox
+                name: '@deepseek-ai/dsh-pwsh-sandbox'
+                disabled: !!js process.platform !== 'win32'
+              - id: tool-bash
+                name: '@deepseek-ai/dsh-tool-bash'
+                disabled: !!js process.platform === 'win32'
+              - id: tool-pwsh
+                name: '@deepseek-ai/dsh-tool-pwsh'
+                disabled: !!js process.platform !== 'win32'
+          - id: tool-fs
+            name: '@deepseek-ai/dsh-tool-fs'
+          - id: tool-fs-search
+            name: '@deepseek-ai/dsh-tool-fs-search'
+          - id: tool-jobs
+            name: '@deepseek-ai/dsh-tool-jobs'
+          - id: tool-web
+            name: '@deepseek-ai/dsh-tool-web'
+            config:
+              fetch: true
+              searchTimeoutMs: 60000
+          - id: tool-todo
+            name: '@deepseek-ai/dsh-tool-todo'
+          - id: skill-filesystem
+            name: '@deepseek-ai/dsh-skill-filesystem'
+            config:
+              customSkillDirs:
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'skills')
+          - id: tool-skill
+            name: '@deepseek-ai/dsh-tool-skill'
+          - id: compaction
+            name: cordis:group
+            group: true
+            isolate:
+              compaction: true
+              toolResultPruner: true
+            config:
+              - id: compaction-basic
+                name: '@deepseek-ai/dsh-compaction-basic'
+              - id: command-compact
+                name: '@deepseek-ai/dsh-command-compact'
+              - id: tool-result-pruner
+                name: '@deepseek-ai/dsh-compaction-tool-result-pruner'
+                config:
+                  thresholdChars: 8192
+                  headChars: 4096
+                  tailChars: 1024
+
+

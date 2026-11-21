@@ -1,0 +1,46 @@
+{
+  "name": "dsh-agent-teams",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "description": "BMad 小队（Squad）插件：在 DSH 内置 Agent Teams 之上提供 Leader + BMad 角色 Roster + 小队指令，并随包携带 BMad 技能。",
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "agent-teams",
+    "squad",
+    "bmad"
+  ],
+  "exports": {
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "manifestVersion": 1
+  },
+  "files": [
+    "cordis.patch.yml",
+    "cordis.patch.tmpl.yml",
+    "prompts",
+    "skills",
+    "scripts",
+    "locale",
+    "icon.svg",
+    "README.md",
+    "DESIGN.md",
+    "SETUP.md",
+    "ATTRIBUTION.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build:patch": "python3 scripts/build_patch.py",
+    "verify": "python3 scripts/verify.py"
+  }
+}
