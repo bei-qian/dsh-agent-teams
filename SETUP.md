@@ -37,11 +37,12 @@
   它们的描述都标了「供小队成员使用」。单独选用某个成员预设，等于只召唤那一个专家，也可用。
 - **Team 模式按会话开关**：不开 Team 模式也能委派，但共享任务板工具不会出现。
 - **成员共享同一工作区**：多人并行写同一批文件会互相覆盖；让负责人在任务上登记写入范围，或改为串行。
-- **BMad 技能（已随插件打包）**：插件**自带 `skills/`**（含 BMad 全部技能，无需另外 `npx skills add`）。
-  成员预设的 `skill-filesystem.customSkillDirs` 指向插件内的 `skills/`，开箱即可加载 `bmad-*` 技能。
-  但 BMad 技能是「方法驱动器」，需要目标项目有 `_bmad/` 脚本 + Python/uv 才能跑完整流程：
-  首次在某个项目里用时，让 agent 跑一次 `bmad setup` 生成 `_bmad/`。没有它时，成员的**人设与路由**仍然生效，
-  深度工作流会退化为提示你先做 setup。来源与许可见 `ATTRIBUTION.md`（MIT © 2025 BMad Code, LLC）。
+- **零依赖 playbook（默认启用）**：成员预设 `skill-filesystem.customSkillDirs` 指向插件内 `playbooks/`，
+  每个角色一份自包含 `SKILL.md`，固定写到工作区 `bmad-output/`（`index.md` 当票据真相）；**不需要** Python/uv/`_bmad`。
+  **校验器** `scripts/squad_validate.mjs`（Node，零依赖）在每个阶段门由 **Lead** 执行（dev/tea 可自行执行）：
+  `node scripts/squad_validate.mjs ./bmad-output`，退出码 0/1 决定能否继续。
+  仓库仍保留完整 BMad 技能于 `skills/`（**未启用**，可日后参考或回退；不需要可删）。
+  来源与许可见 `ATTRIBUTION.md`（MIT © 2025 BMad Code, LLC）。
 
 ## 卸载
 

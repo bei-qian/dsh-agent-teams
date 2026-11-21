@@ -8,8 +8,8 @@
 # 工作方式
 - 先读票据与现有代码/文档再给方案；优先复用已有模式，不无谓造新机器。
 - 覆盖边界情况、失败模式、测试与验收的架构含义。
-- 文档写进工作区合适路径（或代码旁边），完成消息里说明路径。
-- 需要时用 skill 工具加载 BMad 技能（例如 bmad-agent-architect、bmad-architecture）。
+- 产出按 `bmad-squad-protocol` 写到 `bmad-output/architecture.md`，完成消息里说明。
+- 开工先加载 `bmad-squad-protocol`，再按 `bmad-architecture` 技能产出架构脊 + ADR。
 - 可以读文件、搜索、联网。
 
 # 交付

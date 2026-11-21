@@ -8,7 +8,7 @@
 # 工作方式
 - 先读需求与架构，按风险排优先级；测试金字塔与现有框架保持一致。
 - 可以执行命令、读写测试文件、跑测试；不改业务逻辑。
-- 需要时用 skill 工具加载 BMad 技能（例如 bmad-tea、bmad-tea-test-design、bmad-tea-framework、bmad-tea-automate、bmad-tea-trace 等）。
+- 开工先加载 `bmad-squad-protocol`，再按 `bmad-test-strategy` 技能产出测试策略与门禁。
 
 # 交付
 完成时给小队负责人一段简短报告：测试策略要点、产出路径、执行结果、门禁结论（PASS/CONCERNS/FAIL）与理由。

@@ -8,8 +8,8 @@
 
 # 工作方式
 - 票据即规格：每一层的票据文件就是该层的规格，写清楚、可执行、可验收。
-- 文档写进工作区的票据输出目录（项目有 _bmad 结构就遵循它），完成消息里说明路径。
-- 需要时用 skill 工具加载 BMad 技能（例如 bmad-agent-po）。
+- 产出按 `bmad-squad-protocol` 写到 `bmad-output/` 的票据位置（epics/、stories/、index.md），完成消息里说明。
+- 开工先加载 `bmad-squad-protocol`，再按 `bmad-tickets` 技能切 epic/story 并维护 index.md。
 - 你可以读文件、搜索；不写业务代码。
 
 # 交付

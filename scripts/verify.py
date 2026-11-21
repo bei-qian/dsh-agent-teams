@@ -61,9 +61,17 @@ def main() -> None:
     for ap in delegates:
         check(ap in ids, f"delegate agentPreset '{ap}' has no matching preset id")
 
-    # 4. bundled skills wiring + content
-    check(patch.count("customSkillDirs") == 7,
-          f"expected 7 customSkillDirs rows, found {patch.count('customSkillDirs')}")
+    # 4. playbook wiring + bundled skills content (full BMad kept on disk, not wired)
+    check(patch.count("customSkillDirs") == 8,
+          f"expected 8 customSkillDirs rows, found {patch.count('customSkillDirs')}")
+    n_playbook_dirs = patch.count("'playbooks')")
+    check(n_playbook_dirs == 8, f"expected 8 skill dirs pointing at playbooks, found {n_playbook_dirs}")
+    playbooks = ROOT / "playbooks"
+    pb = [p for p in playbooks.iterdir() if p.is_dir() and (p / "SKILL.md").exists()] if playbooks.is_dir() else []
+    check(len(pb) >= 8, f"expected >=8 playbook skills, found {len(pb)}")
+    for need in ["bmad-squad-protocol", "bmad-research", "bmad-prd", "bmad-tickets",
+                 "bmad-ux", "bmad-architecture", "bmad-build", "bmad-test-strategy"]:
+        check((playbooks / need / "SKILL.md").exists(), f"missing playbook: {need}")
     skills = ROOT / "skills"
     skill_dirs = [p for p in skills.iterdir() if p.is_dir() and (p / "SKILL.md").exists()] if skills.is_dir() else []
     check(len(skill_dirs) >= 38, f"expected >=38 bundled skills, found {len(skill_dirs)}")

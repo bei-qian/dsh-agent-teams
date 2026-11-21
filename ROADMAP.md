@@ -28,8 +28,7 @@ list_templates…）并调用兄弟技能，所以完整流程需要目标项目
   重复 id、非法状态；对 `done` 的 story/task 提示缺「验收标准/实现/验证」。退出码 0/1 作为阶段门。
   用法：`node scripts/squad_validate.mjs [./bmad-output]`。
 - **阶段门**：每阶段完成、或 story 置 `done` 前必须跑校验器且通过；Lead 收尾再跑一遍、0 警告才交付。
-- **状态**：✅ 校验器 + 协议技能 `playbooks/bmad-squad-protocol/SKILL.md` + 示例 `examples/bmad-output/` 已完成并跑通；
-  ⏳ 待办：把各角色技能改写为自包含 playbook（research/PRD/tickets/UX/architecture/build/test），并让成员预设扫描 `playbooks/`。
+- **状态**：✅ 已完成：校验器 + 协议 + 7 个角色 playbook（`playbooks/`）；成员预设已改扫 `playbooks/`（`includeDefaultRoots:false`）并安装验证，8 预设全 `active`。完整 BMad 技能保留在 `skills/` 但**未启用**（可回退/删除）。阶段门由 Lead 跑校验器；`verify.py` 与 CI 覆盖 playbook + 校验器。
 
 ## R2 · v2 小队 Web 面板（Multica 完整形态）
 

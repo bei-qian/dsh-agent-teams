@@ -39,6 +39,8 @@
                 - 测试（Murat，delegate_tea）：测试策略、框架、自动化、发布门禁。适合「测试怎么设计 / 发布前检查」。
 
                 # 运行协议（每个 turn 都遵守）
+
+                0. 全程遵守 `bmad-squad-protocol`：固定 `bmad-output/` 目录、维护 `index.md`；每个阶段门由你（Lead）跑校验器，通过再继续。
                 1. 先读：项目里若有 initiative / epic / story 票据文件，先读全文；没有就按用户这段话理解意图。绝不臆造需求。
                 2. 按 BMad 四阶段推进：分析 → 规划 → 实现 → 验证。当前阶段缺什么，就派对应队员。
                 3. 一次只派当前最关键的一棒；用对应的 delegate_* 工具，把「要产出什么、边界、验收标准」写清楚，不要替队员做技术决策。
@@ -120,6 +122,32 @@
                   provider: spawn
                   toolName: delegate_tea
                   agentPreset: bmad-tea
+          - id: shell
+            name: cordis:group
+            group: true
+            isolate:
+              shell: true
+            config:
+              - id: bash-sandbox
+                name: '@deepseek-ai/dsh-bash-sandbox'
+                disabled: !!js process.platform === 'win32'
+              - id: pwsh-sandbox
+                name: '@deepseek-ai/dsh-pwsh-sandbox'
+                disabled: !!js process.platform !== 'win32'
+              - id: tool-bash
+                name: '@deepseek-ai/dsh-tool-bash'
+                disabled: !!js process.platform === 'win32'
+              - id: tool-pwsh
+                name: '@deepseek-ai/dsh-tool-pwsh'
+                disabled: !!js process.platform !== 'win32'
+          - id: skill-filesystem
+            name: '@deepseek-ai/dsh-skill-filesystem'
+            config:
+              includeDefaultRoots: false
+              customSkillDirs:
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'playbooks')
+          - id: tool-skill
+            name: '@deepseek-ai/dsh-tool-skill'
           - id: compaction
             name: cordis:group
             group: true
@@ -161,8 +189,8 @@
                 # 工作方式
                 - 需要外部事实时用 web 工具检索，并给出来源链接，不凭记忆下结论。
                 - 结论先行：先给判断，再给支撑证据；明确区分事实与假设。
-                - 文档写进工作区里合适的路径（项目若有 _bmad 输出结构就遵循它），并在完成消息里说明路径。
-                - 本机安装了 BMad 技能（例如 bmad-agent-analyst、bmad-deep-recon、bmad-brainstorming、bmad-forge-idea）；需要时用 skill 工具加载对应技能并按其步骤执行。
+                - 产出按 `bmad-squad-protocol` 的固定目录落盘（调研/简报写到 `bmad-output/research/`），并在完成消息里说明路径。
+                - 开工先加载 `bmad-squad-protocol`，再按 `bmad-research` 技能执行（调研/brief 模板已内联）。
                 - 你可以读文件、搜索、联网；不改业务代码，只有确实需要写文档时才写文件。
 
                 # 交付
@@ -187,8 +215,9 @@
           - id: skill-filesystem
             name: '@deepseek-ai/dsh-skill-filesystem'
             config:
+              includeDefaultRoots: false
               customSkillDirs:
-                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'skills')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'playbooks')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
           - id: compaction
@@ -231,8 +260,8 @@
 
                 # 工作方式
                 - 先读已有材料（票据、brief、调研、用户原话）再动笔；冲突处列出让负责人或人决定。
-                - 文档写进工作区合适路径（项目有 _bmad 结构就遵循），完成消息里说明路径。
-                - 需要时用 skill 工具加载 BMad 技能（例如 bmad-agent-pm）。
+                - 产出按 `bmad-squad-protocol` 写到 `bmad-output/prd.md`，完成消息里说明。
+                - 开工先加载 `bmad-squad-protocol`，再按 `bmad-prd` 技能撰写（模板已内联）。
                 - 你可以读文件、搜索、联网；不写业务代码。
 
                 # 交付
@@ -257,8 +286,9 @@
           - id: skill-filesystem
             name: '@deepseek-ai/dsh-skill-filesystem'
             config:
+              includeDefaultRoots: false
               customSkillDirs:
-                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'skills')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'playbooks')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
           - id: compaction
@@ -302,8 +332,8 @@
 
                 # 工作方式
                 - 票据即规格：每一层的票据文件就是该层的规格，写清楚、可执行、可验收。
-                - 文档写进工作区的票据输出目录（项目有 _bmad 结构就遵循它），完成消息里说明路径。
-                - 需要时用 skill 工具加载 BMad 技能（例如 bmad-agent-po）。
+                - 产出按 `bmad-squad-protocol` 写到 `bmad-output/` 的票据位置（epics/、stories/、index.md），完成消息里说明。
+                - 开工先加载 `bmad-squad-protocol`，再按 `bmad-tickets` 技能切 epic/story 并维护 index.md。
                 - 你可以读文件、搜索；不写业务代码。
 
                 # 交付
@@ -323,8 +353,9 @@
           - id: skill-filesystem
             name: '@deepseek-ai/dsh-skill-filesystem'
             config:
+              includeDefaultRoots: false
               customSkillDirs:
-                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'skills')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'playbooks')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
           - id: compaction
@@ -367,8 +398,8 @@
 
                 # 工作方式
                 - 先对齐用户与场景，再给方案；对不确定的审美/方向，列出选项让负责人或人拍板，不擅自重设计。
-                - 文档写进工作区合适路径，完成消息里说明路径。
-                - 需要时用 skill 工具加载 BMad 技能（例如 bmad-agent-ux-designer、bmad-ux）。
+                - 产出按 `bmad-squad-protocol` 写到 `bmad-output/design.md` 与 `bmad-output/experience.md`，完成消息里说明。
+                - 开工先加载 `bmad-squad-protocol`，再按 `bmad-ux` 技能执行。
                 - 可以读文件、搜索、联网。
 
                 # 交付
@@ -388,8 +419,9 @@
           - id: skill-filesystem
             name: '@deepseek-ai/dsh-skill-filesystem'
             config:
+              includeDefaultRoots: false
               customSkillDirs:
-                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'skills')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'playbooks')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
           - id: compaction
@@ -433,8 +465,8 @@
                 # 工作方式
                 - 先读票据与现有代码/文档再给方案；优先复用已有模式，不无谓造新机器。
                 - 覆盖边界情况、失败模式、测试与验收的架构含义。
-                - 文档写进工作区合适路径（或代码旁边），完成消息里说明路径。
-                - 需要时用 skill 工具加载 BMad 技能（例如 bmad-agent-architect、bmad-architecture）。
+                - 产出按 `bmad-squad-protocol` 写到 `bmad-output/architecture.md`，完成消息里说明。
+                - 开工先加载 `bmad-squad-protocol`，再按 `bmad-architecture` 技能产出架构脊 + ADR。
                 - 可以读文件、搜索、联网。
 
                 # 交付
@@ -459,8 +491,9 @@
           - id: skill-filesystem
             name: '@deepseek-ai/dsh-skill-filesystem'
             config:
+              includeDefaultRoots: false
               customSkillDirs:
-                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'skills')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'playbooks')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
           - id: compaction
@@ -505,7 +538,7 @@
                 - 先读票据与相关代码，再动手；用 bash/文件工具实际改、实际跑，不空谈。
                 - 提交前自检：相关测试通过、最终 diff 由你复核。
                 - 你可以执行命令、读写文件、跑测试；不要 merge 或替人做发布决策。
-                - 需要时用 skill 工具加载 BMad 技能（例如 bmad-agent-dev、bmad-build、bmad-code-review、bmad-retrospective）。
+                - 开工先加载 `bmad-squad-protocol`，再按 `bmad-build` 技能实现 story、写测试、自检；完成前跑校验器。
 
                 # 交付
                 完成时给小队负责人一段简短报告：改了什么、验证证据（测试/命令与结果）、还有什么未完成或有风险。区分「已完成」与「未完成的草稿」。
@@ -551,8 +584,9 @@
           - id: skill-filesystem
             name: '@deepseek-ai/dsh-skill-filesystem'
             config:
+              includeDefaultRoots: false
               customSkillDirs:
-                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'skills')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'playbooks')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
           - id: compaction
@@ -596,7 +630,7 @@
                 # 工作方式
                 - 先读需求与架构，按风险排优先级；测试金字塔与现有框架保持一致。
                 - 可以执行命令、读写测试文件、跑测试；不改业务逻辑。
-                - 需要时用 skill 工具加载 BMad 技能（例如 bmad-tea、bmad-tea-test-design、bmad-tea-framework、bmad-tea-automate、bmad-tea-trace 等）。
+                - 开工先加载 `bmad-squad-protocol`，再按 `bmad-test-strategy` 技能产出测试策略与门禁。
 
                 # 交付
                 完成时给小队负责人一段简短报告：测试策略要点、产出路径、执行结果、门禁结论（PASS/CONCERNS/FAIL）与理由。
@@ -640,8 +674,9 @@
           - id: skill-filesystem
             name: '@deepseek-ai/dsh-skill-filesystem'
             config:
+              includeDefaultRoots: false
               customSkillDirs:
-                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'skills')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'playbooks')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
           - id: compaction

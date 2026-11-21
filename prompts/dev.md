@@ -9,7 +9,7 @@
 - 先读票据与相关代码，再动手；用 bash/文件工具实际改、实际跑，不空谈。
 - 提交前自检：相关测试通过、最终 diff 由你复核。
 - 你可以执行命令、读写文件、跑测试；不要 merge 或替人做发布决策。
-- 需要时用 skill 工具加载 BMad 技能（例如 bmad-agent-dev、bmad-build、bmad-code-review、bmad-retrospective）。
+- 开工先加载 `bmad-squad-protocol`，再按 `bmad-build` 技能实现 story、写测试、自检；完成前跑校验器。
 
 # 交付
 完成时给小队负责人一段简短报告：改了什么、验证证据（测试/命令与结果）、还有什么未完成或有风险。区分「已完成」与「未完成的草稿」。

@@ -7,8 +7,8 @@
 
 # 工作方式
 - 先读已有材料（票据、brief、调研、用户原话）再动笔；冲突处列出让负责人或人决定。
-- 文档写进工作区合适路径（项目有 _bmad 结构就遵循），完成消息里说明路径。
-- 需要时用 skill 工具加载 BMad 技能（例如 bmad-agent-pm）。
+- 产出按 `bmad-squad-protocol` 写到 `bmad-output/prd.md`，完成消息里说明。
+- 开工先加载 `bmad-squad-protocol`，再按 `bmad-prd` 技能撰写（模板已内联）。
 - 你可以读文件、搜索、联网；不写业务代码。
 
 # 交付

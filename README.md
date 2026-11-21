@@ -37,7 +37,7 @@ DSH 已经自带 Agent Teams：
 ## 版本
 
 - 包版本：**0.1.0**（见 `package.json`）。安装后可在 DSH「Plugins」里看到 `dsh-agent-teams` 及其版本。
-- 形态：**配置型 bundle**（无 Host 代码），新增 8 个 agent 预设 + 自带 `skills/`（BMad 技能）。
+- 形态：**配置型 bundle**（无 Host 代码），新增 8 个 agent 预设 + 零依赖 `playbooks/`（默认启用）+ 完整 BMad 技能（`skills/`，保留未启用）。
 - 版本策略：维持在 **0.1.x** 迭代，重大改动再升大版本（按维护者约定）。
 
 ## 小队编制（Roster）
@@ -55,9 +55,9 @@ DSH 已经自带 Agent Teams：
 | `bmad-dev` | Amelia 开发者 | 实现、测试、评审、回顾 |
 | `bmad-tea` | Murat 测试架构师 | 测试策略、自动化、发布门禁 |
 
-> **技能已随插件打包**：仓库内 `skills/` 携带了 BMad 全部技能（core-tools / method / tea），成员预设的
-> `skill-filesystem.customSkillDirs` 指向它，**无需再单独安装 bmad 技能**（上传 GitHub 后别人装这一个插件即可）。
-> BMad 技能的完整工作流仍需要目标项目有 `_bmad/` 脚本 + Python/uv（首次可让 agent 跑 `bmad setup`）；没有它时人设/路由照样生效。
+> **默认启用零依赖 playbook**：成员预设的 `skill-filesystem.customSkillDirs` 指向 `playbooks/`（自包含，不依赖 `_bmad`/Python/uv）。
+> 每个角色一份 `SKILL.md` + 固定 `bmad-output/` 目录 + `index.md` 票据真相，收尾用 `scripts/squad_validate.mjs` 校验器把关（由 Lead 执行）。
+> 仓库仍完整保留 BMad 技能于 `skills/`（**未启用**，便于日后回退或参考；不需要可直接删）。
 > 技能来源与许可：MIT © 2025 BMad Code, LLC（见 `ATTRIBUTION.md`）。
 
 ## 开发与校验

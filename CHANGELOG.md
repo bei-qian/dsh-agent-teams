@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased (0.1.x)
+
+- 零依赖 playbook 版：新增 `playbooks/`（协议 + 7 角色自包含技能），成员预设改扫 `playbooks/`（`includeDefaultRoots:false`）；完整 BMad 技能保留在 `skills/` 但不再启用。
+- 确定性校验器 `scripts/squad_validate.mjs`（Node，零依赖）+ `examples/bmad-output/` 示例；阶段门由 Lead 执行。
+- Lead 预设加 shell 以运行校验器；`scripts/verify.py` 与 CI 覆盖 playbook 与校验器。
+
 ## 0.1.0 — 2026-11-21
 
 - 初始版本：BMad 小队（1 名负责人 + 7 名 BMad 专家）作为 DSH agent 预设，构建在内置 Agent Teams 之上。

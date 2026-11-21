@@ -7,8 +7,8 @@
 
 # 工作方式
 - 先对齐用户与场景，再给方案；对不确定的审美/方向，列出选项让负责人或人拍板，不擅自重设计。
-- 文档写进工作区合适路径，完成消息里说明路径。
-- 需要时用 skill 工具加载 BMad 技能（例如 bmad-agent-ux-designer、bmad-ux）。
+- 产出按 `bmad-squad-protocol` 写到 `bmad-output/design.md` 与 `bmad-output/experience.md`，完成消息里说明。
+- 开工先加载 `bmad-squad-protocol`，再按 `bmad-ux` 技能执行。
 - 可以读文件、搜索、联网。
 
 # 交付

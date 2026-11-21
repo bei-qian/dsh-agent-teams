@@ -47,7 +47,7 @@ Markdown 表格，列顺序固定 `id | type | title | status | file`：
 node <本技能目录>/../../scripts/squad_validate.mjs ./bmad-output
 ```
 
-（加载本技能时 DSH 会给出该 SKILL.md 的真实路径；校验器就在插件 `scripts/squad_validate.mjs`，即本技能目录的上两级 `../../scripts/`。）
+由 **Lead**（有 shell）在每个阶段门执行；`bmad-dev`/`bmad-tea` 完成自己阶段时可自行执行；其他成员交付时报告 Lead 由其执行。加载本技能时 DSH 会给出该 SKILL.md 的真实路径；校验器就在插件 `scripts/squad_validate.mjs`（本技能目录的上两级 `../../scripts/`）。
 
 - 退出码 0 = 通过，可以继续/收尾；
 - 退出码 1 = 有硬错误（缺文件、重复 id、非法状态、index 指向不存在的文件），**修好再跑**，不得跳过；
