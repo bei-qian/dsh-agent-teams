@@ -2,6 +2,8 @@
 
 ## 0.1.1 — 2026-11-22
 
+- 委派命名可辨识：`prompts/squad-lead.md` 的 Roster 为 7 名成员标注子代理代号（`mary-n` / `john-n` / …），运行协议第 4 步要求每次 `delegate_*` 必须传 `name`（`<代号>-<序号>`，序号按本会话该队员出现次数递增、首次为 1；不确定先 `list_agents` 查已用名再取下一个未占用序号），不再因省略 `name` 而落到 `agent-1` / `agent-2`，使「编队 / Agent 网络」面板显示真实队员名。同时 7 个成员 prompt 各加一条同口径的「派生命名」约定（成员当前无委派 / 子代理工具，属前瞻性约定；成员在编队的显示名本就由 Lead 委派时传入的 `name` 决定）。只改小队 prompt（真相源）并重建 `cordis.patch.yml`，**不涉及 DSH 内核**；`scripts/verify.py` 通过。
+
 - 新增「从 GitHub 下载安装到 DSH」说明：`SETUP.md` 给出面向外部用户的完整流程（前置条件；`git clone` / ZIP 获取；Web「选择本地目录」与 `plugin_manager` 的 `install_bundle` 两种安装方式；成功标志；首次使用；更新；卸载；常见问题），并明确 DSH 只支持「本地目录」安装、无 git URL 直装、link 安装不可删移目录；同时把原「开发者改模板后重建（`build_patch.py`）」单列为开发者章节，与外部用户安装区分；`README.md` 增加安装入口指向该章节。
 
 - 新增零依赖 playbook `playbooks/modern-web-guidance/`：把 Modern Web Guidance 作为**纯 markdown 前端最佳实践参照**（210 篇已展开的干净 guides，17 个分类，`guides/<category>/<slug>.md`）随包携带，做 HTML/CSS/客户端 JS 时按分类查阅；**不引入 Node/Python 运行时、不长期 npx**（如 macro 展开、源仓库、构建均在获取阶段完成，产物仅为本地 .md）。由 `playbooks/bmad-build/SKILL.md` 与 `prompts/dev.md` 各加一句「前端实现前先按分类查 modern-web-guidance 技能」接入。`scripts/verify.py` 新增对应正向校验（SKILL.md 存在、`guides/` 非空、零依赖）并同步期望版本到 `0.1.1`。正文中上游遗留的 `npx -y modern-web-guidance@latest retrieve "ID"` 交叉引用已确定性本地化为 `(local: \`guides/<category>/<id>.md\`)` 本地文件指针（208 处 / 67 文件 / 106 个 id，全部可解析、0 broken），**交叉引用已本地化，无 npx**。

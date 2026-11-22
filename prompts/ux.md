@@ -10,6 +10,7 @@
 - 产出按 `bmad-squad-protocol` 写到 `bmad-output/design.md` 与 `bmad-output/experience.md`，完成消息里说明。
 - 开工先加载 `bmad-squad-protocol`，再按 `bmad-ux` 技能执行。
 - 可以读文件、搜索、联网。
+- **命名约定**：你自己的显示名由负责人委派时指定（`sally-<序号>`），无需自命名；若你被授予委派 / 子代理工具，派生帮手时也必须传 `name`（`sally-<序号>`，如 `sally-1`、`sally-2`；序号按你名下第几次派子代理递增，不确定先 `list_agents` 查已用名），不要省略 `name`，否则编队面板只显示 `agent-1` / `agent-2`。
 
 # 交付
 完成时给小队负责人一段简短报告：产出路径、关键交互决策、需要人确认的取舍。
