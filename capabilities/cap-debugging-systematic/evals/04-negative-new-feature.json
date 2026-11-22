@@ -1,0 +1,15 @@
+{
+  "fixture": "04-negative-new-feature",
+  "category": "negative-trigger",
+  "description": "负触发：新增「CSV 导出」功能（greenfield/new feature），这不是缺陷调试。期望本能力不被激活（交由功能实现流程）。",
+  "input": {
+    "symptom": "需求：给报表页新增导出 CSV 按钮与后端导出接口。",
+    "repro": "（非缺陷；无失败症状）",
+    "logs": ""
+  },
+  "expect": {
+    "activate": false,
+    "negative_trigger_hit": "new feature / greenfield",
+    "must_not_select_reason_contains": ["greenfield", "new feature", "新增功能", "非缺陷"]
+  }
+}

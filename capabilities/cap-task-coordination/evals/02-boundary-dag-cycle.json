@@ -1,0 +1,16 @@
+{
+  "fixture": "02-boundary-dag-cycle",
+  "kind": "dag",
+  "description": "边界：提出的依赖图成环（U1 blocked_by U3，U3→U1→U2→U3），派活前必须被 check_dag 判为有环并拒绝（exit 1），不得进入执行。",
+  "expect": {
+    "acyclic": false,
+    "exit_code": 1
+  },
+  "dag": {
+    "units": [
+      { "id": "U1", "blocked_by": ["U3"] },
+      { "id": "U2", "blocked_by": ["U1"] },
+      { "id": "U3", "blocked_by": ["U2"] }
+    ]
+  }
+}

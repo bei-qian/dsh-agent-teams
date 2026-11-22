@@ -1,0 +1,47 @@
+{
+  "fixture": "01-normal-bugfix",
+  "category": "normal",
+  "description": "典型 bug 修复：低风险、单 owner、后端 → 调试 + 测试 + 评审；无安全信号。",
+  "expect": {
+    "exit": 0,
+    "rule_ids": [],
+    "selected": [
+      "cap-debugging-systematic",
+      "cap-testing-strategy",
+      "cap-code-review"
+    ]
+  },
+  "record": {
+    "schema_version": 1,
+    "task_id": "story-012",
+    "router": "lead",
+    "signals": {
+      "task_type": "bug",
+      "risk_level": "low",
+      "size": "small",
+      "stack": [
+        "node"
+      ],
+      "required_validation": [
+        "regression-test"
+      ],
+      "complexity": "small"
+    },
+    "selected_capabilities": [
+      "cap-debugging-systematic",
+      "cap-testing-strategy",
+      "cap-code-review"
+    ],
+    "excluded": [
+      {
+        "id": "cap-security-baseline",
+        "reason": "risk_level=low；无 auth/sensitive/external exposure，未触发 risk_signals"
+      },
+      {
+        "id": "cap-task-coordination",
+        "reason": "single-owner small change；委派 ROI<1，Lead 自持更省"
+      }
+    ],
+    "reason": "回归缺陷：根因定位 + 回归测试 + 独立复核"
+  }
+}

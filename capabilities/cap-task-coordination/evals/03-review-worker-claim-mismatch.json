@@ -1,0 +1,33 @@
+{
+  "fixture": "03-review-worker-claim-mismatch",
+  "kind": "review",
+  "description": "worker 自述与 diff 不符（regression / 独立复核用例）：worker 自述『新增回归测试且通过、旧 legacyCalc 已删、构建通过』且全绿；但重推 diff 发现无测试文件变更、legacyCalc 仍在 → 独立复核必须抓出 mismatch 并 block（照抄自述会漏）。",
+  "expect": {
+    "catch_mismatch": true,
+    "self_report_all_green": true,
+    "verdict": "block"
+  },
+  "claims": [
+    {
+      "id": "C1",
+      "claim": "新增回归测试且通过",
+      "worker_self_report": "pass",
+      "rederived": "fail",
+      "evidence": "diff 无 tests/ 变更；运行该测试报 not found"
+    },
+    {
+      "id": "C2",
+      "claim": "删除旧 legacyCalc 函数",
+      "worker_self_report": "pass",
+      "rederived": "fail",
+      "evidence": "grep legacyCalc 仍命中定义与两处调用"
+    },
+    {
+      "id": "C3",
+      "claim": "构建通过",
+      "worker_self_report": "pass",
+      "rederived": "pass",
+      "evidence": "重跑 npm run build exit 0"
+    }
+  ]
+}

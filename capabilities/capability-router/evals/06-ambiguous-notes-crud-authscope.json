@@ -1,0 +1,34 @@
+{
+  "fixture": "06-ambiguous-notes-crud-authscope",
+  "category": "ambiguous",
+  "description": "含糊可两解：给 /notes 加 CRUD 接口，是否属于安全基线范围取决于数据是否按用户/租户归属或含敏感内容。可能读法：A=普通 feature（无归属/无敏感→testing+review，安全走轻量检查）；B=auth-sensitive（有对象级归属→security(对象级授权+跨租户隔离)+testing+review）。两条读法都合法（exit 0）；本 fixture 取保守读法 B 并显式记录取舍。",
+  "ambiguity": {
+    "readings": [
+      "A 普通 feature：无归属/无敏感的单机工具 → testing + code-review；security 排除并走轻量检查",
+      "B auth-sensitive：数据按用户/租户归属 → security(对象级授权+跨租户隔离) + testing + code-review"
+    ],
+    "decision": "B（保守）",
+    "tradeoff": "含糊时宁可多覆盖对象级授权/跨租户隔离的负路径，也不因『看起来像普通 CRUD』而漏掉越权；若经确认确无归属/无敏感，再降级到读法 A 并在记录中改写 reason。",
+    "maxConfidentRoutesOnAmbiguous": 0
+  },
+  "expect": { "exit": 0, "rule_ids": [], "selected": ["cap-security-baseline", "cap-testing-strategy", "cap-code-review"] },
+  "record": {
+    "schema_version": 1,
+    "task_id": "story-notes-040",
+    "router": "lead",
+    "signals": {
+      "task_type": "feature",
+      "risk_level": "medium",
+      "size": "small",
+      "stack": ["node", "postgres"],
+      "required_validation": ["security-test", "regression-test"],
+      "complexity": "small"
+    },
+    "selected_capabilities": ["cap-security-baseline", "cap-testing-strategy", "cap-code-review"],
+    "excluded": [
+      { "id": "cap-debugging-systematic", "reason": "非缺陷复现；新增 /notes 接口" },
+      { "id": "cap-task-coordination", "reason": "单 owner 小改；委派 ROI<1，Lead 自持更省" }
+    ],
+    "reason": "含糊任务（两解）：/notes 可能含对象级归属 → 保守按 auth-sensitive（读法 B）覆盖对象级授权/跨租户隔离负路径；如确认无归属再降级读法 A。取舍已记录，未『自信选错』。"
+  }
+}

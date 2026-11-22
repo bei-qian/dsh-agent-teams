@@ -35,4 +35,4 @@ description: BMad 小队 PRD 流程（John）。把已确认的想法/调研写�
 
 ## 收尾
 - 交付后提示 Lead 让 Sofia 据此切 epic/story。
-- 交付后由 Lead 跑校验器做 Gate（你按 `bmad-squad-protocol` 的固定位置写对即可，并对照本节自检清单）。
+- 交付后按 `bmad-squad-protocol` 阶段门跑校验器（你按固定位置写对即可，并对照本节自检清单）。

@@ -1,0 +1,21 @@
+{
+  "id": "02-boundary-config-and-input",
+  "category": "boundary",
+  "description": "边界：配置与输入边界的确定性断言（缺失/临界/越界/合法两端），负路径必须拒绝且不崩溃、不回显敏感。",
+  "prompt": "新增分页与上传大小配置项。请给出配置边界的安全测试：size=0、1、上限、上限+1、缺失。",
+  "expect": {
+    "activate": true,
+    "must_produce": [
+      "边界矩阵：缺失 / 临界(1 与上限) / 越界(0、上限+1) / 合法两端",
+      "越界与缺失 → 拒绝，且不回显内部敏感值",
+      "合法两端 → 接受"
+    ],
+    "must_not": ["只测合法值", "以 assertTrue 代替具体断言"]
+  },
+  "expects": {
+    "activation": true,
+    "required_controls": ["配置与输入边界", "合法两端", "越界"],
+    "required_anti_patterns": ["错误回显敏感值"]
+  },
+  "notes": "对应 auth-and-input.md §4.3；体现『可断言、含负路径』。"
+}

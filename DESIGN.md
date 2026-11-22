@@ -146,19 +146,19 @@ Multica 的 squad = **Leader + Members + Role descriptions + Squad instructions*
             config: { fetch: true, searchTimeoutMs: 60000 }
           - id: tool-todo
             name: '@deepseek-ai/dsh-tool-todo'
-          # 复用项目里已安装的 BMad 技能（需项目里跑过 bmad setup）
+          # 复用随包分发的零依赖 playbooks（customSkillDirs 指向插件内 playbooks/；能力库 capabilities/ 同随包；无需项目里跑过 bmad setup）
           - id: skill-filesystem
             name: '@deepseek-ai/dsh-skill-filesystem'
             config:
               customSkillDirs:
-                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:os').homedir(), '.dsh', 'skills')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'playbooks')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
     # …pm / po / ux / architect / dev / (tea) 同构
 ```
 
 > 具体 config 键以已安装版本为准：安装前用 `cordis.patch.yml` 与 `@deepseek-ai/dsh-tool-subagent`
-> 的 README/Config schema 核对；不要臆造字段（例如 `description` 未必是合法 config 键）。
+> 的 README/Config schema 核对；不要臆造字段。`description` 是**合法的显示元数据字段**（各预设 config 实际使用），其余字段仍以已安装版本 schema 为准。
 
 **v1 目录树**
 
@@ -247,8 +247,7 @@ Leader 的 persona 承载 Multica 的 *Operating Protocol + Roster + Instruction
    - 「测试策略 / 发布门禁」→ `delegate_tea`（若装）
 4. **委派后停止**：Leader 派活后本 turn 结束，不亲自实现、不写代码。
 5. **成员回报再评估**：子代理完成消息自动回来后再决定下一棒（继续、扩围、升级给人、或收尾）。
-6. **写入协调**：成员共享同一工作区（无 worktree 隔离），并行写需在任务上登记 `writeScopes`，避免撞车；
-   构建类工作优先串行或分目录。
+6. **写入协调**：成员共享同一工作区（无 worktree 隔离）；**默认串行推进单条关键路径，仅当子任务相互独立且 writeScopes 不相交时才并行**；并行前须在任务上登记 `writeScopes`，避免撞车。
 7. **完成判定**：交付物自检通过 + 验证证据齐全，才向人汇报「可评审」；中途进度只在内部。
 
 > 这段 persona 是 v1 的「小队指令」；v2 把「Roster/指令」改为 Host 按小队记录动态注入，persona 只留协议骨架。
@@ -264,7 +263,7 @@ Leader 的 persona 承载 Multica 的 *Operating Protocol + Roster + Instruction
 | Team 模式默认 off，按根会话开关 | 小队会话需先开「Use Agent Teams」 | v1：提示用户开启，或在**专用 squad profile** 里 override `defaultEnabled: true`（影响全 profile，慎用）；v2：`squad_run` 程序化开启 |
 | 预设行不能从选择器隐藏 | 用户可能误选成员预设单干 | 名称/描述显式标注「供小队使用」 |
 | Agent Teams 成员共享工作区、无 worktree | 并行写会互相覆盖 | Leader 分配 `writeScopes`；构建任务串行/分目录；最终 diff 由 Leader 复核 |
-| BMad 技能来源 | 需能在任意机器随插件分发 | 已采用：**把完整 BMad 技能打包进 `skills/`**（MIT，含归属），成员预设 `customSkillDirs` 指向插件内 `skills/`；完整工作流仍需目标项目 `_bmad/` + Python/uv（`bmad setup` 可生成） |
+| BMad 技能来源 | 需能在任意机器随插件分发 | 已采用：**零依赖 playbooks + capabilities 均随包**（流程 playbook 在 `playbooks/`、能力库在 `capabilities/`，作为两个 `customSkillDirs` 根随包分发），**无需目标项目 `_bmad/`、Python/uv**；完整 BMad 技能仍打包在 `skills/`（MIT，含归属）但未启用，仅备回退/参考 |
 | 提示文件注入 | persona prefix 是字符串 | 用 `!!js` + `baseUrl` 从 `prompts/*.md` 读取，安装后可迁移 |
 | KV cache | 预设组成变化会使缓存失效 | 预设保持稳定；成员/角色不频繁改 |
 | 安装 = 在 Host 进程执行插件代码 | 需 Full access / 审批 | 装前先 `plugin_manager list_*` 核对，再 `install_bundle` |

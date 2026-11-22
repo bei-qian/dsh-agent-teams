@@ -1,0 +1,17 @@
+{
+  "id": "04-negative-trigger-pure-copy",
+  "category": "negative-trigger",
+  "description": "负触发：纯文案/样式改动、无任何风险信号 → 不应激活全量安全基线（防过度激活）。",
+  "prompt": "把首页一句欢迎语的措辞改一下，涉及一个 CSS 间距微调。",
+  "expect": {
+    "activate": false,
+    "reason": "negative_triggers 命中（pure-copy-change / docs）；无 auth/sensitive-data/external-exposure/destructive/financial/production 风险信号",
+    "must_not": ["做全量 STRIDE 威胁建模", "要求供应链清单全套"]
+  },
+  "expects": {
+    "activation": false,
+    "required_controls": ["轻量检查"],
+    "required_anti_patterns": ["全量威胁建模"]
+  },
+  "notes": "对应 frontmatter negative_triggers；证明风险门控、非全量常驻。"
+}

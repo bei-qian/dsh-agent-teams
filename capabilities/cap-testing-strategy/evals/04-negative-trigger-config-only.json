@@ -1,0 +1,18 @@
+{
+  "id": "04-negative-trigger-config-only",
+  "category": "negative-trigger",
+  "description": "负触发：纯配置常量/纯文档改动、无逻辑分支 → 不应启用完整测试策略（防形式化堆测试）。",
+  "prompt": "把某个常量从 30 改成 60，顺便修一句 README 文案。要不要设计测试？",
+  "expect": {
+    "activate": false,
+    "reason": "negative_triggers 命中（config-only / docs）；无逻辑分支可测",
+    "must_produce": ["记录『无逻辑变更、无需新增测试』的取舍（若常量被逻辑引用，则加一条最小回归断言）"],
+    "must_not": ["为纯配置/文案堆一批形式化测试"]
+  },
+  "expects": {
+    "activation": false,
+    "required_controls": ["无逻辑变更"],
+    "required_anti_patterns": ["堆测试数量"]
+  },
+  "notes": "对应 frontmatter negative_triggers；体现不形式化、不堆数量。"
+}

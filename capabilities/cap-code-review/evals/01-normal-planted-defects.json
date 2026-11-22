@@ -1,0 +1,14 @@
+{
+  "fixture": "01-normal-planted-defects",
+  "category": "normal",
+  "description": "典型评审：diff 埋 3 个缺陷（删测试 / 明文密钥 / 裸异常吞错）。期望全部检出为 blocker，检出率 3/3、漏报 0。",
+  "input": { "diff": "evals/fixtures/defective.patch", "reviewer": "winston", "author": "amelia" },
+  "expect": {
+    "activate": true,
+    "detect_from": "evals/fixtures/defective.patch",
+    "expected_detected": 3,
+    "expected_blockers": 3,
+    "must_detect_rules": ["deleted-test", "secret-leak", "swallowed-exception"],
+    "max_missed": 0
+  }
+}

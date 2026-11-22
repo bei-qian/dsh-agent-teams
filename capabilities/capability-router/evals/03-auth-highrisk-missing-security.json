@@ -1,0 +1,50 @@
+{
+  "fixture": "03-auth-highrisk-missing-security",
+  "category": "regression",
+  "description": "反例（应被拒）：认证高危 + security-test 要求，却漏选 cap-security-baseline 且理由无 risk-ack → R2/R3 必须 exit≠0。",
+  "expect": {
+    "exit": 1,
+    "rule_ids": [
+      "R2-risk-gate",
+      "R3-required-validation"
+    ],
+    "selected": [
+      "cap-code-review",
+      "cap-testing-strategy"
+    ]
+  },
+  "record": {
+    "schema_version": 1,
+    "task_id": "story-030",
+    "router": "lead",
+    "signals": {
+      "task_type": "auth",
+      "risk_level": "high",
+      "size": "medium",
+      "stack": [
+        "node",
+        "postgres"
+      ],
+      "required_validation": [
+        "security-test",
+        "regression-test"
+      ],
+      "complexity": "medium"
+    },
+    "selected_capabilities": [
+      "cap-code-review",
+      "cap-testing-strategy"
+    ],
+    "excluded": [
+      {
+        "id": "cap-security-baseline",
+        "reason": "认为只是登录页样式改动，先不做威胁建模"
+      },
+      {
+        "id": "cap-debugging-systematic",
+        "reason": "服务端认证增强非缺陷复现"
+      }
+    ],
+    "reason": "认证相关改动（示例：故意遗漏 security，用于验证强制规则生效）"
+  }
+}

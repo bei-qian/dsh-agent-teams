@@ -1,0 +1,16 @@
+{
+  "fixture": "03-ambiguous-style-vs-behavior",
+  "category": "ambiguous",
+  "description": "歧义：diff 仅有命名/注释风格问题，无行为缺陷。期望不加 blocker，只给 nit/minor；结论 accept（区分风格与行为，不用 nit 充数掩盖行为审查）。",
+  "input": {
+    "diff_summary": "变量命名 p→price、补注释、等价重排；无逻辑变化、无测试改动。",
+    "reviewer": "winston",
+    "author": "amelia"
+  },
+  "expect": {
+    "activate": true,
+    "conclusion": "accept",
+    "max_severity": "minor",
+    "must_not": ["blocker", "false-block"]
+  }
+}

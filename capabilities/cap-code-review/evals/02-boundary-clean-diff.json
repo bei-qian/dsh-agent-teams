@@ -1,0 +1,13 @@
+{
+  "fixture": "02-boundary-clean-diff",
+  "category": "boundary",
+  "description": "边界：无缺陷的良性重构 diff（改名 / 加注释 / 补合法测试）。期望零 blocker、零误报（false positive = 0）。",
+  "input": { "diff": "evals/fixtures/clean.patch", "reviewer": "winston", "author": "amelia" },
+  "expect": {
+    "activate": true,
+    "detect_from": "evals/fixtures/clean.patch",
+    "expected_detected": 0,
+    "expected_blockers": 0,
+    "max_false_positives": 0
+  }
+}

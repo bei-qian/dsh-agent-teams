@@ -1,0 +1,65 @@
+{
+  "fixture": "01-normal-decompose",
+  "kind": "decompose",
+  "description": "典型多模块特性（normal）：可拆为『共享契约 → 后端 / 前端』三个单元；U2 与 U3 只依赖 U1、writeScopes 不相交 → 计划合法、DAG 无环、U2/U3 可并行（ROI 为正）。",
+  "expect": {
+    "valid": true,
+    "acyclic": true,
+    "parallel_safe": true,
+    "requires_stop": false,
+    "parallel_pairs": [["U2", "U3"]]
+  },
+  "plan": {
+    "plan_version": 1,
+    "goal": "为结算新增优惠券校验与折后价展示（共享契约 + 后端 API + 前端展示）",
+    "units": [
+      {
+        "id": "U1",
+        "scope": "共享层：定义 DiscountResult / CheckoutResponse 类型与结算接口契约（不改业务实现）",
+        "interface": {
+          "inputs": ["couponCode", "cart"],
+          "outputs": ["DiscountResult", "CheckoutResponse"],
+          "touched_files": ["src/shared/types.ts"]
+        },
+        "acceptance_criteria": [
+          { "id": "AC1", "check": "类型导出且全仓类型检查通过", "verify": "npm run typecheck" }
+        ],
+        "writeScopes": ["src/shared/types.ts"],
+        "blocked_by": [],
+        "role": "dev"
+      },
+      {
+        "id": "U2",
+        "scope": "后端：结算接口接入优惠券校验并返回折后价",
+        "interface": {
+          "inputs": ["POST /checkout"],
+          "outputs": ["CheckoutResponse"],
+          "touched_files": ["src/api/checkout.ts"]
+        },
+        "acceptance_criteria": [
+          { "id": "AC1", "check": "有效券返回折后价、过期券拒绝", "verify": "npm test -- checkout" },
+          { "id": "AC2", "check": "非法券返回 400 且不回显内部错误", "verify": "npm test -- checkout" }
+        ],
+        "writeScopes": ["src/api/checkout.ts"],
+        "blocked_by": ["U1"],
+        "role": "dev"
+      },
+      {
+        "id": "U3",
+        "scope": "前端：结算页展示优惠明细（券名 + 折扣金额）",
+        "interface": {
+          "inputs": ["CheckoutResponse"],
+          "outputs": ["折扣行 UI"],
+          "touched_files": ["web/checkout/Summary.tsx"]
+        },
+        "acceptance_criteria": [
+          { "id": "AC1", "check": "有券时展示折扣金额与券名", "verify": "npm test -- Summary" },
+          { "id": "AC2", "check": "无券时隐藏折扣行", "verify": "npm test -- Summary" }
+        ],
+        "writeScopes": ["web/checkout/Summary.tsx"],
+        "blocked_by": ["U1"],
+        "role": "dev"
+      }
+    ]
+  }
+}

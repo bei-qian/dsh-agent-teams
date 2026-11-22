@@ -1,0 +1,45 @@
+{
+  "fixture": "05-auth-highrisk-with-security",
+  "category": "regression",
+  "description": "正向对照：认证高危 + security-test，正确选中 cap-security-baseline → exit 0（与 03 对照证明强制规则）。",
+  "expect": {
+    "exit": 0,
+    "rule_ids": [],
+    "selected": [
+      "cap-security-baseline",
+      "cap-code-review",
+      "cap-testing-strategy"
+    ]
+  },
+  "record": {
+    "schema_version": 1,
+    "task_id": "story-031",
+    "router": "lead",
+    "signals": {
+      "task_type": "auth",
+      "risk_level": "high",
+      "size": "medium",
+      "stack": [
+        "node",
+        "postgres"
+      ],
+      "required_validation": [
+        "security-test",
+        "regression-test"
+      ],
+      "complexity": "medium"
+    },
+    "selected_capabilities": [
+      "cap-security-baseline",
+      "cap-code-review",
+      "cap-testing-strategy"
+    ],
+    "excluded": [
+      {
+        "id": "cap-debugging-systematic",
+        "reason": "服务端认证增强非缺陷复现"
+      }
+    ],
+    "reason": "涉认证与敏感数据：威胁建模 + 安全测试 + 独立评审 + 回归"
+  }
+}

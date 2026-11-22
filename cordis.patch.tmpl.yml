@@ -141,6 +141,7 @@
               includeDefaultRoots: false
               customSkillDirs:
                 - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'playbooks')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'capabilities')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
           - id: compaction
@@ -202,6 +203,7 @@
               includeDefaultRoots: false
               customSkillDirs:
                 - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'playbooks')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'capabilities')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
           - id: compaction
@@ -263,6 +265,7 @@
               includeDefaultRoots: false
               customSkillDirs:
                 - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'playbooks')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'capabilities')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
           - id: compaction
@@ -319,6 +322,7 @@
               includeDefaultRoots: false
               customSkillDirs:
                 - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'playbooks')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'capabilities')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
           - id: compaction
@@ -375,6 +379,7 @@
               includeDefaultRoots: false
               customSkillDirs:
                 - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'playbooks')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'capabilities')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
           - id: compaction
@@ -436,6 +441,7 @@
               includeDefaultRoots: false
               customSkillDirs:
                 - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'playbooks')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'capabilities')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
           - id: compaction
@@ -519,6 +525,7 @@
               includeDefaultRoots: false
               customSkillDirs:
                 - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'playbooks')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'capabilities')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
           - id: compaction
@@ -600,6 +607,7 @@
               includeDefaultRoots: false
               customSkillDirs:
                 - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'playbooks')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'capabilities')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
           - id: compaction

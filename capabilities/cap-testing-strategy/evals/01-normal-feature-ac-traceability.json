@@ -1,0 +1,22 @@
+{
+  "id": "01-normal-feature-ac-traceability",
+  "category": "normal",
+  "description": "典型：为一个含多条 AC 的功能写测试计划。应产出完整 AC→测试追溯表、层级选择、负路径与实跑证据。",
+  "prompt": "为『购物车结算』story 写测试：AC1 满 100 减 10；AC2 库存不足下单失败；AC3 跨用户不可见他人购物车。请给测试计划。",
+  "expect": {
+    "activate": true,
+    "must_produce": [
+      "AC→测试追溯表（每条 AC ≥1 测试 + 层级）",
+      "AC1 用 unit（计价逻辑），AC2/AC3 用 integration（库存/权限接缝）",
+      "负路径：库存不足、跨用户越权",
+      "测试命令 + 实跑结果留痕"
+    ],
+    "must_not": ["只列测试数量不映射 AC", "全部塞 e2e"]
+  },
+  "expects": {
+    "activation": true,
+    "required_controls": ["AC→测试追溯表", "负路径", "测试金字塔"],
+    "required_anti_patterns": ["只测 happy path", "堆测试数量"]
+  },
+  "notes": "覆盖 §7.1⑥『AC→测试覆盖表完整』。"
+}

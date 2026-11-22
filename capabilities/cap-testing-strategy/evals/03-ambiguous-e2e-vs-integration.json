@@ -1,0 +1,18 @@
+{
+  "id": "03-ambiguous-e2e-vs-integration",
+  "category": "ambiguous",
+  "description": "含糊：某流程既可用 integration 也可用 e2e 覆盖，需按『是否真的跨进程/外部系统、是否 must 端到端才有意义』判断并记录取舍。",
+  "prompt": "『创建订单→扣库存→发确认邮件』用 e2e 还是 integration 测？拿不准。",
+  "expect": {
+    "activate": true,
+    "decision_hint": "订单+库存是同进程/同库接缝 → integration；邮件是外部系统 → 用契约/桩断言『发出了正确请求』而非真发 e2e；仅『必须端到端才算数』的关键旅程才上 e2e，并控制在少量。",
+    "must_produce": ["层级取舍理由（跨进程/外部系统判据）", "避免把所有东西塞 e2e 的说明"],
+    "must_not": ["不判断就全上 e2e 或全上 unit"]
+  },
+  "expects": {
+    "activation": true,
+    "required_controls": ["集成", "e2e", "契约测试"],
+    "required_anti_patterns": ["把所有东西塞 e2e", "所有东西都 unit"]
+  },
+  "notes": "含糊用例：给出合理层级选择并记录取舍。"
+}
