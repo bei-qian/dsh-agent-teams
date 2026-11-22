@@ -1,8 +1,14 @@
 # Changelog
 
-## Unreleased
+## 0.1.1 — 2026-11-22
 
 - 新增「从 GitHub 下载安装到 DSH」说明：`SETUP.md` 给出面向外部用户的完整流程（前置条件；`git clone` / ZIP 获取；Web「选择本地目录」与 `plugin_manager` 的 `install_bundle` 两种安装方式；成功标志；首次使用；更新；卸载；常见问题），并明确 DSH 只支持「本地目录」安装、无 git URL 直装、link 安装不可删移目录；同时把原「开发者改模板后重建（`build_patch.py`）」单列为开发者章节，与外部用户安装区分；`README.md` 增加安装入口指向该章节。
+
+- 新增零依赖 playbook `playbooks/modern-web-guidance/`：把 Modern Web Guidance 作为**纯 markdown 前端最佳实践参照**（210 篇已展开的干净 guides，17 个分类，`guides/<category>/<slug>.md`）随包携带，做 HTML/CSS/客户端 JS 时按分类查阅；**不引入 Node/Python 运行时、不长期 npx**（如 macro 展开、源仓库、构建均在获取阶段完成，产物仅为本地 .md）。由 `playbooks/bmad-build/SKILL.md` 与 `prompts/dev.md` 各加一句「前端实现前先按分类查 modern-web-guidance 技能」接入。`scripts/verify.py` 新增对应正向校验（SKILL.md 存在、`guides/` 非空、零依赖）并同步期望版本到 `0.1.1`。正文中上游遗留的 `npx -y modern-web-guidance@latest retrieve "ID"` 交叉引用已确定性本地化为 `(local: \`guides/<category>/<id>.md\`)` 本地文件指针（208 处 / 67 文件 / 106 个 id，全部可解析、0 broken），**交叉引用已本地化，无 npx**。
+
+- 升级 `playbooks/bmad-ux/`（Sally 设计流程）：`bmad-ux/SKILL.md` 引入 design.md 9 段式骨架 + token 契约，experience.md/design.md 内嵌五态 / 无障碍 / 反 AI 味硬 gate；并按「混合」vendoring 设计参照库 `playbooks/bmad-ux/reference/`（open-design 品牌无关 craft 11 篇 + design-systems `_schema` + wireframe/prototype 蓝图；顶层 Apache-2.0、craft 正文 MIT 归属已保留）。
+
+- 升级 `playbooks/bmad-build/` 后端开发规范：vendoring `playbooks/bmad-build/reference/`（`iluwatar/java-design-patterns` 精选 43 篇后端模式 README，按 架构/并发/数据访问/韧性/集成/消息/GoF 分类，MIT，快照 commit `4cabb204f`）；`bmad-build/SKILL.md` 新增「后端设计规范（取自 java-design-patterns 精选）」（原则层 / 何时该用·何时别用决策表 43 条 / 反模式警戒 / Java 示例栈仅示例非强制 / 与架构层边界）；`playbooks/bmad-architecture/SKILL.md` 新增「模式选型」交叉引用（选型归架构、落地归开发、只维护一处）。
 
 ## 0.1.0 — 2026-11-21
 

@@ -3,7 +3,7 @@
 把 DeepSeek Harness 内置的 **Agent Teams** 机制，升级成类似 Multica **Squads** 的「小队」产品概念，
 并用 **BMad Method** 的角色（Mary / John / Sofia / Sally / Winston / Amelia / Murat）作为默认成员编制。
 
-![version](https://img.shields.io/badge/version-0.1.0-blue) ![license](https://img.shields.io/badge/license-MIT-green) ![type](https://img.shields.io/badge/DSH-bundle-7c3aed)
+![version](https://img.shields.io/badge/version-0.1.1-blue) ![license](https://img.shields.io/badge/license-MIT-green) ![type](https://img.shields.io/badge/DSH-bundle-7c3aed)
 
 > 状态：**v1 已安装验证**（8 个预设 active，含内置 BMad 技能）。设计见 [DESIGN.md](./DESIGN.md)，安装与用法见 [SETUP.md](./SETUP.md)。
 
@@ -39,14 +39,14 @@ DSH 已经自带 Agent Teams：
 
 - [SETUP.md](./SETUP.md) — 安装与使用；外部用户请看 [从 GitHub 安装](./SETUP.md#从-github-下载安装到-dsh)（含如何选预设、开 Team、跑一支小队）。
 - [DESIGN.md](./DESIGN.md) — 概念映射、架构（v1 配置型 / v2 Host+UI）、默认 BMad 编制、运行协议、约束与里程碑。
-- [ROADMAP.md](./ROADMAP.md) — 未来两条大改法：零依赖自包含 playbook；v2 小队 Web 面板。
+- [ROADMAP.md](./ROADMAP.md) — 未来若干大改法：零依赖自包含 playbook（已完成）；v2 小队 Web 面板；小队评测体系（待调研）。
 - [ATTRIBUTION.md](./ATTRIBUTION.md) — 内置 BMad 技能的来源与许可说明。
 - [CHANGELOG.md](./CHANGELOG.md) — 版本记录。
 - [LICENSE](./LICENSE) — MIT（本插件）；`skills/` 内的 BMad 技能版权归 BMad Code, LLC（MIT）。
 
 ## 版本
 
-- 包版本：**0.1.0**（见 `package.json`）。安装后可在 DSH「Plugins」里看到 `dsh-agent-teams` 及其版本。
+- 包版本：**0.1.1**（见 `package.json`）。安装后可在 DSH「Plugins」里看到 `dsh-agent-teams` 及其版本。
 - 形态：**配置型 bundle + 轻量客户端半边**：新增 8 个 agent 预设 + 零依赖 `playbooks/`（默认启用）+ 完整 BMad 技能（`skills/`，保留未启用）；并带一个浏览器半边（`client.js`），把 7 个成员预设从预设选择器里过滤掉、只留「调度」一个（Host 端 8 个预设仍全部注册，供 `delegate_*` 委派）。Host 半边（`index.js`）会让内置 Agent Teams 跟着预设走、但不覆盖你的手动选择：**进入**团队预设（默认「调度」）时**自动打开**，**离开**团队预设回到非团队预设时**还原进入前的非团队选择**（原先关→关、原先开→开），**非团队预设之间切换则保持当前状态不动**，无需每次手动勾「启用 agent 协作」。团队预设列表可配置（`TEAM_PRESETS` / `config.teamPresets`），且在插件启用时只对当前已打开的**空白**会话补开团队预设（不擅自改动非团队会话的手动状态）。
 - 版本策略：维持在 **0.1.x** 迭代，重大改动再升大版本（按维护者约定）。
 

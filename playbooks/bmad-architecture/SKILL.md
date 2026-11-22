@@ -17,6 +17,11 @@ description: BMad 小队架构流程（Winston）。产出 architecture.md（架
 3. 覆盖边界情况、失败模式、测试与验收的架构含义。
 4. 落盘 `bmad-output/architecture.md`。
 
+## 模式选型（交叉引用）
+后端设计模式**怎么选、要不要上**属架构决策——**归本技能（Winston）**：回答是否/为何选某个模式、边界与取舍；**落地实现归 Amelia**（`bmad-build`）。决策表与实现规则**只在 `bmad-build` 维护一处**，本技能**不复制正文**，只给入口：
+- 选型与硬规则：`bmad-build/SKILL.md` 的〈后端设计规范（取自 java-design-patterns 精选）〉节及其「问题→模式→参照路径」决策表。
+- 按需深读：`bmad-build/reference/`——先用一页摘要索引 `reference/README.md` 速查，再读 `<类别>/<pattern>.md`。
+
 ## architecture.md 模板（内联）
 ```markdown
 # Architecture · <系统/功能>

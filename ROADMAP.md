@@ -1,7 +1,7 @@
 # Roadmap / 待办
 
-> 本文件跟踪两处较大改法的进度。版本策略：维持在 **0.1.x** 迭代，重大改动再升大版本。
-> 最近更新：2026-11-21（R1 已完成归档，仅剩 R2）。
+> 本文件跟踪三处较大改法的进度。版本策略：维持在 **0.1.x** 迭代，重大改动再升大版本。
+> 最近更新：2026-11-22（R1 已完成归档；R2 仅规划；新增 R3 候选，待调研）。
 
 ## 状态总览
 
@@ -9,6 +9,7 @@
 |---|---|---|
 | R1 | 零依赖自包含 playbook（去掉 `_bmad` / Python / `uv` 依赖） | ✅ 已完成（随 0.1.0 落地并安装验证） |
 | R2 | v2 小队 Web 面板（Multica 完整形态） | ⬜ 未开始（仅规划，无实现） |
+| R3 | 小队评测（Eval）体系 | ⬜ 待调研（仅候选，未实现） |
 
 ---
 
@@ -55,3 +56,31 @@ list_templates…）并调用兄弟技能，所以完整流程需要目标项目
 - 按小队记录动态注入 Roster / 指令（`ctx.systemPrompt.section()` / `agent.inject()`）。
 
 **代价**：需要 Host 代码 + 客户端 UI，工程量大、需大量 API 核对；配置型 v1 仍是默认。
+
+---
+
+## ⬜ R3 · 小队评测（Eval）体系 · 待调研
+
+> 状态：**仅候选，仓库内无任何实现**。以下均为待调研的规划，不是已定的设计；未验证处一律「待调研」，不替使用者拍板。
+
+**问题**：本小队很多流程蒸馏自 BMad，后续还会持续加规范、再蒸馏；没有评测就没有回归护栏，每次「优化」都是盲改。要回答的核心不是「产物文笔好不好」，而是「这套多 agent 编排（路由 + 阶段门 + 协议纪律）有没有稳定兑现价值」。
+
+**思路（评什么，按成本从低到高分层）**：
+- **L0 协议不变量**（确定性、0 模型花费）：`bmad-output/` 结构与命名、`index.md` 票据真相一致、`scripts/squad_validate.mjs` 退出码、「Lead 不亲自实现」、单阶段对应单 artifact。
+- **L1 路由**：意图→正确首位队员+阶段；模糊→该提问；超范围→该拒绝。可把 TEA 的 `bmad-tea-routing` 意图集范式改造成「7 队员 + ask/decline」的 squad 路由套件，并配硬 0 的 controls（`maxConfidentRoutesOnAmbiguous/Unservable=0`、`maxUnroutedClearIntents=0`）。
+- **L2 阶段门**：validator 未过前是否拒绝推进、是否跳阶段（看调用序列）。
+- **L3 端到端场景**（少量 5–8 个）：模糊需求→可评审 artifact。
+- **L4 鲁棒/对抗**：信息缺失该问不该编、冲突指令、无 AGENTS.md 受管 block、validator-fail 自恢复。
+
+**复用既有范式**：照搬 `bmad-method-test-architecture-enterprise/test/evals` 里已沉淀的做法——ground-truth 与 prompt 分离、controls 关闭 recall 漏洞、repetitions≥2 且单列 unstable、用 mutation 证明 grader 能挂、ciTier 分层（确定性层每 PR、真模型层 nightly）。
+
+**范围与顺序**：
+- 先**只评当前这支 8 人小队，并作为标准模板**；评测内核（引擎/grader/契约范式，可复用）与小队专属数据（意图集/fixtures/thresholds，不可复用）从第一天就分两层，便于日后迁移到其它 BMad 仓库。
+- **关键实验**：加 baseline 消融——同一批任务分别给「单体强 agent」「原生 BMad skills 不套小队壳」「本小队」，若小队打不过基线，说明架构没在挣饭钱。
+- **建议顺序**：A) L0+L1 确定性 CI 层（最高 ROI）→ B) 5–8 个 L3 + rubric（nightly）→ C) L4 对抗 + baseline 消融；暂缓评「文风/审美」。
+
+**待调研 / 未定**（务必当作待调研，勿视为已定）：成功口径取「宽（过 validator 即可评审）」还是「严（人基本不返工）」；stub vs 真模型的边界；L3 素材来源（可用 `bmad-output/research/` 里已有的 open-design brief 作真实种子）；holdout 怎么留防过拟合。
+
+**代价与收益**：
+- **代价**：fixture 维护、真模型跑有成本、评分器可能抖动、有被过拟合/Goodhart 的风险。
+- **收益**：给「蒸馏 + 加规范」的持续演进装上可回归的质量护栏，并用 baseline 量化小队架构本身的价值。

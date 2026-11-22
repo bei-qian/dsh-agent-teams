@@ -95,6 +95,20 @@ def main() -> None:
         check("uv run" not in pc_text and "_bmad" not in pc_text,
               "playbooks/bmad-project-context/SKILL.md must stay zero-dependency "
               "(no 'uv run' or '_bmad')")
+    # 4c. modern-web-guidance playbook (frontend best-practice reference) present,
+    #     guides/ non-empty, and stays a zero-dependency markdown-only skill.
+    mwg = playbooks / "modern-web-guidance"
+    check((mwg / "SKILL.md").exists(),
+          "missing playbooks/modern-web-guidance/SKILL.md")
+    mwg_guides = mwg / "guides"
+    mwg_guide_files = [p for p in mwg_guides.rglob("*.md")] if mwg_guides.is_dir() else []
+    check(len(mwg_guide_files) > 0,
+          "playbooks/modern-web-guidance/guides is empty (expected markdown guides)")
+    if (mwg / "SKILL.md").exists():
+        mwg_text = (mwg / "SKILL.md").read_text(encoding="utf-8")
+        check("uv run" not in mwg_text and "_bmad" not in mwg_text,
+              "playbooks/modern-web-guidance/SKILL.md must stay zero-dependency "
+              "(no 'uv run' or '_bmad')")
     skills = ROOT / "skills"
     skill_dirs = [p for p in skills.iterdir() if p.is_dir() and (p / "SKILL.md").exists()] if skills.is_dir() else []
     check(len(skill_dirs) >= 38, f"expected >=38 bundled skills, found {len(skill_dirs)}")
@@ -114,7 +128,7 @@ def main() -> None:
                 errors.append(f"locale/{loc}.json invalid JSON: {e}")
     check((ROOT / "icon.svg").exists(), "missing icon.svg")
     pkg = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))
-    check(pkg.get("version") == "0.1.0", f"unexpected version {pkg.get('version')} (expected 0.1.0)")
+    check(pkg.get("version") == "0.1.1", f"unexpected version {pkg.get('version')} (expected 0.1.1)")
     check(bool(pkg.get("dsh", {}).get("bundle", {}).get("patch")), "package.json missing dsh.bundle.patch")
 
     # 7. per-row plugin list identity: each preset mounts its own thin module + locale so
