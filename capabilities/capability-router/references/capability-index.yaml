@@ -1,0 +1,65 @@
+# capability-index.yaml — 能力元数据索引（capability-router 的派生视图）
+#
+# 只登记「元数据」，不放大段正文（满足渐进披露）。一行/能力。
+# 单一真源：字段应各 cap-*/SKILL.md 的 frontmatter(metadata) 对齐；Phase 6 可由脚本从
+# 各 SKILL.md 汇总生成，避免双维护。此处先手写登记 6 个 P0（P1/P2 暂不登记，控 token）。
+#
+# 字段：id(kebab) / domain / priority / activation / triggers / negative_triggers /
+#       depends_on / cost_tier / owner （security 为 risk-gated，附 risk_signals）
+schema_version: 1
+capabilities:
+  - id: capability-router
+    domain: meta
+    priority: P0
+    activation: manual
+    triggers: ["start work", intake, "plan the task", route, 选能力, 派活, 任务分解]
+    negative_triggers: [pure-q&a, docs-typo, single-file-rename]
+    depends_on: []
+    cost_tier: low
+    owner: lead
+  - id: cap-task-coordination
+    domain: task-decomposition-agent-coordination
+    priority: P0
+    activation: auto
+    triggers: [multi-module, parallel, "multiple agents", decompose, handoff, 委派, 拆分]
+    negative_triggers: [single-owner-small-change]
+    depends_on: []
+    cost_tier: medium
+    owner: lead
+  - id: cap-debugging-systematic
+    domain: systematic-debugging
+    priority: P0
+    activation: auto
+    triggers: [bug, "failing test", regression, "stack trace", "root cause", 报错, 回归]
+    negative_triggers: ["new feature", greenfield, docs, 新增功能]
+    depends_on: []
+    cost_tier: low
+    owner: dev
+  - id: cap-code-review
+    domain: code-review
+    priority: P0
+    activation: auto
+    triggers: [review, "before merge", diff, "independent verification", 审查, 复核]
+    negative_triggers: [author-is-only-actor, docs-typo]
+    depends_on: [cap-debugging-systematic]
+    cost_tier: medium
+    owner: dev
+  - id: cap-security-baseline
+    domain: security-engineering
+    priority: P0
+    activation: risk-gated
+    risk_signals: [auth, sensitive-data, external-exposure, destructive, financial, production]
+    triggers: [auth, login, token, secret, permission, "input validation", 供应链, dependency]
+    negative_triggers: [pure-copy-change, docs]
+    depends_on: []
+    cost_tier: high
+    owner: architect
+  - id: cap-testing-strategy
+    domain: testing-strategy
+    priority: P0
+    activation: auto
+    triggers: [test, "write tests", coverage, "bad path", boundary, flake, regression-guard]
+    negative_triggers: [config-only, docs]
+    depends_on: []
+    cost_tier: medium
+    owner: tea

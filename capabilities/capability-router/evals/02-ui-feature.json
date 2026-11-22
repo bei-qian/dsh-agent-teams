@@ -1,0 +1,49 @@
+{
+  "fixture": "02-ui-feature",
+  "category": "boundary",
+  "description": "UI 特性：前端改动 + a11y 要求；P1 cap-frontend-ux 尚未登记（A2），回退 bmad-ux 兜底；选测试 + 评审。",
+  "expect": {
+    "exit": 0,
+    "rule_ids": [],
+    "selected": [
+      "cap-testing-strategy",
+      "cap-code-review"
+    ]
+  },
+  "record": {
+    "schema_version": 1,
+    "task_id": "story-020",
+    "router": "lead",
+    "signals": {
+      "task_type": "ui",
+      "risk_level": "low",
+      "size": "medium",
+      "stack": [
+        "react"
+      ],
+      "required_validation": [
+        "a11y-check"
+      ],
+      "complexity": "medium"
+    },
+    "selected_capabilities": [
+      "cap-testing-strategy",
+      "cap-code-review"
+    ],
+    "excluded": [
+      {
+        "id": "cap-security-baseline",
+        "reason": "无 auth/sensitive/external；纯 UI 展示，未触发 risk_signals"
+      },
+      {
+        "id": "cap-debugging-systematic",
+        "reason": "非缺陷复现；新界面特性"
+      },
+      {
+        "id": "cap-task-coordination",
+        "reason": "单 owner；无并行需求，ROI<1"
+      }
+    ],
+    "reason": "UI 特性：a11y 由 testing-strategy + bmad-ux 兜底（cap-frontend-ux 属 P1 未登记）；前端测试 + 评审"
+  }
+}

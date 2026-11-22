@@ -1,0 +1,15 @@
+{
+  "fixture": "04-negative-docs-typo",
+  "category": "negative-trigger",
+  "description": "负触发：纯文档 typo（README 文案改字），无代码 diff。期望不触发完整独立评审（轻量处理/略过）。",
+  "input": {
+    "diff_summary": "docs/README.md 错别字修正，无代码变更、无测试变更。",
+    "reviewer": "winston",
+    "author": "amelia"
+  },
+  "expect": {
+    "activate": false,
+    "negative_trigger_hit": "docs-typo",
+    "must_not_require": "full-independent-review"
+  }
+}

@@ -7,12 +7,19 @@ Checks:
   - the leader's 7 delegate tools point at existing member presets
   - the bundled skills/ is kept on disk, not wired (the enable path is playbooks/)
   - the bundled skills/ actually contains the BMad skills
+  - the 6 P0 capability modules exist under capabilities/, each SKILL.md has a
+    complete frontmatter (name==dir/kebab, description, whenToUse, metadata.domain,
+    metadata.priority), and every module's evals cover the 5 categories
+  - every capabilities/*/scripts/run_evals.mjs runs deterministically (exit 0) and
+    the capability-router's validate_selection passes each fixture's expect.exit
+    (so CI running verify.py covers all 6 modules' deterministic evals)
   - display metadata (locale en/zh, icon, version, bundle patch) is present
 
 Exit 0 = OK, 1 = problems. Runs in CI via .github/workflows/verify.yml.
 """
 import json
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -26,12 +33,88 @@ EXPECTED_PRESETS = {
 REQUIRED_SKILLS = ["bmad", "bmad-agent-analyst", "bmad-agent-pm", "bmad-agent-dev",
                    "bmad-agent-architect", "bmad-facilitate", "bmad-build", "bmad-tea"]
 
+# The 6 P0 capability modules that must all be present under capabilities/ (ADR-A1).
+REQUIRED_CAPABILITIES = [
+    "capability-router",
+    "cap-task-coordination",
+    "cap-debugging-systematic",
+    "cap-code-review",
+    "cap-security-baseline",
+    "cap-testing-strategy",
+]
+# Modules that must ship a deterministic run_evals.mjs (router uses validate_selection).
+REQUIRED_RUN_EVAL_MODULES = {
+    "cap-debugging-systematic", "cap-code-review", "cap-task-coordination",
+    "cap-security-baseline", "cap-testing-strategy",
+}
+# The 5 fixture categories every eval-bearing module must cover (ARCH §7.2).
+REQUIRED_EVAL_CATEGORIES = ["normal", "boundary", "ambiguous", "negative-trigger", "regression"]
+# Fixture filename/kind token -> canonical category. Most modules tag fixtures with an
+# explicit `category` field; cap-task-coordination instead encodes the category via its
+# filename token + `kind` (see its evals/README.md). Map both to one canonical set so the
+# coverage gate enforces all five categories uniformly without editing module fixtures.
+CATEGORY_ALIASES = {
+    "normal": "normal",
+    "boundary": "boundary",
+    "ambiguous": "ambiguous",
+    "negative": "negative-trigger",
+    "negative-trigger": "negative-trigger",
+    "regression": "regression",
+    "review": "regression",  # cap-task-coordination kind "review" is its regression case
+}
+
 errors: list[str] = []
 
 
 def check(cond: bool, msg: str) -> None:
     if not cond:
         errors.append(msg)
+
+
+def frontmatter_text(skill_md: Path):
+    """Return the leading YAML frontmatter body (between the --- fences), or None."""
+    try:
+        text = skill_md.read_text(encoding="utf-8")
+    except Exception:  # noqa: BLE001
+        return None
+    if not text.startswith("---"):
+        return None
+    end = text.find("\n---", 3)
+    if end == -1:
+        return None
+    return text[3:end]
+
+
+def frontmatter_field(fm: str, key: str):
+    """Return a scalar top-level `key: value` from the frontmatter, or None."""
+    m = re.search(rf"^{re.escape(key)}:\s*(.+)$", fm, re.M)
+    return m.group(1).strip().strip("\"'") if m else None
+
+
+def metadata_fields(fm: str) -> dict:
+    """Return the nested `metadata:` mapping (only scalar values) from the frontmatter."""
+    out: dict[str, str] = {}
+    in_meta = False
+    for line in fm.splitlines():
+        if re.match(r"^metadata:\s*$", line):
+            in_meta = True
+            continue
+        if not in_meta:
+            continue
+        if line.strip() == "":
+            continue
+        if len(line) - len(line.lstrip()) == 0:
+            break  # dedented out of the metadata block
+        m = re.match(r"^\s+([A-Za-z_][\w-]*):\s*(.*)$", line)
+        if m:
+            out[m.group(1)] = m.group(2).strip().strip("\"'")
+    return out
+
+
+def frontmatter_name(skill_md: Path):
+    """Return the `name:` value from a SKILL.md's leading YAML frontmatter, or None."""
+    fm = frontmatter_text(skill_md)
+    return frontmatter_field(fm, "name") if fm is not None else None
 
 
 def main() -> None:
@@ -109,6 +192,130 @@ def main() -> None:
         check("uv run" not in mwg_text and "_bmad" not in mwg_text,
               "playbooks/modern-web-guidance/SKILL.md must stay zero-dependency "
               "(no 'uv run' or '_bmad')")
+    # 4d. independent capabilities/ second skill root (ADR-A1 option B, Gate 2 decision):
+    #     every preset also wires <pkg>/capabilities; each capabilities/*/SKILL.md has a
+    #     frontmatter name == its dir name and kebab. The playbooks assertions above stay
+    #     unchanged (capabilities is additive, not a replacement).
+    n_capability_dirs = patch.count("'capabilities')")
+    check(n_capability_dirs == 8,
+          f"expected 8 skill dirs pointing at capabilities, found {n_capability_dirs}")
+    capabilities = ROOT / "capabilities"
+    check(capabilities.is_dir(), "missing capabilities/ root directory")
+    cap_skills = [p for p in capabilities.iterdir()
+                  if p.is_dir() and (p / "SKILL.md").exists()] if capabilities.is_dir() else []
+    cap_names = {p.name for p in cap_skills}
+    #     6 P0 capability directories must all exist (named set, >=6 present).
+    for need in REQUIRED_CAPABILITIES:
+        check(need in cap_names, f"missing P0 capability module: capabilities/{need}/SKILL.md")
+    check(len(cap_skills) >= 6, f"expected >=6 capability skills (6 P0), found {len(cap_skills)}")
+    #     each capability SKILL.md frontmatter must be complete: name == dir + kebab,
+    #     description non-empty, whenToUse present, metadata.domain & metadata.priority present.
+    for cdir in cap_skills:
+        fm = frontmatter_text(cdir / "SKILL.md")
+        nm = frontmatter_field(fm, "name") if fm is not None else None
+        check(nm is not None, f"capabilities/{cdir.name}/SKILL.md missing frontmatter name")
+        check(nm == cdir.name,
+              f"capabilities/{cdir.name}/SKILL.md frontmatter name {nm!r} != dir name {cdir.name!r}")
+        check(bool(nm) and re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", nm or "") is not None,
+              f"capabilities/{cdir.name}/SKILL.md name {nm!r} is not kebab-case")
+        desc = frontmatter_field(fm, "description") if fm is not None else None
+        check(bool(desc and desc.strip()),
+              f"capabilities/{cdir.name}/SKILL.md frontmatter missing/empty description "
+              "(skill would be untriggerable in the catalog)")
+        when = frontmatter_field(fm, "whenToUse") if fm is not None else None
+        check(bool(when and when.strip()),
+              f"capabilities/{cdir.name}/SKILL.md frontmatter missing/empty whenToUse")
+        meta = metadata_fields(fm) if fm is not None else {}
+        check(bool((meta.get("domain") or "").strip()),
+              f"capabilities/{cdir.name}/SKILL.md frontmatter missing metadata.domain")
+        check(bool((meta.get("priority") or "").strip()),
+              f"capabilities/{cdir.name}/SKILL.md frontmatter missing metadata.priority")
+
+    # 4e. deterministic module evals: run every capabilities/*/scripts/run_evals.mjs so a
+    #     green verify.py in CI covers ALL capability modules (not just the router). Zero
+    #     external deps: python subprocess -> node. Non-zero exit fails verify with reason.
+    check(shutil.which("node") is not None,
+          "node is required to run capability module evals (deterministic layer)")
+    ran_eval_modules: list[str] = []
+    if capabilities.is_dir() and shutil.which("node"):
+        eval_modules = sorted(p.name for p in capabilities.iterdir()
+                              if p.is_dir() and (p / "scripts" / "run_evals.mjs").exists())
+        missing_runner = sorted(REQUIRED_RUN_EVAL_MODULES - set(eval_modules))
+        check(not missing_runner,
+              f"missing scripts/run_evals.mjs in capability modules: {missing_runner}")
+        for mod in eval_modules:
+            script = capabilities / mod / "scripts" / "run_evals.mjs"
+            rv = subprocess.run(["node", str(script)], cwd=str(capabilities / mod),
+                                capture_output=True, text=True)
+            if rv.returncode == 0:
+                ran_eval_modules.append(mod)
+                print(f"  [eval-ok] {mod}/run_evals.mjs (exit 0)")
+            else:
+                check(False, f"{mod}/scripts/run_evals.mjs failed exit {rv.returncode}: "
+                             + (rv.stdout or rv.stderr).strip()[-400:])
+
+    # 4f. capability-router reference module present (SKILL/references/scripts/SOURCE + evals)
+    router = capabilities / "capability-router"
+    for rel in ("SKILL.md", "references/capability-index.yaml", "references/routing-rules.md",
+                "scripts/validate_selection.mjs", "SOURCE.md"):
+        check((router / rel).exists(), f"missing capabilities/capability-router/{rel}")
+    #     zero-dependency validator: run it on every eval fixture; exit must match expect.exit
+    vsel = router / "scripts" / "validate_selection.mjs"
+    router_evals_dir = router / "evals"
+    router_fixture_count = 0
+    if vsel.exists() and shutil.which("node"):
+        fixtures = sorted(router_evals_dir.glob("*.json")) if router_evals_dir.is_dir() else []
+        router_fixture_count = len(fixtures)
+        check(len(fixtures) >= 5,
+              f"expected >=5 capability-router eval fixtures, found {len(fixtures)}")
+        for fx in fixtures:
+            try:
+                exp = json.loads(fx.read_text(encoding="utf-8")).get("expect", {}).get("exit")
+            except Exception:  # noqa: BLE001
+                exp = None
+            rv = subprocess.run(["node", str(vsel), str(fx)], capture_output=True, text=True)
+            if isinstance(exp, int):
+                check((rv.returncode == 0) == (exp == 0),
+                      f"validate_selection on {fx.name} exit {rv.returncode} != expect.exit {exp}: "
+                      + (rv.stdout or rv.stderr).strip()[-300:])
+            else:
+                check(rv.returncode in (0, 1),
+                      f"validate_selection on {fx.name} crashed exit {rv.returncode}: "
+                      + (rv.stderr or rv.stdout).strip()[-300:])
+        print(f"  [router] validate_selection × {router_fixture_count} fixtures "
+              "(expect.exit asserted)")
+
+    # 4g. fixture category coverage: every module with an evals/ dir must cover all 5
+    #     categories (normal/boundary/ambiguous/negative-trigger/regression). Category is read
+    #     from each fixture's `category` field; when absent (cap-task-coordination encodes it
+    #     via filename/kind, see its evals/README.md), resolve it via CATEGORY_ALIASES.
+    if capabilities.is_dir():
+        for cdir in sorted(p for p in capabilities.iterdir() if p.is_dir()):
+            evd = cdir / "evals"
+            if not evd.is_dir():
+                continue
+            fixtures = sorted(evd.glob("*.json"))
+            if not fixtures:
+                continue
+            seen_cats: set[str] = set()
+            for fx in fixtures:
+                try:
+                    doc = json.loads(fx.read_text(encoding="utf-8"))
+                except Exception:  # noqa: BLE001
+                    continue
+                cat = doc.get("category")
+                if cat not in REQUIRED_EVAL_CATEGORIES:
+                    hay = (fx.stem + " " + str(doc.get("kind", ""))).lower()
+                    toks = set(re.split(r"[^a-z]+", hay))
+                    cat = next((CATEGORY_ALIASES[t] for t in toks if t in CATEGORY_ALIASES), None)
+                if cat in REQUIRED_EVAL_CATEGORIES:
+                    seen_cats.add(cat)
+            missing_cats = [c for c in REQUIRED_EVAL_CATEGORIES if c not in seen_cats]
+            check(len(fixtures) >= 5,
+                  f"capabilities/{cdir.name}/evals has {len(fixtures)} fixtures (<5)")
+            check(not missing_cats,
+                  f"capabilities/{cdir.name}/evals missing category coverage: {missing_cats} "
+                  f"(saw {sorted(seen_cats)})")
     skills = ROOT / "skills"
     skill_dirs = [p for p in skills.iterdir() if p.is_dir() and (p / "SKILL.md").exists()] if skills.is_dir() else []
     check(len(skill_dirs) >= 38, f"expected >=38 bundled skills, found {len(skill_dirs)}")
@@ -191,7 +398,6 @@ def main() -> None:
     # 8. client half (picker filter): the only mechanism that hides member presets is
     #    client.js, discovered via the bare-package host row + dsh.client + exports.
     #    Assert every link so deleting one cannot make the filter silently vanish.
-    import shutil as _shutil
     check("- id: agent-teams\n      name: 'dsh-agent-teams'" in patch,
           "cordis patch missing the bare 'agent-teams' host row that loads client.js")
     check(pkg.get("dsh", {}).get("client", {}).get("platform") == "web",
@@ -208,7 +414,7 @@ def main() -> None:
     #    assert its syntax and its zero-dependency behavior test too.
     check("apply" in (ROOT / "index.js").read_text(encoding="utf-8"),
           "index.js should export the auto-enable hook (apply)")
-    if _shutil.which("node"):
+    if shutil.which("node"):
         r = subprocess.run(["node", "--check", str(ROOT / "client.js")],
                            capture_output=True, text=True)
         check(r.returncode == 0,
@@ -227,7 +433,6 @@ def main() -> None:
               "index.js behavior test failed: " + (ht.stderr or ht.stdout).strip())
 
     # 9. zero-dependency squad kit (R1): validator + protocol playbook, and validator runs clean on the example
-    import shutil
     validator = ROOT / "scripts" / "squad_validate.mjs"
     check(validator.exists(), "missing scripts/squad_validate.mjs")
     check((ROOT / "playbooks" / "bmad-squad-protocol" / "SKILL.md").exists(),
@@ -244,6 +449,8 @@ def main() -> None:
             print("  -", e)
         sys.exit(1)
     print(f"VERIFY OK: {len(preset_rows)} presets, {len(delegates)} delegates, {len(skill_dirs)} bundled skills")
+    print(f"  deterministic capability evals: run_evals × {len(ran_eval_modules)} modules "
+          f"{sorted(ran_eval_modules)}; router validate_selection × {router_fixture_count} fixtures")
 
 
 if __name__ == "__main__":

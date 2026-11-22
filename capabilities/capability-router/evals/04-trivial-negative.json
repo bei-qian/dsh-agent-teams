@@ -1,0 +1,47 @@
+{
+  "fixture": "04-trivial-negative",
+  "category": "negative-trigger",
+  "description": "琐碎改动负触发：纯文案 typo、低风险、无逻辑变更 → 最小/空集，证明防过度激活。",
+  "expect": {
+    "exit": 0,
+    "rule_ids": [],
+    "selected": []
+  },
+  "record": {
+    "schema_version": 1,
+    "task_id": "task-typo-001",
+    "router": "lead",
+    "signals": {
+      "task_type": "feature",
+      "risk_level": "low",
+      "size": "small",
+      "stack": [],
+      "required_validation": [],
+      "complexity": "small"
+    },
+    "selected_capabilities": [],
+    "excluded": [
+      {
+        "id": "cap-debugging-systematic",
+        "reason": "非缺陷；docs-only 文案 typo（命中 negative_trigger）"
+      },
+      {
+        "id": "cap-security-baseline",
+        "reason": "无 risk signal；纯文案"
+      },
+      {
+        "id": "cap-testing-strategy",
+        "reason": "无逻辑变更，无需测试"
+      },
+      {
+        "id": "cap-task-coordination",
+        "reason": "无需委派"
+      },
+      {
+        "id": "cap-code-review",
+        "reason": "文档 typo，评审从简/省略"
+      }
+    ],
+    "reason": "纯文案 typo；最小集，避免过度激活（负触发）"
+  }
+}

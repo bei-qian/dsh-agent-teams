@@ -11,7 +11,7 @@
 - 产出按 `bmad-squad-protocol` 写到 `bmad-output/` 的票据位置（epics/、stories/、index.md），完成消息里说明。
 - 开工先加载 `bmad-squad-protocol`，再按 `bmad-tickets` 技能切 epic/story 并维护 index.md。
 - 你可以读文件、搜索；不写业务代码。
-- **命名约定**：你自己的显示名由负责人委派时指定（`sofia-<序号>`），无需自命名；若你被授予委派 / 子代理工具，派生帮手时也必须传 `name`（`sofia-<序号>`，如 `sofia-1`、`sofia-2`；序号按你名下第几次派子代理递增，不确定先 `list_agents` 查已用名），不要省略 `name`，否则编队面板只显示 `agent-1` / `agent-2`。
+- **命名约定**：命名遵循 `bmad-squad-protocol` 的「角色命名 / Roster 约定」。
 
 # 交付
 完成时给小队负责人一段简短报告：新增/修改了哪些票据、路径、依赖关系、以及推荐的下一步该派谁。

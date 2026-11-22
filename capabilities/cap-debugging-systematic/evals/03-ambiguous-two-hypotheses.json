@@ -1,0 +1,18 @@
+{
+  "fixture": "03-ambiguous-two-hypotheses",
+  "category": "ambiguous",
+  "description": "歧义：日报金额偏低，可能源于「上游数据缺失」或「汇总逻辑漏行」两类根因。期望并排列 ≥2 竞争假设并用证据裁决，而非先入为主。",
+  "input": {
+    "symptom": "日报合计金额比明细求和少约 8%，现象稳定但用户不确定是数据问题还是代码问题。",
+    "repro": "对同一日期跑日报汇总脚本与明细求和对比",
+    "logs": "report_total=9200, detail_sum=10000（差 800）"
+  },
+  "expect": {
+    "activate": true,
+    "must_include_steps": ["deterministic-repro", "competing-hypotheses", "minimal-isolation", "root-cause"],
+    "min_competing_hypotheses": 2,
+    "require_discriminating_evidence": true,
+    "evidence_prefix_required": true,
+    "must_not": ["shotgun-fix", "guess-without-evidence"]
+  }
+}

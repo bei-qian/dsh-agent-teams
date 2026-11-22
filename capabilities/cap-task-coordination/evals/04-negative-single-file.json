@@ -1,0 +1,16 @@
+{
+  "fixture": "04-negative-single-file",
+  "kind": "trigger",
+  "description": "负触发（negative-trigger）：单文件文案 typo、单 owner 小改 → 委派 ROI<1，不应启用 task-coordination（自干更省）；命中 negative_trigger single-owner-small-change。",
+  "expect": {
+    "activate": false
+  },
+  "signals": {
+    "task_type": "feature",
+    "size": "small",
+    "files_touched": 1,
+    "modules": 1,
+    "owners": 1,
+    "description": "修正文档一处 typo"
+  }
+}

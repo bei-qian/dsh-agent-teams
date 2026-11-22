@@ -60,16 +60,8 @@ description: BMad 小队 UX 流程（Sally）。产出 design.md（外观：9 �
 ## 9. 给实现 agent 的提示 Agent Prompt Guide
 3–6 条生成纪律（先排版与留白、accent 配额、颜色 token 不可臆造、section 数量上限等），供 Amelia 实现时遵循。
 
-## 状态覆盖自查（五态硬 gate —— 缺一即不合格）
-每个取数/转换/接收输入的界面都要呈现五态并逐项勾选：
-- [ ] **Loading**：骨架屏 / spinner / shell；超过 **15s** 显示「比预期更久」
-- [ ] **Empty**：标题 + 平白解释 + 主 CTA；区分首次/无结果/已清空，**错误不得折叠成空态**
-- [ ] **Error**：①发生了什么 ②为什么（可知时）③能做什么；**保留用户已输入内容**
-- [ ] **Populated**：设计主对的状态
-- [ ] **Edge**：超量数据 / 超长字符串 / 缺可选字段 / RTL 或长词 / 弱网——布局不崩
-- [ ] 加载时长阈值：0–300ms 不显示；300ms–2s 轻 spinner/骨架；2–10s 骨架或带文案 spinner；10–30s 确定性进度条+取消；30–60s 进度条+明确取消（15s 已提示勿重复）；60s+ 停动画→错误+重试
-- [ ] retry 纪律：首次立即；第 2/3 次指数退避 2s/4s/8s；3 次失败「重试」→「联系支持」+可复制错误 ID；错误面显示「上次尝试：Xs 前」
-- [ ] 表单额外态：untouched / dirty(valid) / submitting（详见 reference/craft/state-coverage.md）
+## 状态覆盖自查（五态硬 gate）
+五态/WCAG 底线见 `reference/craft/state-coverage.md`。
 
 ## 反 AI 味质量门（硬 gate —— P0 必过）
 依据 reference/craft/anti-ai-slop.md 逐项核对：
@@ -122,16 +114,8 @@ P2（可修）：
 ## 无障碍与一致性
 键盘可达、焦点顺序、语义结构、文案一致性；底线见下方无障碍硬 gate。
 
-## 状态覆盖自查（五态硬 gate —— 缺一即不合格）
-每个取数/转换/接收输入的界面都要呈现五态并逐项勾选：
-- [ ] **Loading**：骨架屏 / spinner / shell；超过 **15s** 显示「比预期更久」
-- [ ] **Empty**：标题 + 平白解释 + 主 CTA；区分首次/无结果/已清空，**错误不得折叠成空态**
-- [ ] **Error**：①发生了什么 ②为什么（可知时）③能做什么；**保留用户已输入内容**
-- [ ] **Populated**：设计主对的状态
-- [ ] **Edge**：超量数据 / 超长字符串 / 缺可选字段 / RTL 或长词 / 弱网——布局不崩
-- [ ] 加载时长阈值：0–300ms 不显示；300ms–2s 轻 spinner/骨架；2–10s 骨架或带文案 spinner；10–30s 确定性进度条+取消；30–60s 进度条+明确取消（15s 已提示勿重复）；60s+ 停动画→错误+重试
-- [ ] retry 纪律：首次立即；第 2/3 次指数退避 2s/4s/8s；3 次失败「重试」→「联系支持」+可复制错误 ID；错误面显示「上次尝试：Xs 前」
-- [ ] 表单额外态：untouched / dirty(valid) / submitting（详见 reference/craft/state-coverage.md）
+## 状态覆盖自查（五态硬 gate）
+五态/WCAG 底线见 `reference/craft/state-coverage.md`。
 
 ## 无障碍底线自查（WCAG 2.2 AA 硬 gate）
 依据 reference/craft/accessibility-baseline.md（实现细节以 modern-web-guidance 为准，见「边界」）：
@@ -165,4 +149,4 @@ P2（可修）：
 
 ## 收尾
 - 产出固定写 `bmad-output/design.md` 与 `bmad-output/experience.md`（见 `bmad-squad-protocol`）。
-- 交付后由 Lead 跑校验器做 Gate（退出码 0 才过）；你按固定位置写对，并对照本节硬 gate 与验收标准自检。
+- 交付后按 `bmad-squad-protocol` 阶段门跑校验器（退出码 0 才过）；你按固定位置写对，并对照本节硬 gate 与验收标准自检。

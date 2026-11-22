@@ -1,0 +1,21 @@
+{
+  "id": "02-boundary-negative-path-matrix",
+  "category": "boundary",
+  "description": "边界：为数值/长度/分页类输入补全负路径与边界矩阵（缺失/临界/越界/合法两端），断言正确拒绝方式且不崩溃、不回显敏感。",
+  "prompt": "给输入校验写测试：分页 size、字符串长度、金额范围（含负数/0/上限/上限+1/缺失/非法类型）。",
+  "expect": {
+    "activate": true,
+    "must_produce": [
+      "边界矩阵：缺失/临界/越界(0、上限+1)/合法两端/非法类型",
+      "每条负路径断言：拒绝方式正确、不崩溃、不回显内部敏感信息",
+      "金额负数/0/超上限均拒绝"
+    ],
+    "must_not": ["只测合法值", "用 assertTrue 代替具体断言"]
+  },
+  "expects": {
+    "activation": true,
+    "required_controls": ["边界矩阵", "负路径", "越界"],
+    "required_anti_patterns": ["assertTrue(true)", "只测 happy path"]
+  },
+  "notes": "对应 test-design.md §3 负路径/边界矩阵。"
+}

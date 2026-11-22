@@ -1,0 +1,17 @@
+{
+  "fixture": "05-regression-red-green",
+  "category": "regression",
+  "description": "先红后绿回归断言用例：由 scripts/red_green_demo.mjs 确定性证明「旧代码 RED、新代码 GREEN」，要求根因报告含该可复现命令与两次结果。",
+  "input": {
+    "symptom": "off-by-one 缺陷的最小样例（sumRange 闭区间求和）。",
+    "repro": "node scripts/red_green_demo.mjs",
+    "logs": "RED (pre-fix): FAIL（符合预期） / GREEN (post-fix): PASS"
+  },
+  "expect": {
+    "activate": true,
+    "red_green": true,
+    "run": "node scripts/red_green_demo.mjs",
+    "must_include_steps": ["red-green", "deterministic-repro"],
+    "must_not": ["delete-test", "weaken-test"]
+  }
+}

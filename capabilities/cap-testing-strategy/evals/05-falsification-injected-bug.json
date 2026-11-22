@@ -1,0 +1,21 @@
+{
+  "id": "05-falsification-injected-bug",
+  "category": "regression",
+  "description": "证伪性：在实现里埋 1 个行为缺陷，合格的测试必须能抓住（对应测试在缺陷实现上失败、在正确实现上通过）。",
+  "prompt": "评审这套折扣计算测试：把 clamp 逻辑去掉、边界改用 floor（制造 1 个行为缺陷），现有测试还能抓出这个缺陷吗？",
+  "expect": {
+    "activate": true,
+    "must_produce": [
+      "指出哪些行为测试在缺陷实现上失败（缺陷被抓住）",
+      "指出哪些浅测（只断言返回数字/不抛）在缺陷实现上仍全绿（抓不住）",
+      "结论：好测试能证伪；数量/浅测 ≠ 质量"
+    ],
+    "must_not": ["因为测试条数多/全绿就认为缺陷被覆盖"]
+  },
+  "expects": {
+    "activation": true,
+    "required_controls": ["证伪", "变异", "缺陷"],
+    "required_anti_patterns": ["覆盖率%当目标"]
+  },
+  "notes": "对应 §7.1⑥『注入 1 个行为缺陷被测试抓住』；可执行示范见 scripts/falsification_demo.mjs。"
+}

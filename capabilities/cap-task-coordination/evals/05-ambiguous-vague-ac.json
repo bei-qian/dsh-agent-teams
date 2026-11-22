@@ -1,0 +1,31 @@
+{
+  "fixture": "05-ambiguous-vague-ac",
+  "kind": "decompose",
+  "description": "歧义（ambiguous）：单元 AC 用『性能更好、用户更满意』这类不可断言表述且无 verify → 不可独立验收，计划不应视为可派活；应停机把 AC 补成可测后再派。",
+  "expect": {
+    "valid": false,
+    "acyclic": true,
+    "requires_stop": true
+  },
+  "plan": {
+    "plan_version": 1,
+    "goal": "优化结算接口（需求含糊，未定义可测指标）",
+    "units": [
+      {
+        "id": "U1",
+        "scope": "后端：结算接口性能优化",
+        "interface": {
+          "inputs": ["POST /checkout"],
+          "outputs": ["CheckoutResponse"],
+          "touched_files": ["src/api/checkout.ts"]
+        },
+        "acceptance_criteria": [
+          { "id": "AC1", "check": "性能更好、用户更满意" }
+        ],
+        "writeScopes": ["src/api/checkout.ts"],
+        "blocked_by": [],
+        "role": "dev"
+      }
+    ]
+  }
+}

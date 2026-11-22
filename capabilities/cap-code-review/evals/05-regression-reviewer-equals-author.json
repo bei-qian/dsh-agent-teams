@@ -1,0 +1,12 @@
+{
+  "fixture": "05-regression-reviewer-equals-author",
+  "category": "regression",
+  "description": "回归（GAP#17 self-review 唯一门）：reviewer==author 时自评审不得作为独立验证的唯一门。期望红标 block:true、severity blocker。",
+  "input": { "reviewer": "amelia", "author": "amelia" },
+  "expect": {
+    "activate": true,
+    "self_review": true,
+    "block": true,
+    "severity": "blocker"
+  }
+}

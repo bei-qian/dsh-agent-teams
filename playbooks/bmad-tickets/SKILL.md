@@ -34,4 +34,4 @@ description: BMad 小队票据流程（Sofia）。把 initiative/PRD 切成 epic
 表格列固定 `id | type | title | status | file`；`file` 相对 `bmad-output/` 且必须存在；状态 ∈ `todo|in_progress|in_review|done|blocked`。
 
 ## 收尾
-- 交付后由 Lead 跑校验器做 Gate（你按 `bmad-squad-protocol` 的固定位置写对即可，并对照本节自检清单）。
+- 交付后按 `bmad-squad-protocol` 阶段门跑校验器（你按固定位置写对即可，并对照本节自检清单）。

@@ -1,0 +1,26 @@
+{
+  "fixture": "07-regression-case08-bugfix-routing",
+  "category": "regression",
+  "description": "来自真实失败 CASE-08 的泛化回归：登录后列表分页错位的回归缺陷修复，必须路由到 debugging + testing + code-review（不能只丢给 review，也不能漏 testing/先红后绿回归）。expect.exit=0。",
+  "source": "CASE-08 回归修复（泛化）",
+  "expect": { "exit": 0, "rule_ids": [], "selected": ["cap-debugging-systematic", "cap-testing-strategy", "cap-code-review"] },
+  "record": {
+    "schema_version": 1,
+    "task_id": "story-case08-regression",
+    "router": "lead",
+    "signals": {
+      "task_type": "bug",
+      "risk_level": "low",
+      "size": "small",
+      "stack": ["node"],
+      "required_validation": ["regression-test"],
+      "complexity": "small"
+    },
+    "selected_capabilities": ["cap-debugging-systematic", "cap-testing-strategy", "cap-code-review"],
+    "excluded": [
+      { "id": "cap-security-baseline", "reason": "risk_level=low；分页显示错位，无 auth/sensitive/external 信号" },
+      { "id": "cap-task-coordination", "reason": "single-owner small change；委派 ROI<1" }
+    ],
+    "reason": "CASE-08 泛化回归：需根因定位(debugging) + 先红后绿回归测试(testing) + 独立复核防删测试求绿(code-review)。"
+  }
+}

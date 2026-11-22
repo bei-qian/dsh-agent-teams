@@ -1,0 +1,23 @@
+{
+  "id": "01-normal-auth-highrisk",
+  "category": "normal",
+  "description": "典型高危：为登录/会话功能做安全基线。应激活并产出完整 STRIDE 威胁模型 + 确定性安全测试。",
+  "prompt": "实现用户登录与找回密码端点（涉及密码、会话 token、外部暴露），risk_level=high。请做安全基线与安全测试。",
+  "expect": {
+    "activate": true,
+    "must_produce": [
+      "按 STRIDE 六类分组的 abuse case（每条绑定防御 + 可断言测试）",
+      "信任边界与跨边界数据流",
+      "≥3 条确定性安全约束测试（账号不可区分 / fail-fast 一致 / 配置输入边界 / 启动不变量 / 跨租户隔离 中至少 3）",
+      "供应链防御性清单逐项 pass/fail/N/A + 证据",
+      "残余风险登记"
+    ],
+    "must_not": ["用墙钟耗时证明侧信道防护", "错误回显敏感值"]
+  },
+  "expects": {
+    "activation": true,
+    "required_controls": ["STRIDE", "账号不可区分", "fail-fast", "跨租户隔离", "供应链"],
+    "required_anti_patterns": ["明文密钥", "错误回显敏感值", "墙钟耗时"]
+  },
+  "notes": "覆盖 §7.1⑤『威胁模型含 STRIDE 分组 abuse case + ≥3 条确定性测试』。当 risk_level=high 未选安全基线应被 router 拒绝。"
+}

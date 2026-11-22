@@ -1,0 +1,17 @@
+{
+  "fixture": "01-normal-failing-test",
+  "category": "normal",
+  "description": "典型 bug：sumRange(5) 返回 10 而非 15，红测失败。期望走完整调试流程（确定性复现→≥2 竞争假设→隔离→根因→修复→先红后绿）。",
+  "input": {
+    "symptom": "sumRange(5) 期望 15，实际 10；单测 sumRange(5)===15 红。",
+    "repro": "node -e \"const f=n=>{let s=0;for(let i=1;i<n;i++)s+=i;return s};console.log(f(5))\"",
+    "logs": "AssertionError: expected 10 to be 15"
+  },
+  "expect": {
+    "activate": true,
+    "must_include_steps": ["deterministic-repro", "competing-hypotheses", "minimal-isolation", "root-cause", "fix", "red-green"],
+    "min_competing_hypotheses": 2,
+    "evidence_prefix_required": true,
+    "must_not": ["delete-test", "weaken-test", "shotgun-fix", "symptom-only-fix", "swallow-error"]
+  }
+}

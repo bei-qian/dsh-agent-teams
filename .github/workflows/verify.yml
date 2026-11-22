@@ -9,8 +9,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Verify bundle (patch in sync, presets, delegation, bundled skills, metadata)
+      # verify.py now runs the deterministic layer end-to-end: it executes each of the 6
+      # capability modules' run_evals.mjs (cap-debugging/code-review/task-coordination/
+      # security/testing) and every capability-router validate_selection fixture, in addition
+      # to the patch/preset/delegation/bundled-skill/frontmatter/category-coverage checks.
+      # So this single step covering verify.py keeps all 6 modules' evals in CI on every push/PR.
+      - name: Verify bundle (patch in sync, presets, delegation, bundled skills, metadata, 6-module deterministic evals)
         run: python3 scripts/verify.py

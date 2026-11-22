@@ -1,0 +1,22 @@
+{
+  "id": "05-regression-missing-security-tests",
+  "category": "regression",
+  "description": "回归/证伪：高危任务声称完成，但『验证』段只有 happy-path 测试、缺确定性安全测试 → 应被点出为未完成/blocker，不得默认通过。",
+  "prompt": "这是登录功能的安全实现报告，请复核是否达到安全基线完成标准。报告声称『登录测试已通过』，只有一条『正确口令登录成功』用例。",
+  "expect": {
+    "flag": true,
+    "must_produce": [
+      "指出缺账号不可区分/防枚举测试",
+      "指出缺 fail-fast 失败路径一致（调用计数）测试",
+      "指出缺跨租户隔离/越权负路径",
+      "拒绝把该实现判为安全基线完成（标 blocker/未完成，登记残余风险）"
+    ],
+    "must_not": ["因为『测试通过』就认可安全完成"]
+  },
+  "expects": {
+    "activation": true,
+    "required_controls": ["账号不可区分", "fail-fast", "跨租户隔离", "残余风险"],
+    "required_anti_patterns": ["把安全当纸面约定"]
+  },
+  "notes": "覆盖『缺安全测试应被点出』；证伪性：happy-path 全绿 ≠ 安全约束通过。"
+}

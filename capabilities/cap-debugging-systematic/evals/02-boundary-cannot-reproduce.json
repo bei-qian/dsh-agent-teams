@@ -1,0 +1,17 @@
+{
+  "fixture": "02-boundary-cannot-reproduce",
+  "category": "boundary",
+  "description": "边界：偶现 500、日志无堆栈、本地无法稳定复现。期望先补取证（instrument/放大复现），禁止在复现前散弹式改业务代码。",
+  "input": {
+    "symptom": "生产偶发 500（约千分之一），本地压测无法稳定复现，日志仅 'internal error' 无堆栈。",
+    "repro": "（目前无可稳定复现命令）",
+    "logs": "ERROR 500 internal error（无堆栈）"
+  },
+  "expect": {
+    "activate": true,
+    "must_include_steps": ["deterministic-repro", "competing-hypotheses"],
+    "require_evidence_before_behavior_change": true,
+    "min_competing_hypotheses": 2,
+    "must_not": ["shotgun-fix", "premature-fix-before-repro", "swallow-error"]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "id": "03-ambiguous-crud-authscope",
+  "category": "ambiguous",
+  "description": "含糊：一个『普通 CRUD』接口是否属于安全基线范围，取决于是否含授权/多租户/敏感数据——应判信号而非一律全量或一律跳过。",
+  "prompt": "加一个 /notes 的 CRUD 接口，看起来是普通功能。要不要做安全基线？",
+  "expect": {
+    "activate": "conditional",
+    "decision_hint": "若数据按用户/租户归属（对象级授权 + 跨租户隔离）或含敏感内容 → 激活并至少覆盖授权与跨租户隔离；若确为无归属/无敏感的单机工具 → 走轻量检查并记录取舍。",
+    "must_produce": ["明确的信号判定与取舍记录", "至少说明对象级授权/跨租户隔离是否需要覆盖"],
+    "must_not": ["不判信号就全套上或直接跳过"]
+  },
+  "expects": {
+    "activation": "conditional",
+    "required_controls": ["对象级授权", "跨租户隔离"],
+    "required_anti_patterns": ["把安全当纸面约定"]
+  },
+  "notes": "含糊用例：合理选择或停机问，并记录取舍（对齐 §7.2 ambiguous 类）。"
+}

@@ -76,6 +76,31 @@ node <本技能目录>/../../scripts/squad_validate.mjs ./bmad-output
 - **门禁用证据**：阶段门不只跑功能测试，还要用**确定性证据**（KDF/调用计数、桩、状态断言，而非不稳定耗时）确认这些约束已落实；功能通过 ≠ 安全约束通过。
 - **如实标记**：约束暂时无法被现有测试确定性覆盖时，在票据标注为「残余风险 / 待补测试」，不得默认视为通过。
 
+## 角色命名 / Roster 约定（唯一真源）
+
+小队成员与子代理一律按「**`<角色前缀>-<序号>`**」命名；命名规则只在此处维护，其它 playbook / prompt 只引用本节。
+
+**Roster 角色前缀**（与 `prompts/squad-lead.md` 的 Roster 对齐）：
+
+| 角色 | 预设 | 命名前缀 |
+|---|---|---|
+| 调度 / 负责人 Lead | `bmad-squad-lead` | （自身，不代为命名） |
+| 业务分析师 Mary | `bmad-analyst` | `mary-n` |
+| 产品经理 John | `bmad-pm` | `john-n` |
+| 产品负责人 Sofia | `bmad-po` | `sofia-n` |
+| UX 设计师 Sally | `bmad-ux` | `sally-n` |
+| 架构师 Winston | `bmad-architect` | `winston-n` |
+| 开发者 Amelia | `bmad-dev` | `amelia-n` |
+| 测试架构师 Murat | `bmad-tea` | `murat-n` |
+
+**命名规则**：
+
+- **Lead 委派时指定显示名**：Lead 用 `delegate_*` 派活时**必须传 `name`**，取「该队员前缀-序号」（如 `mary-1`、`john-2`）；序号 `n` 按本会话该队员第几次被委派递增，首次为 1；不确定已用名时先 `list_agents` 查，取该队员下一个未占用序号，报 `DUPLICATE_AGENT_NAME` 则顺延。
+- **派生帮手同样传 `name`**：成员若被授予委派 / 子代理工具，派生下属时也必须传 `name`（同一前缀，序号在其名下递增），不要省略。
+- **不命名即不可辨**：省略 `name` 会让编队面板只显示 `agent-1` / `agent-2`，无法辨认执行者，务必按此命名。
+
+> 角色 prompt 只写「命名遵循 `bmad-squad-protocol` 约定」，不重复本节规则；`prompts/squad-lead.md` 的 Roster 也是本节的前缀来源之一。
+
 ## 规则
 
 1. **先读后写**：开工先读 `initiative.md` 与 `index.md`；只处理自己票据范围内的文件。
