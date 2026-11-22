@@ -2,6 +2,8 @@
 
 ## 0.1.1 — 2026-11-22
 
+- 安全 / 非功能约束硬化（仅 playbook 层，不涉及 DSH 内核）：`bmad-architecture` 新增「安全与非功能风险分析」（信任边界 / 认证授权 / 密钥与凭据 / 密码学原语 / 防账号枚举 / 时序与侧信道），要求每条安全决策落成可测试约束并标注验收方式；`bmad-build` 要求实现前逐条通读架构安全 ADR 并补确定性回归测试（失败路径一致性 / 配置与输入边界 / 启动期不变量）；`bmad-squad-protocol` 要求 Lead 把安全约束逐条转写为可测验收标准、用确定性证据过阶段门、无法覆盖的标残余风险；`bmad-test-strategy` 要求主动覆盖冷启动 / 配置边界 / 安全负路径 / 启动期不变量。另 `ROADMAP.md` 新增 R4「轻量 per-role 工作记忆」候选（仅待调研，无实现）。版本保持 0.1.1；`scripts/verify.py` 通过。
+
 - 委派命名可辨识：`prompts/squad-lead.md` 的 Roster 为 7 名成员标注子代理代号（`mary-n` / `john-n` / …），运行协议第 4 步要求每次 `delegate_*` 必须传 `name`（`<代号>-<序号>`，序号按本会话该队员出现次数递增、首次为 1；不确定先 `list_agents` 查已用名再取下一个未占用序号），不再因省略 `name` 而落到 `agent-1` / `agent-2`，使「编队 / Agent 网络」面板显示真实队员名。同时 7 个成员 prompt 各加一条同口径的「派生命名」约定（成员当前无委派 / 子代理工具，属前瞻性约定；成员在编队的显示名本就由 Lead 委派时传入的 `name` 决定）。只改小队 prompt（真相源）并重建 `cordis.patch.yml`，**不涉及 DSH 内核**；`scripts/verify.py` 通过。
 
 - 新增「从 GitHub 下载安装到 DSH」说明：`SETUP.md` 给出面向外部用户的完整流程（前置条件；`git clone` / ZIP 获取；Web「选择本地目录」与 `plugin_manager` 的 `install_bundle` 两种安装方式；成功标志；首次使用；更新；卸载；常见问题），并明确 DSH 只支持「本地目录」安装、无 git URL 直装、link 安装不可删移目录；同时把原「开发者改模板后重建（`build_patch.py`）」单列为开发者章节，与外部用户安装区分；`README.md` 增加安装入口指向该章节。
