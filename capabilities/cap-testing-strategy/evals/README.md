@@ -9,11 +9,12 @@ Phase 6 评测前置 fixture（prompt + 期望行为）。覆盖 `CAPABILITY_ARC
 | 03 | `03-ambiguous-e2e-vs-integration.json` | ambiguous | **激活**；按跨进程/外部系统判层级并记录取舍 |
 | 04 | `04-negative-trigger-config-only.json` | negative-trigger | **不启用**完整策略（config-only/docs，无逻辑分支） |
 | 05 | `05-falsification-injected-bug.json` | regression（证伪） | **埋 1 个行为缺陷被测试抓住**；数量/浅测 ≠ 质量 |
+| 06 | `06-mandatory-action-missing.json` | regression（零动作缺陷） | **埋一个『跳过必须动作』的坏实现被测试抓住**；只测 happy path 会漏做 |
 
 ## 如何用
 
 - **自动化**：`node scripts/falsification_demo.mjs` 演示证伪性——行为测试在缺陷实现上失败、在正确实现上通过，而 3 条浅测在缺陷实现上仍全绿；退出码 0 = 证伪性成立。
-- **覆盖校验（不调 LLM）**：`node scripts/run_evals.mjs` 读取本目录 5 个 fixture 的机器可检 `expects`（`activation` / `required_controls` / `required_anti_patterns`），结构断言这些必备测试设计要素/反模式**确实在本模块 `SKILL.md`/`references/` 里有定义**；缺项则打印缺失 token 并 exit≠0（控制能拒绝）。退出码 0 = 5 类 fixture 覆盖校验通过。
+- **覆盖校验（不调 LLM）**：`node scripts/run_evals.mjs` 读取本目录各 fixture（覆盖 5 类）的机器可检 `expects`（`activation` / `required_controls` / `required_anti_patterns`），结构断言这些必备测试设计要素/反模式**确实在本模块 `SKILL.md`/`references/` 里有定义**；缺项则打印缺失 token 并 exit≠0（控制能拒绝）。退出码 0 = 各类 fixture 覆盖校验通过。
 - **人工/评测**：Phase 6 用同模型/工具/时间跑 `baseline vs capability-enabled`，比对每个 fixture 的 `expect`：是否激活、是否产出必备工件、是否命中 `must_not`。主观处盲评。
 - `category` 枚举：`normal | boundary | ambiguous | negative-trigger | regression`（`05` 的证伪性用例归 `regression`）。
 
