@@ -471,6 +471,54 @@ function main() {
     check(rr.status === 0, 'squad_validate failed on examples/bmad-output: ' + (rr.stderr || rr.stdout || '').trim())
   }
 
+  // 10. capability-boundary gate (issue-02b): per-preset fs/bash/jobs/web/control/subagent
+  //     matrix. check_presets.mjs parses the GENERATED patch against the single-source
+  //     squad.roles.json and exits non-zero on any boundary violation (leader fs three-key
+  //     false, no member tool-subagent, etc.). Its non-zero exit is surfaced here so the
+  //     entrypoint fails honestly; tolerated KNOWN-GAPs (issue #6 pending) are echoed.
+  const checkPresets = join(ROOT, 'scripts', 'check_presets.mjs')
+  check(exists(checkPresets), 'missing scripts/check_presets.mjs (capability-boundary gate)')
+  if (exists(checkPresets) && hasNode) {
+    const cp = spawnSync(process.execPath, [checkPresets], { encoding: 'utf-8' })
+    check(cp.status === 0,
+      'check_presets.mjs failed ' + fmtExit(cp) + ': ' + tail(cp, 600))
+    for (const line of (cp.stdout || '').split('\n')) {
+      if (line.includes('KNOWN-GAP')) console.log('  ' + line.trim())
+    }
+  }
+
+  // 11. reference-integrity gate (issue-11 · 09a): pins the one phase-gate command the
+  //     whole squad copies verbatim from the protocol + one pure capability-index set
+  //     comparison (index id set == capabilities/<dir>/SKILL.md frontmatter name set).
+  //     Deliberately does NOT parse arbitrary Markdown paths/placeholders/links (09b).
+  const checkGateCmd = join(ROOT, 'scripts', 'check_gate_cmd.mjs')
+  check(exists(checkGateCmd), 'missing scripts/check_gate_cmd.mjs (reference-integrity gate)')
+  if (exists(checkGateCmd) && hasNode) {
+    const gc = spawnSync(process.execPath, [checkGateCmd], { encoding: 'utf-8' })
+    check(gc.status === 0, 'check_gate_cmd.mjs failed ' + fmtExit(gc) + ': ' + tail(gc, 600))
+    for (const line of (gc.stdout || '').split('\n')) {
+      if (line.trim()) console.log('  ' + line.trim())
+    }
+  }
+
+  // 12. product-view pack ledger (issue-05 / 03b): npm pack --dry-run asserts the packed
+  //     product ⊇ a DERIVED required set and product ∩ {node_modules,.git} = ∅. SKIP (exit 2,
+  //     npm unavailable / pack env failure) is surfaced as a failure too — never silently green.
+  const checkPack = join(ROOT, 'scripts', 'check_pack.mjs')
+  check(exists(checkPack), 'missing scripts/check_pack.mjs (product-view pack ledger)')
+  if (exists(checkPack) && hasNode) {
+    const pk = spawnSync(process.execPath, [checkPack], { encoding: 'utf-8' })
+    if (pk.status === 0) {
+      for (const line of (pk.stdout || '').split('\n')) {
+        if (line.trim()) console.log('  ' + line.trim())
+      }
+    } else if (pk.status === 2) {
+      check(false, 'check_pack.mjs SKIP (cannot verify product view, treated as NOT green): ' + tail(pk, 400))
+    } else {
+      check(false, 'check_pack.mjs failed ' + fmtExit(pk) + ': ' + tail(pk, 600))
+    }
+  }
+
   if (errors.length) {
     console.log('VERIFY FAILED:')
     for (const e of errors) console.log('  -', e)

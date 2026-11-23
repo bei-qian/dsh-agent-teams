@@ -1,0 +1,91 @@
+{
+  "_doc": [
+    "Single source of truth for the capability boundary of every BMad squad preset.",
+    "scripts/check_presets.mjs reads THIS file (and only this file) to derive its assertions;",
+    "it never hardcodes a second copy of the matrix. The values describe the TARGET contract",
+    "for cordis.patch.yml (the generated bundle patch).",
+    "",
+    "Field semantics:",
+    "  bash      : preset mounts the shell group / tool-bash plugin",
+    "  jobs      : preset mounts tool-jobs",
+    "  web       : preset mounts tool-web",
+    "  fs        : tool-fs config values. boolean = must be EXPLICITLY present with that value;",
+    "              null = not pinned here (inherits the DSH default, only presence of tool-fs",
+    "              is asserted). We only pin `false` explicitly because a deny must be explicit,",
+    "              while an inherit-on default is safe to leave implicit.",
+    "  control   : preset mounts tool-subagent-control (expected exactly 1 row when true).",
+    "  subagent  : preset mounts tool-subagent (the delegation tool). Only the lead owns this;",
+    "              every member MUST be false (a member re-delegating is privilege escalation).",
+    "",
+    "Members' `control: true` is now a HARD assertion in the default run: every member must",
+    "mount exactly 1 tool-subagent-control row. A missing/extra row fails check_presets with a",
+    "non-zero exit and names the offending preset (no KNOWN-GAP allowance, no warning-and-exit-0",
+    "path). `--strict` is accepted for CLI compatibility only and does not change behaviour."
+  ],
+  "presets": {
+    "bmad-squad-lead": {
+      "bash": true,
+      "jobs": false,
+      "web": false,
+      "fs": { "write": false, "edit": false, "applyPatch": false },
+      "control": true,
+      "subagent": true
+    },
+    "bmad-analyst": {
+      "bash": false,
+      "jobs": false,
+      "web": true,
+      "fs": { "write": null, "edit": null, "applyPatch": null },
+      "control": true,
+      "subagent": false
+    },
+    "bmad-pm": {
+      "bash": false,
+      "jobs": false,
+      "web": true,
+      "fs": { "write": null, "edit": null, "applyPatch": null },
+      "control": true,
+      "subagent": false
+    },
+    "bmad-po": {
+      "bash": false,
+      "jobs": false,
+      "web": false,
+      "fs": { "write": null, "edit": null, "applyPatch": null },
+      "control": true,
+      "subagent": false
+    },
+    "bmad-ux": {
+      "bash": false,
+      "jobs": false,
+      "web": false,
+      "fs": { "write": null, "edit": null, "applyPatch": null },
+      "control": true,
+      "subagent": false
+    },
+    "bmad-architect": {
+      "bash": false,
+      "jobs": false,
+      "web": true,
+      "fs": { "write": null, "edit": null, "applyPatch": null },
+      "control": true,
+      "subagent": false
+    },
+    "bmad-dev": {
+      "bash": true,
+      "jobs": true,
+      "web": true,
+      "fs": { "write": null, "edit": null, "applyPatch": false },
+      "control": true,
+      "subagent": false
+    },
+    "bmad-tea": {
+      "bash": true,
+      "jobs": true,
+      "web": true,
+      "fs": { "write": null, "edit": null, "applyPatch": null },
+      "control": true,
+      "subagent": false
+    }
+  }
+}

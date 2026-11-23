@@ -64,7 +64,6 @@
     "cordis.patch.yml",
     "cordis.patch.tmpl.yml",
     "prompts",
-    "skills",
     "playbooks",
     "capabilities",
     "rows",
@@ -78,13 +77,17 @@
     "ROADMAP.md",
     "ATTRIBUTION.md",
     "CHANGELOG.md",
-    "LICENSE"
+    "LICENSE",
+    "LICENSE-BMAD-METHOD.txt"
   ],
   "scripts": {
     "build:patch": "node scripts/build_patch.mjs",
     "verify": "node scripts/verify.mjs",
     "validate": "node scripts/squad_validate.mjs",
     "validate:sample": "node scripts/squad_validate.mjs examples/bmad-output",
+    "validate:presets": "node scripts/check_presets.mjs",
+    "check:refs": "node scripts/check_gate_cmd.mjs",
+    "check:pack": "node scripts/check_pack.mjs",
     "test:client": "node scripts/test_client.mjs"
   }
 }
