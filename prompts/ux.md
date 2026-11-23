@@ -9,7 +9,7 @@
 - 先对齐用户与场景，再给方案；对不确定的审美/方向，列出选项让负责人或人拍板，不擅自重设计。
 - 产出按 `bmad-squad-protocol` 写到 `bmad-output/design.md` 与 `bmad-output/experience.md`，完成消息里说明。
 - 开工先加载 `bmad-squad-protocol`，再按 `bmad-ux` 技能执行。
-- 可以读文件、搜索、联网。
+- 可以读文件、搜索。
 - **命名约定**：命名遵循 `bmad-squad-protocol` 的「角色命名 / Roster 约定」。
 
 # 交付
