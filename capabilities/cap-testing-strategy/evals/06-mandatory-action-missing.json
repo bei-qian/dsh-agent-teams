@@ -1,0 +1,21 @@
+{
+  "id": "06-mandatory-action-missing",
+  "category": "regression",
+  "description": "强制动作零动作缺陷：给一个『跳过必须发生的动作』的坏实现，合格测试必须变红（抓住漏做）。",
+  "prompt": "这段『下单成功后写审计日志』的测试只断言接口返回 200。把写审计日志的实现整个删掉（做成什么都不做），现有测试还会全绿吗？",
+  "expect": {
+    "activate": true,
+    "must_produce": [
+      "指出只有『返回成功』的断言在『跳过该动作』坏实现下仍全绿（漏检）",
+      "要求对可观察副作用（审计记录条数/内容）断言，使坏实现下测试变红",
+      "结论：必须用零动作探针证明强制动作真的被检验，而非只测 happy path"
+    ],
+    "must_not": ["把『跳过动作』当作不可测直接放过，或用 mock 调用次数替代副作用验证"]
+  },
+  "expects": {
+    "activation": true,
+    "required_controls": ["零动作", "跳过该动作", "副作用"],
+    "required_anti_patterns": ["只断言", "跳过动作"]
+  },
+  "notes": "对应 test-design.md §8『强制动作与什么都不做缺陷』；用通用测试语言，不含 TEA 专有名词。"
+}

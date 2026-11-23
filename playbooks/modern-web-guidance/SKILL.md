@@ -15,7 +15,7 @@ description: Modern Web 前端最佳实践参照（HTML/CSS/客户端 JS）：�
 | category | 篇数 | 主题 |
 |---|---|---|
 | `accessibility` | 4 | 无障碍：错误播报、生成内容、尊重系统文字缩放 |
-| `built-in-ai` | 5 | 浏览器内置 AI：语言检测/模型、摘要、翻译 |
+| `built-in-ai` | 4 | 浏览器内置 AI：语言检测/模型、摘要、翻译 |
 | `css` | 18 | CSS 布局、动画、响应式、条件样式、`:has()`、容器查询等 |
 | `forms` | 19 | 表单与输入控件：自动填充、校验、选择器、滑块、OTP 等 |
 | `html` | 8 | HTML、Web Components、Shadow DOM、自定义元素 |
@@ -26,7 +26,7 @@ description: Modern Web 前端最佳实践参照（HTML/CSS/客户端 JS）：�
 | `security` | 17 | 前端安全：passkeys、HTML 净化、Trusted Types、来源校验等 |
 | `ui-atoms` | 13 | 原子 UI：图标、tooltip、滚动提示、粘性头部等 |
 | `ui-behaviors` | 40 | 交互行为：过渡、拖拽、滚动效果、客户端路由等 |
-| `ui-components` | 22 | 组件：dialog、tabs、accordion、data grid、菜单等 |
+| `ui-components` | 23 | 组件：dialog、tabs、accordion、data grid、菜单等 |
 | `user-experience` | 3 | 用户体验：form factor 适配、偏好感知、引导 |
 | `visual-design` | 22 | 视觉设计：颜色、排版、暗色模式、形状、纹理等 |
 | `wasm` | 1 | WebAssembly（C++ on the web） |
