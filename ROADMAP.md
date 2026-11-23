@@ -16,7 +16,7 @@
 
 ## ✅ R1 · 零依赖自包含 playbook（已完成）
 
-**状态（已完成）**：校验器 + 协议 + 7 个角色 playbook（`playbooks/`）；成员预设已改扫 `playbooks/`（`includeDefaultRoots:false`）并安装验证，8 预设全 `active`。完整 BMad 技能保留在 `skills/` 但**未启用**（可回退/删除）。阶段门由 Lead 跑校验器；`verify.py` 与 CI 覆盖 playbook + 校验器。
+**状态（已完成）**：校验器 + 协议 + 7 个角色 playbook（`playbooks/`）；成员预设已改扫 `playbooks/`（`includeDefaultRoots:false`）并安装验证，8 预设全 `active`。完整 BMad 技能保留在 `skills/` 但**未启用**（可回退/删除）。阶段门由 Lead 跑校验器；`verify.mjs` 与 CI 覆盖 playbook + 校验器。
 关键提交：`3b6c2f3`（校验器 + 协议 + 示例）→ `dbe7782`（接入 7 角色 playbook）→ `6ebe33a`（index/initiative 归 Sofia，Lead 只读 + 门禁）。
 
 **当初要解决的问题**：插件已内置完整 BMad 技能，但它们是「方法驱动器」——`SKILL.md` 里会

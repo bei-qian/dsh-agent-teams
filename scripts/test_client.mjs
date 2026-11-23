@@ -12,7 +12,7 @@
  *   - the ctx.effect disposer restores the original list exactly;
  *   - a second apply is a no-op (no nested wrapper).
  *
- * Exit 0 = all pass, 1 = a failure. Invoked by verify.py when node is present.
+ * Exit 0 = all pass, 1 = a failure. Invoked by verify.mjs when node is present.
  */
 import assert from 'node:assert/strict'
 

@@ -40,4 +40,4 @@ for f in evals/*.json; do node scripts/validate_selection.mjs "$f"; echo "exit=$
 
 ## 与 Phase 6 的衔接
 
-Phase 6b 已在此基线上补齐 `normal / boundary / ambiguous / negative-trigger / regression` 五类用例（见上表；`category` 元数据可机器统计覆盖率），并保持 `validate_selection.mjs` 对每条 `evals/*.json` 实跑、退出码与 `expect.exit` 一致（`verify.py §4d` 亦逐个复跑）。收益侧（`baseline（无路由）vs router-enabled` 同模型/工具/时间对照）仍属 Gate 3 端到端待办（见 `CAPABILITY_ROUTING_DESIGN.md` §6 与 `CAPABILITY_ARCHITECTURE.md` §7.2）。
+Phase 6b 已在此基线上补齐 `normal / boundary / ambiguous / negative-trigger / regression` 五类用例（见上表；`category` 元数据可机器统计覆盖率），并保持 `validate_selection.mjs` 对每条 `evals/*.json` 实跑、退出码与 `expect.exit` 一致（`verify.mjs §4e` 亦逐个复跑）。收益侧（`baseline（无路由）vs router-enabled` 同模型/工具/时间对照）仍属 Gate 3 端到端待办（见 `CAPABILITY_ROUTING_DESIGN.md` §6 与 `CAPABILITY_ARCHITECTURE.md` §7.2）。

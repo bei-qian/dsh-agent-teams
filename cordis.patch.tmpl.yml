@@ -1,6 +1,6 @@
 # dsh-agent-teams v1 bundle patch — GENERATED FILE.
 # Source of truth: prompts/*.md (persona text) + cordis.patch.tmpl.yml (structure).
-# Regenerate with:  python3 scripts/build_patch.py
+# Regenerate with:  node scripts/build_patch.mjs
 #
 # Inserts the BMad squad agent presets on top of the built-in Agent Teams mechanism
 # (the base bundle already mounts @deepseek-ai/dsh-agent-team + @deepseek-ai/dsh-tool-agent-team,

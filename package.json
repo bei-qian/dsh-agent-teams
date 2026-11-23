@@ -81,8 +81,8 @@
     "LICENSE"
   ],
   "scripts": {
-    "build:patch": "python3 scripts/build_patch.py",
-    "verify": "python3 scripts/verify.py",
+    "build:patch": "node scripts/build_patch.mjs",
+    "verify": "node scripts/verify.mjs",
     "validate": "node scripts/squad_validate.mjs",
     "validate:sample": "node scripts/squad_validate.mjs examples/bmad-output",
     "test:client": "node scripts/test_client.mjs"
