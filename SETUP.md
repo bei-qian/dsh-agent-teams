@@ -95,8 +95,8 @@ git pull
   用该目录的**绝对路径**，例如 `C:\Users\<你>\plugins\dsh-agent-teams`。不要用 `~` 或相对路径。
 - **`package.json` 里是 `private: true`，会不会装不上？**
   不会。`private: true` 只影响发布到 npm；「本地目录」安装不经过 npm 发布，照常可用。
-- **需要先 `npm install` 或 `python3 scripts/build_patch.py` 吗？**
-  外部用户**不需要**。`cordis.patch.yml` 已随仓库提交，直接安装即可。Python/Node 仅用于开发者改模板后重建（见下节），以及可选地跑 `scripts/verify.py` 校验。
+- **需要先 `npm install` 或 `node scripts/build_patch.mjs` 吗？**
+  外部用户**不需要**。`cordis.patch.yml` 已随仓库提交，直接安装即可。开发/校验仅需 Node（无需 Python），用于开发者改模板后重建（见下节），以及可选地跑 `scripts/verify.mjs` 校验。
 - **peerDependency `@deepseek-ai/dsh-agent-preset` 要怎么装？**
   无需手动处理，由 DSH 安装过程自行解析；**不用**把它发布到 npm。
 
@@ -139,7 +139,7 @@ git pull
   **Plugins → Subagent → Model selection** 启用并勾选允许的模型路由，之后调度会在 `delegate_*` 里按需传
   `provider/model/reasoning_effort`（未启用时只能选父会话当前的模型）。要给某成员**固定默认模型**，
   在 `cordis.patch.tmpl.yml` 对应 `delegate_*` 行加 `agentOptions: { provider, model, reasoningEffort }`，
-  再跑 `python3 scripts/build_patch.py`。
+  再跑 `node scripts/build_patch.mjs`。
 
 ## 开发者：改模板后重建
 
@@ -148,7 +148,7 @@ git pull
 1. 重新生成 `cordis.patch.yml`（模板 / 提示词改动后需要重跑）：
    ```bash
    cd dsh-agent-teams
-   python3 scripts/build_patch.py
+   node scripts/build_patch.mjs
    ```
 2. 重新安装 / 刷新插件（与外部用户同样的「本地目录」方式）：
    ```
@@ -157,5 +157,5 @@ git pull
    或在 Web 的 **Plugins → Add plugin → 选择本地目录** 选择本目录；已在 Plugins 里的，关开一次或重启 DSH 生效。
 3. 校验（可选；CI 也会跑）：
    ```bash
-   python3 scripts/verify.py
+   node scripts/verify.mjs
    ```

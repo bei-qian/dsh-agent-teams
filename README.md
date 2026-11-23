@@ -89,7 +89,7 @@ DSH 已经自带 Agent Teams：
        agentOptions: { provider: deepseek, model: deepseek-chat, reasoningEffort: high }
    ```
 
-   改完 `cordis.patch.tmpl.yml` 后跑 `python3 scripts/build_patch.py` 重新生成 `cordis.patch.yml`。
+   改完 `cordis.patch.tmpl.yml` 后跑 `node scripts/build_patch.mjs` 重新生成 `cordis.patch.yml`。
 
 > DSH 的 agent 预设本身不能声明模型（preset 只声明插件组合）；成员模型一律走 `dsh-tool-subagent` 的 `agentOptions` / `modelSelection`。
 
@@ -97,13 +97,13 @@ DSH 已经自带 Agent Teams：
 
 ```bash
 # 改完 prompts/*.md 后重新生成 cordis.patch.yml
-python3 scripts/build_patch.py
+node scripts/build_patch.mjs
 
 # 校验：生成物是否同步、8 个预设/委派接线/内置技能/元数据是否齐全
-python3 scripts/verify.py
+node scripts/verify.mjs
 ```
 
-CI（`.github/workflows/verify.yml`）在 push / PR 时跑 `scripts/verify.py`，防止 `cordis.patch.tmpl.yml`、`prompts/` 与 `cordis.patch.yml` 漂移。
+CI（`.github/workflows/verify.yml`）在 push / PR 时跑 `scripts/verify.mjs`，防止 `cordis.patch.tmpl.yml`、`prompts/` 与 `cordis.patch.yml` 漂移。
 
 ## 许可
 

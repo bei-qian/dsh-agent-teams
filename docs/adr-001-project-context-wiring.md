@@ -13,16 +13,16 @@
 
 | # | 事实 | 证据（文件:行） | 对设计的影响 |
 |---|---|---|---|
-| F1 | **`skills/` 未对队员可见，只有 `playbooks/` 被接线**。每个 preset 的 `skill-filesystem.customSkillDirs` 都指向插件内 `playbooks` 目录（`includeDefaultRoots:false`）。`verify.py` 注释明说完整 BMad 技能「kept on disk, not wired」。 | `cordis.patch.tmpl.yml:138-145,199-206,260-267,316-323,372-379,433-440,516-523,597-604`（8 处均 `join(..., 'playbooks')`）；`scripts/verify.py:74-89`（注释「full BMad kept on disk, not wired」） | **`skills/bmad-project-context` 目前对队员不可见**。要接入必须放到 `playbooks/` 下；不需要动 preset。 |
+| F1 | **`skills/` 未对队员可见，只有 `playbooks/` 被接线**。每个 preset 的 `skill-filesystem.customSkillDirs` 都指向插件内 `playbooks` 目录（`includeDefaultRoots:false`）。`verify.mjs` 注释明说完整 BMad 技能「kept on disk, not wired」。 | `cordis.patch.tmpl.yml:138-145,199-206,260-267,316-323,372-379,433-440,516-523,597-604`（8 处均 `join(..., 'playbooks')`）；`scripts/verify.mjs:74-89`（注释「full BMad kept on disk, not wired」） | **`skills/bmad-project-context` 目前对队员不可见**。要接入必须放到 `playbooks/` 下；不需要动 preset。 |
 | F2 | **新增 `playbooks/<x>/SKILL.md` 即自动对全部 8 个预设可见**（含 Lead、含 architect）。 | 同上——`customSkillDirs` 指向整个 `playbooks/` 目录，逐子目录加载为技能 | 挂载能力**无需改 preset / rows / tmpl**。 |
 | F3 | **激活步骤有两处 `uv` 依赖**，但 SKILL 自带降级口径。 | `skills/bmad-project-context/SKILL.md:22`（`uv run .../resolve_customization.py`）；`:27`（`uv run .../resolve_config.py`，`_bmad` 不存在则「Standalone: skip」）；降级口径 `:24`（「Any other failure: read customize.toml directly and use defaults」） | 零依赖改造**只需把「降级分支」固化为唯一行为**，不必真跑 python。 |
 | F4 | `customize.toml` 的工作流键**全为空默认**：`activation_steps_prepend/append=[]`、`persistent_facts=[]`、`on_complete=""`、`external_sources=[]`。 | `skills/bmad-project-context/customize.toml:12-24` | SKILL 里 `{workflow.*}` 占位**可直接按空处理**，安全忽略 resolver。 |
 | F5 | **正文与两份 references 无外部脚本依赖，可原样复用**。 | `SKILL.md`（Setup/Adoption/Refresh/Record/Audit/Children 全是文件读写逻辑）；`references/best-practices.md`（84 行）；`references/template.md`（55 行，含 `<!-- bmad:context -->` 标记与 6 小节） | 改造面很小：正文少量替换 + 两份 references 照搬。 |
 | F6 | **Winston（architect）的工具集**：有 `tool-fs`（未显式关写/改，`lead` 才是唯一显式 `write:false, edit:false` 的）、`tool-fs-search`、`tool-web`、`tool-todo`、`skill-filesystem(playbooks)`、`tool-skill`、`compaction`。**没有 shell、没有 `tool-ask-user`、没有 subagent/委派工具**。 | `cordis.patch.tmpl.yml:398-457`（architect preset）；对比 `:120-137`（lead 有 shell）、`:54-55`（lead 有 ask-user） | 三重含义：① 能读写 `AGENTS.md`；② **不能跑 git/命令**（SHA、refresh 的 `git log`、命令验证都受限）；③ **不能直接问用户**——访谈与「写前用户批准」必须由 Lead（有 shell + ask_user）中介。 |
-| F7 | **构建/校验链路**：`cordis.patch.yml` 由 `python3 scripts/build_patch.py` 从 `cordis.patch.tmpl.yml` + `prompts/*.md` 内联生成；`python3 scripts/verify.py` 会重新生成到临时目录比对，并断言 8 preset/7 delegate/playbook/skills/元数据；`node scripts/squad_validate.mjs` 只校验 `bmad-output/`。 | `scripts/build_patch.py:1-58`；`scripts/verify.py:37-48,75-89,202-212`；`scripts/squad_validate.mjs:24-99` | **改 playbook 不需 build；改 `prompts/*.md` 必须 build_patch 再 verify**。 |
+| F7 | **构建/校验链路**：`cordis.patch.yml` 由 `node scripts/build_patch.mjs` 从 `cordis.patch.tmpl.yml` + `prompts/*.md` 内联生成；`node scripts/verify.mjs` 会重新生成到临时目录比对，并断言 8 preset/7 delegate/playbook/skills/元数据；`node scripts/squad_validate.mjs` 只校验 `bmad-output/`。 | `scripts/build_patch.mjs:1-58`；`scripts/verify.mjs:37-48,75-89,202-212`；`scripts/squad_validate.mjs:24-99` | **改 playbook 不需 build；改 `prompts/*.md` 必须 build_patch.mjs 再 verify.mjs**。 |
 | F8 | **协议固定契约是「一切产出写进 `bmad-output/`、不自创路径」，而 `AGENTS.md` 在项目根、天然在 `bmad-output/` 之外**。 | `playbooks/bmad-squad-protocol/SKILL.md`（输出目录契约 + 规则 3「不自创路径」）；`references/template.md`（AGENTS.md 在 repo root） | 协议需要为 `AGENTS.md` 明确开一个「唯一例外」，否则与纪律冲突。 |
-| F9 | **文档不一致（待顺手修正）**：`verify.py` 顶部 docstring 说「the 7 member presets wire the bundled `skills/` dir」，与正文「not wired」矛盾。 | `scripts/verify.py:8-9` vs `:74-89` | 易误导后续实现者以为 `skills/` 已接线；建议在改造中修正 docstring。 |
-| F10 | `examples/bmad-output` 存在，`verify.py` 会用它跑校验器。 | `scripts/verify.py:208-212`；`examples/bmad-output/{initiative,index}.md` 等 | 校验命令可落到 `examples/bmad-output`，不污染真实项目。 |
+| F9 | **文档不一致（待顺手修正）**：`verify.mjs` 顶部 docstring 说「the 7 member presets wire the bundled `skills/` dir」，与正文「not wired」矛盾。 | `scripts/verify.mjs:8-9` vs `:74-89` | 易误导后续实现者以为 `skills/` 已接线；建议在改造中修正 docstring。 |
+| F10 | `examples/bmad-output` 存在，`verify.mjs` 会用它跑校验器。 | `scripts/verify.mjs:208-212`；`examples/bmad-output/{initiative,index}.md` 等 | 校验命令可落到 `examples/bmad-output`，不污染真实项目。 |
 
 > **与你假设可能不符的点（重点）**：你倾向「挂到架构（Winston）最贴（命令验证/约定/边界）」。核实后——Winston **没有 shell、没有 ask-user**。所以「命令验证」只能是**读脚本/配置核对**（不能实跑），provenance 的 **SHA / `git log` 刷新 / 真实命令验证需要 Lead（有 shell）代跑**；而「访谈用户 / 写前批准」这种对话必须由 **Lead 用 ask_user 中介**。结论方向（挂 architect）仍成立：architect 负责分析、决策与**写** `AGENTS.md`，但**人机交互与命令执行外包给 Lead**。
 
@@ -94,7 +94,7 @@
 **风险**（详见第 4 节）
 - R1：把「写 AGENTS.md」误当常规产出而污染真实 repo → 用「强制用户批准 + writeScopes + 不 commit」兜。
 - R2：未来若把 `skills/` 也接线，`bmad-project-context` 会与 playbook 同名冲突。
-- R3：改了 prompt 忘记 `build_patch` 导致 `cordis.patch.yml` 漂移 → `verify.py` 兜底。
+- R3：改了 prompt 忘记 `build_patch.mjs` 导致 `cordis.patch.yml` 漂移 → `verify.mjs` 兜底。
 - R4：provenance SHA 长期缺失 → refresh/audit 退化为弱 diff。
 
 ---
@@ -140,7 +140,7 @@
   - 当项目根 `AGENTS.md` 缺失/为空/无受管 block，或用户要求时，**加载 `bmad-project-context` playbook 跑 `setup`/`adopt`**；已有受管 block 按需 `refresh`/`audit`。
   - **写前经 Lead 取用户批准**；`AGENTS.md` 放项目根；`writeScopes` 含 `AGENTS.md`。
   - SHA / `git log` / 需实跑的命令请 **Lead 代跑**，拿不到写 `TODO(待 Lead 补)`；能读脚本核对的就核对，不臆造。
-- **验收标准**：persona 明确「能力 + 边界 + 经 Lead」；`python3 scripts/build_patch.py` 后 `cordis.patch.yml` 对应 `@@PROMPT:architect@@` 段包含该文本。
+- **验收标准**：persona 明确「能力 + 边界 + 经 Lead」；`node scripts/build_patch.mjs` 后 `cordis.patch.yml` 对应 `@@PROMPT:architect@@` 段包含该文本。
 
 ### 2.7 `prompts/squad-lead.md` — **修改（真相源）**
 - **改什么**：在「运行协议」加**第 0 步 / 路由话术**：
@@ -156,9 +156,9 @@
 - **理由**：无新增 preset；`rows/` 仅为既有预设的模块再导出 + locale。
 - **验收标准**：`git diff -- rows/` 为空。
 
-### 2.10 `scripts/verify.py` — **修改（建议）**
+### 2.10 `scripts/verify.mjs` — **修改（建议）**
 - **改什么**：① 增加断言：`playbooks/bmad-project-context/SKILL.md` 及两份 references 存在；② 可选断言该 `SKILL.md` 不含 `uv run` / `_bmad`（防回退）；③ 顺手修正 F9 的过时 docstring（`:8-9` 改为「bundled `skills/` kept on disk, not wired」并说明 playbook 才是启用路径）。
-- **验收标准**：`python3 scripts/verify.py` 通过；故意删除该 playbook 文件时 verify 失败。
+- **验收标准**：`node scripts/verify.mjs` 通过；故意删除该 playbook 文件时 verify 失败。
 
 ### 2.11 `scripts/squad_validate.mjs` — **不改（推荐）／或不进门**
 - **评估与理由**：当前 validator 只针对 `bmad-output/`，是**确定性硬门**；`AGENTS.md` 是**可选**产物且在 `bmad-output/` 之外，把它纳入硬/软警告会污染「Lead 收尾必须 0 警告」的契约，可能误挡交付。故**建议不放进 `squad_validate`**。
@@ -167,11 +167,11 @@
 
 ### 2.12 生成 / 校验命令 — **运行**
 - 因改了 `prompts/*.md`（真相源），必须：
-  1. `python3 scripts/build_patch.py` — 重新生成 `cordis.patch.yml`（把新的 architect/lead persona 内联进去）。
-  2. `python3 scripts/verify.py` — 校验生成物同步 + 8 preset/7 delegate/playbook/skills/元数据。
+  1. `node scripts/build_patch.mjs` — 重新生成 `cordis.patch.yml`（把新的 architect/lead persona 内联进去）。
+  2. `node scripts/verify.mjs` — 校验生成物同步 + 8 preset/7 delegate/playbook/skills/元数据。
   3. `node scripts/squad_validate.mjs examples/bmad-output` — 冒烟跑阶段门（或对真实 `bmad-output` 跑）。
-- **注意**：**只改 playbook / protocol 时不需要 `build_patch`**（playbooks 不内联进 patch）；只有改 `prompts/*.md` 才需要。任何改动后都建议跑一次 `verify.py`。
-- **验收标准**：三条命令均退出 0；`python3 scripts/build_patch.py` 后 `git diff cordis.patch.yml` 仅含预期 persona 变化。
+- **注意**：**只改 playbook / protocol 时不需要 `build_patch.mjs`**（playbooks 不内联进 patch）；只有改 `prompts/*.md` 才需要。任何改动后都建议跑一次 `verify.mjs`。
+- **验收标准**：三条命令均退出 0；`node scripts/build_patch.mjs` 后 `git diff cordis.patch.yml` 仅含预期 persona 变化。
 
 ### 2.13 文档（可选）— `README.md` / `ROADMAP.md` / `CHANGELOG.md`
 - **改什么**：README「默认启用零依赖 playbook」段补一句 `bmad-project-context`（AGENTS.md 能力）；ROADMAP 记 R1.1；CHANGELOG 记本次接入。
@@ -184,11 +184,11 @@
 1. **先落 playbook（2.1–2.4）**：完全独立、无依赖；完成后 `grep "uv run\|_bmad\|npx skills add"` 应为 0，且成员会话能加载。
 2. **改 protocol（2.5）**：引用 playbook 名；依赖 2.1 的命名（`bmad-project-context`）。
 3. **改两处 prompt（2.6、2.7）**：依赖 2.5 定的「第 0 步」话术与 playbook 名。
-4. **（可选）verify.py（2.10）与文档（2.13）**。
-5. **跑生成/校验（2.12）**：`build_patch` → `verify` → `squad_validate`。**这一步是阶段门**。
+4. **（可选）verify.mjs（2.10）与文档（2.13）**。
+5. **跑生成/校验（2.12）**：`build_patch.mjs` → `verify.mjs` → `squad_validate.mjs`。**这一步是阶段门**。
 6. **真机验证**：开一个 architect 会话，确认 `tool-skill` 里能看到 `bmad-project-context`；对一个**无 `AGENTS.md` 的测试目录**走一遍 setup（Lead 访谈 + 用户批准后由 architect 写），检查产物标记、6 小节（有内容才写）、provenance。建议在临时目录/`examples` 验证，不污染真实项目。
 
-依赖关系：`2.6/2.7` →（`build_patch`）→ `2.12.verify`；`2.5` 依赖 `2.1`；`2.8/2.9` 明确不改，作为对比基线。
+依赖关系：`2.6/2.7` →（`build_patch.mjs`）→ `2.12.verify`；`2.5` 依赖 `2.1`；`2.8/2.9` 明确不改，作为对比基线。
 
 ---
 
@@ -198,12 +198,12 @@
 |---|---|---|
 | **R1** 污染真实 repo | 把「写 `AGENTS.md`」当常规产出，未经同意就改用户仓库 | 强制**用户批准** + `writeScopes=[AGENTS.md]` + **不 commit**；playbook 明确「show block before writing」 |
 | **R2** 同名技能冲突 | 未来若把 `skills/` 也接入 `skill-filesystem`，会与 playbook 同名 `bmad-project-context` | 保持 `skills/` 不接线；或改名 `squad-project-context`；或接线时去重 |
-| **R3** 生成物漂移 | 改了 `prompts/*.md` 却忘跑 `build_patch`，`cordis.patch.yml` 落后 | `verify.py` 会比对失败兜底；CI（`.github/workflows/verify.yml`）拦截 |
+| **R3** 生成物漂移 | 改了 `prompts/*.md` 却忘跑 `build_patch.mjs`，`cordis.patch.yml` 落后 | `verify.mjs` 会比对失败兜底；CI（`.github/workflows/verify.yml`）拦截 |
 | **R4** 弱 provenance | Winston 无 shell，SHA/`git log` 取不到 → refresh/audit 退化 | Lead 代跑 `git rev-parse --short HEAD`；取不到写 `TODO(待 Lead 补)`；refresh 至少做到「读当前文件 diff」 |
 | **R5** 交互过长 | 无直连 ask-user，访谈/批准多轮 | Lead 一次性批量访谈（≤8 问，原技能口径）；把「草稿+ledger」随消息回传减少来回 |
 | **R6** 与上游漂移 | playbook 是副本，上游更新不流入 | 接受（R1 同类代价）；可在 CHANGELOG 记录基线版本，定期对照 |
 
-**回滚**：删除 `playbooks/bmad-project-context/`；`git checkout` 还原 `prompts/architect.md`、`prompts/squad-lead.md`、`playbooks/bmad-squad-protocol/SKILL.md`（及可选的 `verify.py`/文档）；重跑 `build_patch` + `verify`。因**零 preset/rows/tmpl 改动**，回滚干净、无残留接线。
+**回滚**：删除 `playbooks/bmad-project-context/`；`git checkout` 还原 `prompts/architect.md`、`prompts/squad-lead.md`、`playbooks/bmad-squad-protocol/SKILL.md`（及可选的 `verify.mjs`/文档）；重跑 `build_patch.mjs` + `verify.mjs`。因**零 preset/rows/tmpl 改动**，回滚干净、无残留接线。
 
 ---
 
@@ -217,7 +217,7 @@
 6. **references 形态**：独立 `references/` 文件（贴合原技能、改动小）vs 内联进 `SKILL.md`（规避对 `{skill-root}` 解析的依赖）？建议独立文件，若担心解析再内联。
 7. **软检查是否做**（2.11）：建议仅独立脚本、默认不进门；是否本轮就做？
 8. **monorepo/多子仓**：原技能有 `Children` 节（子目录各自 `AGENTS.md`）。首版是否只覆盖 root + 询问是否需要子仓？建议首版 root-only + 询问。
-9. **`verify.py` docstring 不一致（F9）** 是否顺手修正？建议修正。
+9. **`verify.mjs` docstring 不一致（F9）** 是否顺手修正？建议修正。
 10. **触发时机**：只在「新建项目 / 首次 initiative」自动提示，还是任意时刻用户点名都可（含 `record`）？建议**两者都要**：入口自动提示 + 用户点名随时跑。
 
 ---
@@ -230,7 +230,7 @@
 4. **adopt 路径**：已有 `AGENTS.md`（有内容、无受管 block）→ 走 adopt，输出 ledger、保留原指令、不静默删除。
 5. **refresh/audit 路径**：已有受管 block → **不静默跳过**；按需 refresh/audit，删除项在 ledger 逐项呈现；`record` 可随时记录。
 6. **判定口径**：空/脚手架文件判定为 `setup`（脚手架不算 meaningful）；矛盾 intent 上报确认不静默执行。
-7. **构建一致**：`python3 scripts/build_patch.py` 后 `cordis.patch.yml` 与 `prompts/*.md` 同步；`python3 scripts/verify.py` **退出 0**；`node scripts/squad_validate.mjs` **退出 0**。
+7. **构建一致**：`node scripts/build_patch.mjs` 后 `cordis.patch.yml` 与 `prompts/*.md` 同步；`node scripts/verify.mjs` **退出 0**；`node scripts/squad_validate.mjs` **退出 0**。
 8. **未越界**：`cordis.patch.tmpl.yml` 与 `rows/` **diff 为空**（零 preset 改动）。
 9. **纪律**：用户批准前不写 `AGENTS.md`；不 commit；命令拿不准写 `TODO` 不臆造；需实跑的命令由 Lead 代跑。
 10. **文档**（可选）：README/ROADMAP/CHANGELOG 记录了本次接入，读者可发现该能力。

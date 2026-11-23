@@ -26,7 +26,7 @@
  *     - unknown history falls back to leaving the switch as-is;
  *     - a throwing setEnabled is contained and cannot reject creation/selection.
  *
- * Exit 0 = all pass, 1 = a failure. Invoked by verify.py when node is present.
+ * Exit 0 = all pass, 1 = a failure. Invoked by verify.mjs when node is present.
  */
 import assert from 'node:assert/strict'
 
