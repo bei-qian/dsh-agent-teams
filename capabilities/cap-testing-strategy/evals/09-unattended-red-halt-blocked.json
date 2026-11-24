@@ -1,0 +1,20 @@
+{
+  "id": "09-unattended-red-halt-blocked",
+  "category": "regression",
+  "description": "回归：无人值守（headless/CI）红阶段停摆时须上报 blocked build（显式 open item），不得静默跳过/假装通过；恢复须用调用方显式提供的 ticket/标识，或歧义即停，绝不猜测。",
+  "prompt": "CI 里先写失败测试的红阶段无法建立可复现红（标准不可用 / 多个候选清单有歧义）。应如何处理？",
+  "expect": {
+    "activate": true,
+    "must_produce": [
+      "上报为 blocked build（显式 open item），不静默跳过、不假装通过",
+      "恢复须用调用方显式提供的 ticket/标识，或歧义即停，绝不猜测"
+    ],
+    "must_not": ["停摆当 skipped 悄悄放过", "凭猜测挂到别的 ticket"]
+  },
+  "expects": {
+    "activation": true,
+    "required_controls": ["blocked build", "open item", "歧义即停", "静默跳过"],
+    "required_anti_patterns": ["假装通过"]
+  },
+  "notes": "F1 硬化：C 思想（无人值守红停摆显式 blocked）纳入确定性覆盖。"
+}

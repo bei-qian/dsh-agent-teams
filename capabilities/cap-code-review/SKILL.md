@@ -23,13 +23,13 @@ metadata:
 - **`author-is-only-actor`（实现者=唯一评审者）不是「免审」**：这是**红牌升级条件**——自评审不能作为唯一门，必须标红并升级为独立评审/人工复核，不得默认通过。含糊时按 `references/review-checklist.md` 定维度。
 
 ## 输入 / 输出契约
-**输入**：diff、story/AC、测试、相关架构 ADR（含安全 ADR）、`reviewer` 与 `author` 身份；**变更文件清单**（覆盖率冻结分母的来源：`--from`/`--to` 走 `git diff --name-status`，或显式 `--files`/`--files-from`）。
+**输入**：diff、story/AC、测试、相关架构 ADR（含安全 ADR）、`reviewer` 与 `author` 身份；**变更文件清单**（覆盖率冻结分母的来源：`--from`/`--to` 走 `git diff --name-status`，或显式 `--files`/`--files-from`）。**测试发现覆盖面**：变更清单同时用于测试发现，必须覆盖本次**新增/变更的测试文件（含新扩展名与测试框架，不因扩展名/目录规则漏检）**。**重命名/移动归因**：重命名/移动的文件按**成对路径精确 diff**，**未改动行上的既有缺陷归为既有(preexisting)**、不算本次引入。
 **输出（评审报告）**：
 1. 逐条 finding：`{severity: blocker|major|minor|nit, file:line, evidence（命令/复现）, remediation}`；
 2. **AC 覆盖检查**（每条验收标准→有无对应实现与测试）；
 3. **测试完整性检查**（删测试 / `|| true` / `.skip` / 删断言 / `passWithNoTests` 必标为 blocker）；
 4. **结论**：`block` / `accept`，并注明 reviewer、author、`reviewer==author` 红标状态。
-5. **覆盖率账本（coverage ledger）**：为每个变更文件记录终态 `reviewed` 或 `skipped(可核理由)`，输出 `coverage_rate = reviewed / 冻结分母`；**任何未记账文件即 `block`（硬门）**，全覆盖方可 `accept`（见 `references/coverage.md`）。
+5. **覆盖率账本（coverage ledger）**：为每个变更文件记录终态 `reviewed` 或 `skipped(可核理由)`，输出 `coverage_rate = reviewed / 冻结分母`；**任何未记账文件即 `block`（硬门）**，全覆盖方可 `accept`（见 `references/coverage.md`）。账本须体现**测试发现覆盖面**（新增/变更的测试文件计入分母，含新扩展名/框架，不因扩展名/目录规则漏检）与**重命名/移动归因**（成对路径精确对比、未改动行既有缺陷标 `preexisting`，**双向**既不漏报也不误报）。
 
 ## 过程（procedure）
 0. **冻结覆盖率分母（评审前）**：用 `git diff --name-status`（或显式文件列表）拿到**本次变更文件全集**并冻结，作为 `coverage_rate` 的分母；分母不得在评审后缩小或改动（依据见 `references/coverage.md`）。

@@ -12,6 +12,8 @@
 | 顶层许可 | Apache License 2.0 |
 | 顶层版权 | `Copyright 2026 Open Design contributors` |
 
+> **上游核对附注（2026-11-25）**：已核对 open-design `5fdcc3db`（0.27.3）相对本快照基线仅 **18 个 `package.json` 版本号变化**（`0.27.2`→`0.27.3`，外加 1 处 devDependencies 排序），`craft/`、`design-systems/`、`design-templates/` 正文**无差异**；**故正文快照源不变（仍 `e033aad1…`），不刷新任何 vendored 正文**。
+
 ## 顶层许可：Apache-2.0（关键段，摘自 `open-design/LICENSE`）
 
 ```

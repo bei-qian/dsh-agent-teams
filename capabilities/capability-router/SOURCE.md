@@ -8,7 +8,7 @@
 |---|---|---|---|---|
 | `anthropics/skills` · `skill-creator` | `skills/skills/skill-creator/` @ commit `e4bb5d9`（2026-11-16） | 见该目录 `LICENSE.txt` | 「description 即触发器」、正/负触发样本、渐进披露（短 SKILL.md + 按需 references）、防过拟合 | adapt（思想） |
 | `agentskills`（Agent Skills 规范 / `skills-ref`） | `agentskills/`（含 `skills-ref/`）@ commit `83021e2`（2026-11-04） | 见该目录 `LICENSE` | frontmatter + 目录包约定、skill 名 kebab 校验（`skills-ref validate` 思路）、`<name>/SKILL.md` 布局 | adopt（约定/校验思想） |
-| BMad Test Architecture（`bmad-method-test-architecture-enterprise`，TEA） | `bmad-method-test-architecture-enterprise/` @ commit `6fba06e8`（v4.3.1，2026-11-20） | 见该目录 `LICENSE` | 索引式按需加载（`tea-index.csv`）、路由歧义 / 不可服务边界表 | adapt（索引/边界思想） |
+| BMad Test Architecture（`bmad-method-test-architecture-enterprise`，TEA） | `bmad-method-test-architecture-enterprise/` @ commit `6fba06e8`（v4.3.1，2026-11-20） | 见该目录 `LICENSE` | 索引式按需加载（`tea-index.csv`）、路由歧义 / 不可服务边界表；**复核注记**：已复核 TEA v4.5.0（`75dbfb83`）**无相关路由变化**（本行 pin 仍 `6fba06e8` v4.3.1，仅加复核注记，不改既有 commit/许可/采用语义） | adapt（索引/边界思想） |
 | GoogleChrome `modern-web-guidance-src` | `modern-web-guidance-src/` @ commit `634d0f83`（`634d0f83bb41092832797411d148350196b8258d`，2026-11-22） · https://github.com/GoogleChrome/modern-web-guidance-src | Apache-2.0（`LICENSE`） | 检索式按需知识范式：**search → retrieve → verify → disclose 用了哪条**（渐进披露 + 披露纪律） | adapt（思想） |
 | `wshobson/agents` | `agents/` @ commit `12bcec79`（`12bcec79ec7f24868bc75fe8cd21428ebf5e96d0`，2026-11-22） · https://github.com/wshobson/agents | MIT（`LICENSE`） | agent-team 六模式与「单源真相/生成」分层中的路由与渐进披露参照（只取方法参照） | reference（思想） |
 

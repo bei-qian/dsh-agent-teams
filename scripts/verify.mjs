@@ -359,7 +359,7 @@ function main() {
   }
   check(exists(join(ROOT, 'icon.svg')), 'missing icon.svg')
   const pkg = JSON.parse(read(join(ROOT, 'package.json')))
-  check(pkg.version === '0.2.0', `unexpected version ${pkg.version} (expected 0.2.0)`)
+  check(pkg.version === '0.2.1', `unexpected version ${pkg.version} (expected 0.2.1)`)
   check(Boolean(pkg && pkg.dsh && pkg.dsh.bundle && pkg.dsh.bundle.patch),
     'package.json missing dsh.bundle.patch')
 
@@ -508,7 +508,7 @@ function main() {
     }
   }
 
-  // 13. naming gate (issue-12 / 0.2.0 identity rename): the product identity layer
+  // 13. naming gate (issue-12 identity rename): the product identity layer
   //     (package name, preset ids, preset-card titles) must not carry the BMad brand
   //     (upstream TRADEMARK.md: MIT covers code, not the brand). Runs as its own script
   //     so the two negative paths (id back to bmad-, title back to BMAD) are cheap to replay.

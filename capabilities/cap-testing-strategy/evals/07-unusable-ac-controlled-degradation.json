@@ -1,0 +1,21 @@
+{
+  "id": "07-unusable-ac-controlled-degradation",
+  "category": "boundary",
+  "description": "边界：某条验收标准本身不可测（无客观可断言结果）。合格策略须识别可测/不可测、保留完整清单+理由、默认 halt，仅显式受控降级才 skip-and-report 并上报被跳过数量，继续可测子集且完成前校验每个可测 AC 恰有一个可执行测试。",
+  "prompt": "有一条验收标准『页面要足够美观』无法转成可执行断言，另有两条 AC 可测。请给测试计划。",
+  "expect": {
+    "activate": true,
+    "must_produce": [
+      "把 AC 分为可测/不可测，不可测项保留在完整清单并写明具体理由",
+      "默认 halt；仅显式开启受控降级才 skip-and-report，并上报被跳过的条目与数量",
+      "继续对可测子集推进，完成前校验每个可测 AC 恰有一个可执行测试"
+    ],
+    "must_not": ["默认放过不可测项", "删掉不可测项不登记"]
+  },
+  "expects": {
+    "activation": true,
+    "required_controls": ["不可测", "受控降级", "skip-and-report", "上报被跳过", "halt"],
+    "required_anti_patterns": ["放水通道", "形容词"]
+  },
+  "notes": "F1 硬化：A 思想（不可测验收标准上报与受控降级）纳入确定性覆盖，对应 references/test-design.md §9。"
+}
