@@ -81,6 +81,19 @@ git pull
 
 然后在 **Plugins** 里把 `dsh-olympus` 插件**关开一次**，或**重启 DSH**，让新内容生效（Host 半边不像浏览器半边那样热更）。
 
+### 升级与版本锁定（07a）
+
+上面「更新」走的是「本地目录 + `git pull`」。若你把 `dsh-olympus` 作为 **profile 依赖**（在 profile 的 `package.json` 里以 `github:` specifier 引入）安装，请把依赖**锁定到显式 ref**，避免跟随默认分支漂移：
+
+```yaml
+# ~/.dsh/profiles/<profile>/package.json
+"dsh-olympus": "github:bei-qian/dsh-olympus#v0.2.0"   # 锁到发布 tag（或改用具体 commit sha）
+```
+
+升级流程 = **改 specifier → 重装 → 核对**：改到目标 tag / commit → `pnpm install` 重装 → 核对 `pnpm-lock.yaml` 里该依赖的 tarball commit 与所选 ref 一致、`require('dsh-olympus/package.json').version` 等于所选版本（如 `0.2.0`）。
+
+> **发版 = 打 tag**（tag 推送即触发 CI `verify`，`on: push` 无 branches/tags 过滤器）；**不使用 prepack** 作为安装门禁——pnpm 11.28.5 实测 git 依赖默认受 `allowBuilds` 白名单约束、`prepack` 不会自动执行（未列入白名单时安装报 `ERR_PNPM_GIT_DEP_PREPARE_NOT_ALLOWED`）。
+
 ### 卸载
 
 在 **Plugins** 里移除 `dsh-olympus` bundle 即可（或在 profile 的 `cordis.patch.yml` 中删除对应插入）。
