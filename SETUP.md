@@ -25,33 +25,33 @@ DSH 安装插件 bundle **只支持「本地目录」这一种来源**，**不�
 **方式 1：git clone**
 
 ```bash
-git clone https://github.com/bei-qian/dsh-agent-teams.git
+git clone https://github.com/bei-qian/dsh-olympus.git
 ```
 
 **方式 2：下载 ZIP**
 
-在 GitHub 仓库页点击 **Code → Download ZIP**，解压后得到 `dsh-agent-teams/` 目录。
+在 GitHub 仓库页点击 **Code → Download ZIP**，解压后得到 `dsh-olympus/` 目录。
 
-两种方式都会得到一个包含 `cordis.patch.yml` 的目录（即本仓库根 `dsh-agent-teams/`）。**请记住这个目录的绝对路径**，下一步要用。
+两种方式都会得到一个包含 `cordis.patch.yml` 的目录（即本仓库根 `dsh-olympus/`）。**请记住这个目录的绝对路径**，下一步要用。
 
 > ⚠️ **这个目录之后不能删除、不能移动。** DSH 是**链接（link）**这个本地目录来安装，而不是拷贝。移动或删除会让插件失效（见 [常见问题](#常见问题faq)）。建议放在一个稳定的位置，例如：
-> - macOS / Linux：`~/plugins/dsh-agent-teams`
-> - Windows：`C:\Users\<你>\plugins\dsh-agent-teams`
+> - macOS / Linux：`~/plugins/dsh-olympus`
+> - Windows：`C:\Users\<你>\plugins\dsh-olympus`
 
 ### 第二步：用「本地目录」安装
 
 **安装方式 A：Web 图形界面**
 
-DSH → **Plugins** → **Add plugin** → **选择本地目录**，选中上一步得到的 `dsh-agent-teams` 目录。
+DSH → **Plugins** → **Add plugin** → **选择本地目录**，选中上一步得到的 `dsh-olympus` 目录。
 
 **安装方式 B：agent / `plugin_manager`**
 
 让 agent 调用 `plugin_manager` 的 `install_bundle`，`target` 填该目录的**绝对路径**（macOS / Linux / Windows 都用绝对路径）：
 
 ```
-install_bundle  target = /绝对/路径/to/dsh-agent-teams
-# 例（macOS/Linux）：/Users/你的名字/plugins/dsh-agent-teams
-# 例（Windows）    ：C:\Users\你的名字\plugins\dsh-agent-teams
+install_bundle  target = /绝对/路径/to/dsh-olympus
+# 例（macOS/Linux）：/Users/你的名字/plugins/dsh-olympus
+# 例（Windows）    ：C:\Users\你的名字\plugins\dsh-olympus
 ```
 
 `install_bundle` 会自行完成 package 安装与 bundle 选择，**不要**用 shell 手动复刻这些步骤。
@@ -75,7 +75,7 @@ install_bundle  target = /绝对/路径/to/dsh-agent-teams
 ### 更新
 
 ```bash
-cd /你的/dsh-agent-teams
+cd /你的/dsh-olympus
 git pull
 ```
 
@@ -92,7 +92,7 @@ git pull
 - **能不能直接填 git URL / npm 包名安装？**
   不能。DSH 目前只支持从**本地目录**安装插件 bundle，没有「从 git URL 或 npm spec 直接安装 bundle」的能力。务必先 `git clone` 或下载 ZIP 解压，再用本地目录方式安装。
 - **Windows 上 target 路径怎么写？**
-  用该目录的**绝对路径**，例如 `C:\Users\<你>\plugins\dsh-agent-teams`。不要用 `~` 或相对路径。
+  用该目录的**绝对路径**，例如 `C:\Users\<你>\plugins\dsh-olympus`。不要用 `~` 或相对路径。
 - **`package.json` 里是 `private: true`，会不会装不上？**
   不会。`private: true` 只影响发布到 npm；「本地目录」安装不经过 npm 发布，照常可用。
 - **需要先 `npm install` 或 `node scripts/build_patch.mjs` 吗？**
@@ -147,12 +147,12 @@ git pull
 
 1. 重新生成 `cordis.patch.yml`（模板 / 提示词改动后需要重跑）：
    ```bash
-   cd dsh-agent-teams
+   cd dsh-olympus
    node scripts/build_patch.mjs
    ```
 2. 重新安装 / 刷新插件（与外部用户同样的「本地目录」方式）：
    ```
-   install_bundle  target = /绝对/路径/to/dsh-agent-teams
+   install_bundle  target = /绝对/路径/to/dsh-olympus
    ```
    或在 Web 的 **Plugins → Add plugin → 选择本地目录** 选择本目录；已在 Plugins 里的，关开一次或重启 DSH 生效。
 3. 校验（可选；CI 也会跑）：

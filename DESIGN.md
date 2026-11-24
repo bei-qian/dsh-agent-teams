@@ -163,7 +163,7 @@ Multica 的 squad = **Leader + Members + Role descriptions + Squad instructions*
 **v1 目录树**
 
 ```
-dsh-agent-teams/
+dsh-olympus/
 ├─ package.json                 # dsh.bundle.patch 指向 cordis.patch.yml
 ├─ cordis.patch.yml             # 插入 leader + 成员预设 + 委派工具行
 ├─ persona/
@@ -196,7 +196,7 @@ dsh-agent-teams/
 **v2 目录树**
 
 ```
-dsh-agent-teams/
+dsh-olympus/
 ├─ package.json            # dsh.bundle.patch + dsh.client.inject
 ├─ cordis.patch.yml        # Host 插件行 + 预设行 + 客户端行
 ├─ src/
@@ -283,7 +283,7 @@ Leader 的 persona 承载 Multica 的 *Operating Protocol + Roster + Instruction
 
 1. **v1 形态**：配置型闭环（零 Host 代码）——已实现。
 2. **Roster 范围**：6 个 method 角色 + TEA 的 Murat，共 7 名成员 + 1 名负责人。
-3. **命名**：目录 `dsh-agent-teams`、包名 `dsh-olympus`。
+3. **命名**：目录 `dsh-olympus`、包名 `dsh-olympus`。
 4. **落地**：已在 `desktop` profile 安装，8 个预设行均 `enabled=true / active`（见 SETUP.md 的验证方式）。
 5. **提示语言**：中文。
 6. **待办（下一轮）**：v2 的 Host 服务 + Web 面板；以及本插件的图标/详情页展示资源（本地 bundle 可后补）。
