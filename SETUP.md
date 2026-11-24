@@ -133,7 +133,7 @@ git pull
   每个角色一份自包含 `SKILL.md`，固定写到工作区 `bmad-output/`（`index.md` 当票据真相）；**不需要** Python/uv/`_bmad`。
   **校验器** `scripts/squad_validate.mjs`（Node，零依赖）在每个阶段门由 **Lead** 执行（dev/tea 可自行执行）：
   `node scripts/squad_validate.mjs ./bmad-output`，退出码 0/1 决定能否继续。
-  仓库仍保留完整 BMad 技能于 `skills/`（**未启用**，可日后参考或回退；不需要可删）。
+  需要上游原文时请 clone `bmad-code-org/BMAD-METHOD` / `bmad-code-org/bmad-method-test-architecture-enterprise`（见 `ATTRIBUTION.md`）；仓库不再保留副本。
   来源与许可见 `ATTRIBUTION.md`（MIT © 2025 BMad Code, LLC）。
 - **每个成员可选模型**：默认成员跟随调度会话的当前模型。要在**委派时**给某个成员换模型，先打开
   **Plugins → Subagent → Model selection** 启用并勾选允许的模型路由，之后调度会在 `delegate_*` 里按需传

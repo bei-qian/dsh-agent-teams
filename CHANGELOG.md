@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- **删除 vendored `skills/` 参考副本**（issue #16，方案 C）：移除仓库内 38 个 BMad 技能目录 + `skills/LICENSE-BMAD-METHOD.txt`（**653 文件 / 6.9MB**）——运行时从未接线、发布物从未包含它。同步：`scripts/verify.mjs` 删除第 4 段 skills 计数断言（`REQUIRED_SKILLS` / `skillDirs` / 末行 `N bundled skills` 一并清理，末行改为只报 presets+delegates）；`scripts/check_pack.mjs` **仅注释级改动**（保留 declared-but-absent 守卫，不改断言方向）；`ATTRIBUTION.md` 改写为「上游两仓、不随包不留仓」并修正 `tea` 归属（原误列为 BMAD-METHOD 子集，实为独立仓 `bmad-method-test-architecture-enterprise`）；`README` / `SETUP` / `ROADMAP` / `DESIGN` 同步；新增 `docs/vendored-skills-baseline.md`（38→上游路径映射 + 两仓 pin + 整树 sha256；`docs/` 不随包）。合规前置（根 `LICENSE-BMAD-METHOD.txt` MIT 全文随包分发）已在 issue-06 方案 B 落地，本次不动。**产物零变化（针对删除 `skills/` 目录这一操作）**：`skills/` 从未进包，删该目录前后 `npm pack` 产物文件集均为 **458 文件 / `skills: 0` / 根 `LICENSE-BMAD-METHOD.txt` 随包**；因 `scripts/` 与各文档本身在 `package.json#files` 内，本次对其内容的修改会使 tarball 字节数相应变化，属预期。
+
 ## 0.1.2 — 2026-11-24
 
 - **上游更新吸收（epic-004）**：①TEA v4.4 测试证据完整性思想零逐字改编入 cap-testing-strategy / bmad-test-strategy（零动作缺陷探针 / 覆盖排除显式登记 / 证据版本绑定·变动即 stale / 发布前就绪清单 / 弱化机制不得冒充保证；SOURCE pin 85fda574，新增 06 回归 fixture）；②modern-web-guidance playbook 快照 v1.0.1(6971ebbe)→888035b5 整体刷新（210 篇对齐，+context-menu/+teaser、−prompt-api(重复)/−soft-edge-content-fade(改名)，20 篇正文更新含 dialog 无障碍重写；零依赖纯 markdown、212 处交叉引用 0 broken、SKILL 分类计数同步）；③ATTRIBUTION 补 modern-web-guidance 逐字 vendoring 归属（guides 正文 CC-BY 4.0 + 代码 Apache-2.0，Upstream pin 888035b5，© Google LLC 及 contributors）。门禁：verify.mjs OK / squad_validate OK(24) / 独立评审 murat-3·amelia-3 PASS。

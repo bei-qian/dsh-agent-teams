@@ -6,8 +6,6 @@
  *   - cordis.patch.yml is in sync with cordis.patch.tmpl.yml + prompts/*.md
  *   - 8 agent presets with the expected ids exist
  *   - the leader's 7 delegate tools point at existing member presets
- *   - the bundled skills/ is kept on disk, not wired (the enable path is playbooks/)
- *   - the bundled skills/ actually contains the BMad skills
  *   - the 6 P0 capability modules exist under capabilities/, each SKILL.md has a
  *     complete frontmatter (name==dir/kebab, description, whenToUse, metadata.domain,
  *     metadata.priority), and every module's evals cover the 5 categories
@@ -32,8 +30,6 @@ const EXPECTED_PRESETS = new Set([
   'bmad-squad-lead', 'bmad-analyst', 'bmad-pm', 'bmad-po',
   'bmad-ux', 'bmad-architect', 'bmad-dev', 'bmad-tea',
 ])
-const REQUIRED_SKILLS = ['bmad', 'bmad-agent-analyst', 'bmad-agent-pm', 'bmad-agent-dev',
-  'bmad-agent-architect', 'bmad-facilitate', 'bmad-build', 'bmad-tea']
 
 // The 6 P0 capability modules that must all be present under capabilities/ (ADR-A1).
 const REQUIRED_CAPABILITIES = [
@@ -188,7 +184,7 @@ function main() {
   check(nModelDiscovery === 1,
     `expected exactly 1 modelDiscovery: true (one per scope), found ${nModelDiscovery}`)
 
-  // 4. playbook wiring + bundled skills content (full BMad kept on disk, not wired)
+  // 4. playbook + capabilities wiring (vendored reference copies removed — issue #16)
   const nCustomSkillDirs = (patch.match(/customSkillDirs/g) || []).length
   check(nCustomSkillDirs === 8, `expected 8 customSkillDirs rows, found ${nCustomSkillDirs}`)
   const nPlaybookDirs = patch.split("'playbooks')").length - 1
@@ -345,13 +341,6 @@ function main() {
         `capabilities/${cdir}/evals missing category coverage: ${pyList(missingCats)} ` +
         `(saw ${pyList([...seenCats].sort())})`)
     }
-  }
-  const skills = join(ROOT, 'skills')
-  const skillDirs = listDir(skills)
-    .filter((n) => isDir(join(skills, n)) && exists(join(skills, n, 'SKILL.md')))
-  check(skillDirs.length >= 38, `expected >=38 bundled skills, found ${skillDirs.length}`)
-  for (const need of REQUIRED_SKILLS) {
-    check(exists(join(skills, need, 'SKILL.md')), `missing bundled skill: ${need}`)
   }
 
   // 5. display metadata
@@ -524,7 +513,7 @@ function main() {
     for (const e of errors) console.log('  -', e)
     process.exit(1)
   }
-  console.log(`VERIFY OK: ${presetRows.length} presets, ${delegates.length} delegates, ${skillDirs.length} bundled skills`)
+  console.log(`VERIFY OK: ${presetRows.length} presets, ${delegates.length} delegates`)
   console.log(`  deterministic capability evals: run_evals × ${ranEvalModules.length} modules `
     + `${pyList([...ranEvalModules].sort())}; router validate_selection × ${routerFixtureCount} fixtures`)
 }
