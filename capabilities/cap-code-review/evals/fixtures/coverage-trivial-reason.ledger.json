@@ -1,0 +1,9 @@
+{
+  "schema": "cap-code-review/coverage-ledger/v1",
+  "reviewed": [],
+  "skipped": [
+    { "path": "src/a.js", "reason": "n/a" },
+    { "path": "src/b.js", "reason": "later" },
+    { "path": "src/c.js", "reason": "skip" }
+  ]
+}

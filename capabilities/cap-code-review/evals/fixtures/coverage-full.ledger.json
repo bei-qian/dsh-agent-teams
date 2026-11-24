@@ -1,0 +1,11 @@
+{
+  "schema": "cap-code-review/coverage-ledger/v1",
+  "reviewed": ["src/app.js", "src/db.js"],
+  "skipped": [
+    {
+      "path": "docs/legacy.md",
+      "reason": "纯 Markdown 文档改动，无代码可审；按 docs-typo 轻量路径豁免（可核：diff 仅改文档措辞）"
+    }
+  ],
+  "denominator": ["src/app.js", "src/db.js", "docs/legacy.md"]
+}

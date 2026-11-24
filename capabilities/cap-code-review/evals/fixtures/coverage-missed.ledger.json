@@ -1,0 +1,5 @@
+{
+  "schema": "cap-code-review/coverage-ledger/v1",
+  "reviewed": ["src/a.js", "src/b.js"],
+  "skipped": []
+}
