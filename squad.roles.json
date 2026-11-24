@@ -1,6 +1,6 @@
 {
   "_doc": [
-    "Single source of truth for the capability boundary of every BMad squad preset.",
+    "Single source of truth for the capability boundary of every Olympus Squad preset.",
     "scripts/check_presets.mjs reads THIS file (and only this file) to derive its assertions;",
     "it never hardcodes a second copy of the matrix. The values describe the TARGET contract",
     "for cordis.patch.yml (the generated bundle patch).",
@@ -23,7 +23,7 @@
     "path). `--strict` is accepted for CLI compatibility only and does not change behaviour."
   ],
   "presets": {
-    "bmad-squad-lead": {
+    "squad-lead": {
       "bash": true,
       "jobs": false,
       "web": false,
@@ -31,7 +31,7 @@
       "control": true,
       "subagent": true
     },
-    "bmad-analyst": {
+    "analyst": {
       "bash": false,
       "jobs": false,
       "web": true,
@@ -39,7 +39,7 @@
       "control": true,
       "subagent": false
     },
-    "bmad-pm": {
+    "pm": {
       "bash": false,
       "jobs": false,
       "web": true,
@@ -47,7 +47,7 @@
       "control": true,
       "subagent": false
     },
-    "bmad-po": {
+    "po": {
       "bash": false,
       "jobs": false,
       "web": false,
@@ -55,7 +55,7 @@
       "control": true,
       "subagent": false
     },
-    "bmad-ux": {
+    "ux": {
       "bash": false,
       "jobs": false,
       "web": false,
@@ -63,7 +63,7 @@
       "control": true,
       "subagent": false
     },
-    "bmad-architect": {
+    "architect": {
       "bash": false,
       "jobs": false,
       "web": true,
@@ -71,7 +71,7 @@
       "control": true,
       "subagent": false
     },
-    "bmad-dev": {
+    "dev": {
       "bash": true,
       "jobs": true,
       "web": true,
@@ -79,7 +79,7 @@
       "control": true,
       "subagent": false
     },
-    "bmad-tea": {
+    "tea": {
       "bash": true,
       "jobs": true,
       "web": true,

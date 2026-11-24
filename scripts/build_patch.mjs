@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * Generate cordis.patch.yml from cordis.patch.tmpl.yml + prompts/*.md.
+ * Generate cordis.patch.yml from cordis.patch.tmpl.yml + persona/*.md.
  *
- * Why a build step: persona text is stored as editable Markdown in prompts/*.md,
+ * Why a build step: persona text is stored as editable Markdown in persona/*.md,
  * but a preset's `persona.prefix` must be a YAML block scalar in cordis.patch.yml.
  * This script inlines each prompt at the exact indentation of its @@PROMPT:<name>@@
  * marker, so the emitted YAML is always well-formed and prompts stay editable.
@@ -18,7 +18,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const PROMPTS = path.join(ROOT, 'prompts')
+const PERSONA = path.join(ROOT, 'persona')
 const TMPL = path.join(ROOT, 'cordis.patch.tmpl.yml')
 const DEFAULT_OUT = path.join(ROOT, 'cordis.patch.yml')
 
@@ -26,9 +26,9 @@ const MARKER = /^(\s*)@@PROMPT:([A-Za-z0-9_-]+)@@\s*$/
 
 function loadPrompts() {
   const prompts = new Map()
-  const names = fs.readdirSync(PROMPTS).filter((n) => n.endsWith('.md')).sort()
+  const names = fs.readdirSync(PERSONA).filter((n) => n.endsWith('.md')).sort()
   for (const name of names) {
-    const full = path.join(PROMPTS, name)
+    const full = path.join(PERSONA, name)
     prompts.set(path.basename(name, '.md'), fs.readFileSync(full, 'utf-8').replace(/^\n+|\n+$/g, ''))
   }
   return prompts
@@ -46,7 +46,7 @@ function build(out) {
     const indent = m[1]
     const name = m[2]
     if (!prompts.has(name)) {
-      console.error(`build_patch: no prompt file prompts/${name}.md`)
+      console.error(`build_patch: no persona file persona/${name}.md`)
       process.exit(1)
     }
     for (const promptLine of prompts.get(name).split('\n')) {

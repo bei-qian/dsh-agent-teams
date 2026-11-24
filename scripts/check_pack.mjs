@@ -20,8 +20,8 @@
  * proving itself):
  *   - cordis.patch.yml  skill-filesystem customSkillDirs join(..., 'X')  → playbooks, capabilities
  *   - package.json exports each value's first path segment + dsh.bundle.patch
- *                                         → index.js, client.js, rows, locale, icon.svg, cordis.patch.yml (…)
- *   - prompts/  (build source dir) — included only when it exists on disk
+ *                                         → index.js, client.js, presets, locale, icon.svg, cordis.patch.yml (…)
+ *   - persona/  (build source dir) — included only when it exists on disk
  *
  * Exit codes:
  *   0 = product satisfies both directions
@@ -56,7 +56,7 @@ function deriveRequired() {
   const pkg = readJson(path.join(ROOT, 'package.json'))
   const required = new Set()
 
-  // (1) exports.* value first path segment → index.js, client.js, rows, locale, icon.svg, package.json
+  // (1) exports.* value first path segment → index.js, client.js, presets, locale, icon.svg, package.json
   for (const value of Object.values(pkg.exports || {})) {
     if (typeof value !== 'string') continue // ignore conditional/nested export objects
     const first = topSegment(value)
@@ -79,8 +79,8 @@ function deriveRequired() {
     if (quoted.length) required.add(quoted[quoted.length - 1]) // last join argument
   }
 
-  // (4) prompts/ — the build_patch source dir; include in the required set only if it exists
-  if (isDir(path.join(ROOT, 'prompts'))) required.add('prompts')
+  // (4) persona/ — the build_patch source dir; include in the required set only if it exists
+  if (isDir(path.join(ROOT, 'persona'))) required.add('persona')
 
   return { pkg, required }
 }

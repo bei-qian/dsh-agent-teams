@@ -1,8 +1,8 @@
 ---
 name: bmad-squad-protocol
-description: BMad 小队的零依赖运行协议：固定 bmad-output/ 目录、index.md 票据真相、squad_validate 确定性校验。Lead 与成员开工/收尾时加载。
+description: Olympus Squad 的零依赖运行协议：固定 bmad-output/ 目录、index.md 票据真相、squad_validate 确定性校验。Lead 与成员开工/收尾时加载。
 ---
-# BMad 小队 · 零依赖运行协议
+# Olympus Squad · 零依赖运行协议
 
 这是「零依赖版」小队的纪律基线。不依赖 `_bmad/`、不依赖 Python/uv，但用**固定目录 + 索引文件 + 校验器**保证确定性。所有成员与负责人每次开工、收尾都遵守。
 
@@ -12,21 +12,21 @@ description: BMad 小队的零依赖运行协议：固定 bmad-output/ 目录、
 
 ```
 bmad-output/
-  initiative.md        # 唯一真相：举措目标/范围/开放问题（Sofia 维护）
-  index.md             # 唯一真相：票据清单（Sofia 维护）
-  research/            # Mary：调研笔记、brief
-  prd.md               # John：PRD
-  architecture.md      # Winston：架构 + ADR 摘要
-  design.md            # Sally：设计
-  experience.md        # Sally：体验/行为
-  epics/epic-*.md      # Sofia：epic
-  stories/story-*.md   # Sofia：story
+  initiative.md        # 唯一真相：举措目标/范围/开放问题（Themis 维护）
+  index.md             # 唯一真相：票据清单（Themis 维护）
+  research/            # Apollo：调研笔记、brief
+  prd.md               # Prometheus：PRD
+  architecture.md      # Athena：架构 + ADR 摘要
+  design.md            # Ariadne：设计
+  experience.md        # Ariadne：体验/行为
+  epics/epic-*.md      # Themis：epic
+  stories/story-*.md   # Themis：story
   tasks/task-*.md      # 可选：拆到 task
 ```
 
 ## 第 0 步 · AGENTS.md（项目级 agent 指令）
 
-`AGENTS.md` 承载「项目级 agent 指令」，由 architect（Winston）用 `bmad-project-context` playbook 维护。它是**条件触发**，不是每次必跑：
+`AGENTS.md` 承载「项目级 agent 指令」，由 architect（Athena）用 `bmad-project-context` playbook 维护。它是**条件触发**，不是每次必跑：
 
 - 目标项目**无 `AGENTS.md` / 为空 / 有内容但无受管 block** → 走 `setup` / `adopt`（建 / 吸收）。
 - **已有受管 `<!-- bmad:context -->` block** → **不静默跳过**，按需 `refresh` / `audit`（不强制每次跑，防止指令腐烂）。
@@ -34,7 +34,7 @@ bmad-output/
 
 纪律：
 
-- **仅 architect（Winston）执行**：由它加载 `bmad-project-context` playbook。Sofia 维护的 `index.md` / 票据流程不受影响（`AGENTS.md` 不是票据，不写 `index.md`）。
+- **仅 architect（Athena）执行**：由它加载 `bmad-project-context` playbook。Themis 维护的 `index.md` / 票据流程不受影响（`AGENTS.md` 不是票据，不写 `index.md`）。
 - **`AGENTS.md` 在项目根**，是「一切产出写 `bmad-output/`」契约的**唯一明确例外**；除此之外仍只写 `bmad-output/`。
 - 派活前由 **Lead 用 `ask_user`** 访谈用户（治理 / 安全 / 禁改目录 / 术语 / 已知坑）；命令拿不准写 `TODO(待 Lead 补)`。
 - **写入前必须用户确认**；任务上标 `writeScopes=[AGENTS.md]`；**不 commit**。
@@ -62,7 +62,7 @@ Markdown 表格，列顺序固定 `id | type | title | status | file`：
 node <本技能目录>/../../scripts/squad_validate.mjs ./bmad-output
 ```
 
-由 **Lead**（有 shell）在每个阶段门执行；`bmad-dev`/`bmad-tea` 完成自己阶段时可自行执行；其他成员交付时报告 Lead 由其执行。加载本技能时 DSH 会给出该 SKILL.md 的真实路径；校验器就在插件 `scripts/squad_validate.mjs`（本技能目录的上两级 `../../scripts/`）。
+由 **Lead**（有 shell）在每个阶段门执行；`dev`/`tea` 完成自己阶段时可自行执行；其他成员交付时报告 Lead 由其执行。加载本技能时 DSH 会给出该 SKILL.md 的真实路径；校验器就在插件 `scripts/squad_validate.mjs`（本技能目录的上两级 `../../scripts/`）。
 
 - 退出码 0 = 通过，可以继续/收尾；
 - 退出码 1 = 有硬错误（缺文件、重复 id、非法状态、index 指向不存在的文件），**修好再跑**，不得跳过；
@@ -80,31 +80,50 @@ node <本技能目录>/../../scripts/squad_validate.mjs ./bmad-output
 
 小队成员与子代理一律按「**`<角色前缀>-<序号>`**」命名；命名规则只在此处维护，其它 playbook / prompt 只引用本节。
 
-**Roster 角色前缀**（与 `prompts/squad-lead.md` 的 Roster 对齐）：
+**Roster 角色前缀**（与 `persona/squad-lead.md` 的 Roster 对齐）：
 
-| 角色 | 预设 | 命名前缀 |
+| 角色 | 预设（preset id） | 命名前缀 |
 |---|---|---|
-| 调度 / 负责人 Lead | `bmad-squad-lead` | （自身，不代为命名） |
-| 业务分析师 Mary | `bmad-analyst` | `mary-n` |
-| 产品经理 John | `bmad-pm` | `john-n` |
-| 产品负责人 Sofia | `bmad-po` | `sofia-n` |
-| UX 设计师 Sally | `bmad-ux` | `sally-n` |
-| 架构师 Winston | `bmad-architect` | `winston-n` |
-| 开发者 Amelia | `bmad-dev` | `amelia-n` |
-| 测试架构师 Murat | `bmad-tea` | `murat-n` |
+| 调度 / 负责人 Lead | `squad-lead` | （自身，不代为命名） |
+| 业务分析师 Apollo | `analyst` | `apollo-n` |
+| 产品经理 Prometheus | `pm` | `prometheus-n` |
+| 产品负责人 Themis | `po` | `themis-n` |
+| UX 设计师 Ariadne | `ux` | `ariadne-n` |
+| 架构师 Athena | `architect` | `athena-n` |
+| 开发者 Hephaestus | `dev` | `hephaestus-n` |
+| 测试架构师 Argus | `tea` | `argus-n` |
 
 **命名规则**：
 
-- **Lead 委派时指定显示名**：Lead 用 `delegate_*` 派活时**必须传 `name`**，取「该队员前缀-序号」（如 `mary-1`、`john-2`）；序号 `n` 按本会话该队员第几次被委派递增，首次为 1；不确定已用名时先 `list_agents` 查，取该队员下一个未占用序号，报 `DUPLICATE_AGENT_NAME` 则顺延。
+- **Lead 委派时指定显示名**：Lead 用 `delegate_*` 派活时**必须传 `name`**，取「该队员前缀-序号」（如 `apollo-1`、`prometheus-2`）；序号 `n` 按本会话该队员第几次被委派递增，首次为 1；不确定已用名时先 `list_agents` 查，取该队员下一个未占用序号，报 `DUPLICATE_AGENT_NAME` 则顺延。
 - **派生帮手同样传 `name`**：成员若被授予委派 / 子代理工具，派生下属时也必须传 `name`（同一前缀，序号在其名下递增），不要省略。
 - **不命名即不可辨**：省略 `name` 会让编队面板只显示 `agent-1` / `agent-2`，无法辨认执行者，务必按此命名。
 
-> 角色 prompt 只写「命名遵循 `bmad-squad-protocol` 约定」，不重复本节规则；`prompts/squad-lead.md` 的 Roster 也是本节的前缀来源之一。
+> 角色 prompt 只写「命名遵循 `bmad-squad-protocol` 约定」，不重复本节规则；`persona/squad-lead.md` 的 Roster 也是本节的前缀来源之一。
+
+## 花名 ↔ id ↔ 上游角色（唯一映射表）
+
+**id = 地址，花名 = 称呼。** id 里绝不出现神话名；换花名只改人读层（`persona/*.md`、`locale/*.json`、本表），不动 id。
+
+| 花名 | preset id | 上游 BMad 角色（仅来源说明） | 座位 | 状态 |
+|---|---|---|---|---|
+| Hermes 赫尔墨斯 | `squad-lead` | （上游无对应，队长） | 调度 | 已建 |
+| Apollo 阿波罗 | `analyst` | Mary | 分析 | 已建 |
+| Prometheus 普罗米修斯 | `pm` | John | 产品 | 已建 |
+| Themis 忒弥斯 | `po` | Sofia | 票据 | 已建 |
+| Ariadne 阿里阿德涅 | `ux` | Sally | 体验 | 已建 |
+| Athena 雅典娜 | `architect` | Winston | 架构 | 已建 |
+| Hephaestus 赫菲斯托斯 | `dev` | Amelia | 开发 | 已建 |
+| Argus 阿耳戈斯 | `tea` | Murat | 测试 | 已建 |
+| Nemesis 涅墨西斯 | —（占位，无 preset） | reviewer | 评审 | **未开**（用户明确「先不开」；不建 preset、不配工具、不进 `squad.roles.json`） |
+
+- `squad-lead` 不叫裸 `lead`：DSH 运行时的根 agent 就叫 `lead`，裸 `lead` 会让 `list_agents` 寻址混淆。
+- 本小队的方法参考 BMad Method（MIT © BMad Code, LLC）；花名是自有品牌，与上游人名不是同一身份。
 
 ## 规则
 
 1. **先读后写**：开工先读 `initiative.md` 与 `index.md`；只处理自己票据范围内的文件。
-2. **改状态走索引**：`index.md` 由 Sofia 维护（成员可改自己票据的行；派活/重排由 Lead 指示、Sofia 执行）。
+2. **改状态走索引**：`index.md` 由 Themis 维护（成员可改自己票据的行；派活/重排由 Lead 指示、Themis 执行）。
 3. **不自创路径**：产出只写进上面的固定位置；需要新目录先与 Lead 确认。
 4. **交付前跑 Gate**：见上；不通过不算完成。
 5. **Lead 收尾**：整队目标达成时，Lead 跑一次校验并确保 0 警告，再向用户交付「可评审」。

@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /**
- * Validate the dsh-agent-teams bundle (zero dependencies, stdlib only).
+ * Validate the dsh-olympus bundle (zero dependencies, stdlib only).
  *
  * Checks:
- *   - cordis.patch.yml is in sync with cordis.patch.tmpl.yml + prompts/*.md
+ *   - cordis.patch.yml is in sync with cordis.patch.tmpl.yml + persona/*.md
  *   - 8 agent presets with the expected ids exist
  *   - the leader's 7 delegate tools point at existing member presets
  *   - the 6 P0 capability modules exist under capabilities/, each SKILL.md has a
@@ -27,8 +27,8 @@ import { fileURLToPath } from 'node:url'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const EXPECTED_PRESETS = new Set([
-  'bmad-squad-lead', 'bmad-analyst', 'bmad-pm', 'bmad-po',
-  'bmad-ux', 'bmad-architect', 'bmad-dev', 'bmad-tea',
+  'squad-lead', 'analyst', 'pm', 'po',
+  'ux', 'architect', 'dev', 'tea',
 ])
 
 // The 6 P0 capability modules that must all be present under capabilities/ (ADR-A1).
@@ -161,14 +161,14 @@ function main() {
   const patch = read(join(ROOT, 'cordis.patch.yml'))
 
   // 2. presets
-  const presetRows = [...patch.matchAll(/- id: preset-(bmad-[a-z-]+)/g)].map((m) => m[1])
+  const presetRows = [...patch.matchAll(/- id: preset-([a-z][a-z-]*)/g)].map((m) => m[1])
   check(presetRows.length === 8, `expected 8 preset rows, found ${presetRows.length}`)
-  const ids = new Set([...patch.matchAll(/^ {8}id: (bmad-[a-z-]+)$/gm)].map((m) => m[1]))
+  const ids = new Set([...patch.matchAll(/^ {8}id: ([a-z][a-z-]*)$/gm)].map((m) => m[1]))
   const missingPresets = [...EXPECTED_PRESETS].filter((p) => !ids.has(p)).sort()
   check(missingPresets.length === 0, `missing preset ids: ${pyList(missingPresets)}`)
 
   // 3. delegation wiring
-  const delegates = [...patch.matchAll(/agentPreset: (bmad-[a-z-]+)/g)].map((m) => m[1])
+  const delegates = [...patch.matchAll(/agentPreset: ([a-z][a-z-]*)/g)].map((m) => m[1])
   check(delegates.length === 7, `expected 7 delegate tools, found ${delegates.length}`)
   for (const ap of delegates) {
     check(ids.has(ap), `delegate agentPreset '${ap}' has no matching preset id`)
@@ -359,7 +359,7 @@ function main() {
   }
   check(exists(join(ROOT, 'icon.svg')), 'missing icon.svg')
   const pkg = JSON.parse(read(join(ROOT, 'package.json')))
-  check(pkg.version === '0.1.2', `unexpected version ${pkg.version} (expected 0.1.2)`)
+  check(pkg.version === '0.2.0', `unexpected version ${pkg.version} (expected 0.2.0)`)
   check(Boolean(pkg && pkg.dsh && pkg.dsh.bundle && pkg.dsh.bundle.patch),
     'package.json missing dsh.bundle.patch')
 
@@ -367,46 +367,46 @@ function main() {
   //    DSH's Plugins list shows the role name/description instead of the shared
   //    "@deepseek-ai/dsh-agent-preset" text.
   const expectedRows = {
-    'bmad-squad-lead': ['squad-lead', 'BMad 小队 · 调度', 'BMad squad · Lead'],
-    'bmad-analyst': ['analyst', '〔内部成员〕BMad · Mary 业务分析师', '[Internal] BMad · Mary (Analyst)'],
-    'bmad-pm': ['pm', '〔内部成员〕BMad · John 产品经理', '[Internal] BMad · John (PM)'],
-    'bmad-po': ['po', '〔内部成员〕BMad · Sofia 产品负责人', '[Internal] BMad · Sofia (PO)'],
-    'bmad-ux': ['ux', '〔内部成员〕BMad · Sally UX 设计师', '[Internal] BMad · Sally (UX)'],
-    'bmad-architect': ['architect', '〔内部成员〕BMad · Winston 架构师', '[Internal] BMad · Winston (Architect)'],
-    'bmad-dev': ['dev', '〔内部成员〕BMad · Amelia 开发者', '[Internal] BMad · Amelia (Dev)'],
-    'bmad-tea': ['tea', '〔内部成员〕BMad · Murat 测试架构师', '[Internal] BMad · Murat (Test)'],
+    'squad-lead': ['squad-lead', 'Olympus Squad · 调度', 'Olympus Squad · Lead'],
+    'analyst': ['analyst', 'Olympus · Apollo 业务分析师', 'Olympus · Apollo (Analyst)'],
+    'pm': ['pm', 'Olympus · Prometheus 产品经理', 'Olympus · Prometheus (PM)'],
+    'po': ['po', 'Olympus · Themis 产品负责人', 'Olympus · Themis (PO)'],
+    'ux': ['ux', 'Olympus · Ariadne UX 设计师', 'Olympus · Ariadne (UX)'],
+    'architect': ['architect', 'Olympus · Athena 架构师', 'Olympus · Athena (Architect)'],
+    'dev': ['dev', 'Olympus · Hephaestus 开发者', 'Olympus · Hephaestus (Dev)'],
+    'tea': ['tea', 'Olympus · Argus 测试架构师', 'Olympus · Argus (Test)'],
   }
   const pkgExports = pkg.exports || {}
   const seenTitles = { en: new Set(), zh: new Set() }
   for (const [preset, [role, zhTitle, enTitle]] of Object.entries(expectedRows)) {
     const expectedTitle = { zh: zhTitle, en: enTitle }
-    const moduleName = `dsh-agent-teams/rows/${role}`
+    const moduleName = `dsh-olympus/presets/${role}`
     check(patch.includes(`- id: preset-${preset}\n      name: '${moduleName}'`),
       `preset-${preset} should mount ${moduleName}`)
-    const idx = join(ROOT, 'rows', role, 'index.js')
-    check(exists(idx), `missing rows/${role}/index.js`)
+    const idx = join(ROOT, 'presets', role, 'index.js')
+    check(exists(idx), `missing presets/${role}/index.js`)
     if (exists(idx)) {
       check(read(idx).includes('export { default }'),
-        `rows/${role}/index.js should re-export the preset module`)
+        `presets/${role}/index.js should re-export the preset module`)
     }
-    check(`./rows/${role}` in pkgExports, `package.json exports missing ./rows/${role}`)
-    check(`./rows/${role}/locale/*.json` in pkgExports,
-      `package.json exports missing ./rows/${role}/locale/*.json`)
-    check(`./rows/${role}/icon` in pkgExports, `package.json exports missing ./rows/${role}/icon`)
+    check(`./presets/${role}` in pkgExports, `package.json exports missing ./presets/${role}`)
+    check(`./presets/${role}/locale/*.json` in pkgExports,
+      `package.json exports missing ./presets/${role}/locale/*.json`)
+    check(`./presets/${role}/icon` in pkgExports, `package.json exports missing ./presets/${role}/icon`)
     for (const loc of ['en', 'zh']) {
-      const lp = join(ROOT, 'rows', role, 'locale', `${loc}.json`)
-      check(exists(lp), `missing rows/${role}/locale/${loc}.json`)
+      const lp = join(ROOT, 'presets', role, 'locale', `${loc}.json`)
+      check(exists(lp), `missing presets/${role}/locale/${loc}.json`)
       if (!exists(lp)) continue
       let meta
       try { meta = JSON.parse(read(lp)).meta || {} } catch (e) {
-        errors.push(`rows/${role}/locale/${loc}.json invalid JSON: ${e.message}`)
+        errors.push(`presets/${role}/locale/${loc}.json invalid JSON: ${e.message}`)
         continue
       }
       const title = meta.title
       check(title === expectedTitle[loc],
-        `rows/${role}/locale/${loc}.json title ${pyRepr(title)} != expected ${pyRepr(expectedTitle[loc])}`)
+        `presets/${role}/locale/${loc}.json title ${pyRepr(title)} != expected ${pyRepr(expectedTitle[loc])}`)
       check(Boolean((meta.description || '').trim()),
-        `rows/${role}/locale/${loc}.json missing meta.description`)
+        `presets/${role}/locale/${loc}.json missing meta.description`)
       if (title) seenTitles[loc].add(title)
     }
   }
@@ -422,7 +422,7 @@ function main() {
 
   // 8. client half (picker filter): the only mechanism that hides member presets is
   //    client.js, discovered via the bare-package host row + dsh.client + exports.
-  check(patch.includes("- id: agent-teams\n      name: 'dsh-agent-teams'"),
+  check(patch.includes("- id: agent-teams\n      name: 'dsh-olympus'"),
     "cordis patch missing the bare 'agent-teams' host row that loads client.js")
   check(pkg.dsh && pkg.dsh.client && pkg.dsh.client.platform === 'web',
     "package.json missing dsh.client with platform 'web'")
@@ -506,6 +506,29 @@ function main() {
     } else {
       check(false, 'check_pack.mjs failed ' + fmtExit(pk) + ': ' + tail(pk, 600))
     }
+  }
+
+  // 13. naming gate (issue-12 / 0.2.0 identity rename): the product identity layer
+  //     (package name, preset ids, preset-card titles) must not carry the BMad brand
+  //     (upstream TRADEMARK.md: MIT covers code, not the brand). Runs as its own script
+  //     so the two negative paths (id back to bmad-, title back to BMAD) are cheap to replay.
+  const checkNaming = join(ROOT, 'scripts', 'check_naming.mjs')
+  check(exists(checkNaming), 'missing scripts/check_naming.mjs (naming gate)')
+  if (exists(checkNaming) && hasNode) {
+    const nm = spawnSync(process.execPath, [checkNaming], { encoding: 'utf-8' })
+    check(nm.status === 0, 'check_naming.mjs failed ' + fmtExit(nm) + ': ' + tail(nm, 600))
+  }
+
+  // 14. prototype verification gate (issue #19 / internal issue-14): the static layer of
+  //     check_prototype.mjs is deterministic, offline, zero-dependency and needs neither
+  //     Chrome nor bmad-output/ — so CI runs ONLY its --self-test (per-rule red/green
+  //     fixtures). The real-prototype static run and the --browser CDP layer are a HUMAN
+  //     step (see playbooks/bmad-ux/SKILL.md 原型交付硬 gate), never wired into CI.
+  const checkPrototype = join(ROOT, 'scripts', 'check_prototype.mjs')
+  check(exists(checkPrototype), 'missing scripts/check_prototype.mjs (prototype verification gate)')
+  if (exists(checkPrototype) && hasNode) {
+    const pt = spawnSync(process.execPath, [checkPrototype, '--self-test'], { encoding: 'utf-8' })
+    check(pt.status === 0, 'check_prototype.mjs --self-test failed ' + fmtExit(pt) + ': ' + tail(pt, 600))
   }
 
   if (errors.length) {

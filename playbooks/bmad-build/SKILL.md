@@ -1,8 +1,8 @@
 ---
 name: bmad-build
-description: BMad 小队实现流程（Amelia）。端到端实现一个 story：计划、编码、测试、自检，更新 story 文件与 index.md，按 bmad-squad-protocol 落盘并过校验。
+description: Olympus Squad 实现流程（Hephaestus）。端到端实现一个 story：计划、编码、测试、自检，更新 story 文件与 index.md，按 bmad-squad-protocol 落盘并过校验。
 ---
-# 实现一个 story（Amelia）
+# 实现一个 story（Hephaestus）
 
 ## 何时用
 拿到一个已验收标准清晰的 story，要把它做出来时。
@@ -11,7 +11,7 @@ description: BMad 小队实现流程（Amelia）。端到端实现一个 story�
 - story 文件：`bmad-output/stories/story-<nnn>.md`
 - `bmad-output/architecture.md`、`bmad-output/prd.md`
 - `bmad-output/index.md`
-- 后端设计规范速查表：`dsh-agent-teams/playbooks/bmad-build/reference/README.md`（43 条意图 / 何时用 / **何时别用** / 权衡 / 路径一页摘要）；要动手实现某模式时再深读 `reference/<类别>/<pattern>.md`。
+- 后端设计规范速查表：`dsh-olympus/playbooks/bmad-build/reference/README.md`（43 条意图 / 何时用 / **何时别用** / 权衡 / 路径一页摘要）；要动手实现某模式时再深读 `reference/<类别>/<pattern>.md`。
 
 ## 步骤
 1. 读 story 与相关代码；确认范围，不擅自扩大。
@@ -154,8 +154,8 @@ description: BMad 小队实现流程（Amelia）。端到端实现一个 story�
 
 ### e) 与 bmad-architecture 的边界（重叠只维护一处）
 
-- **模式「选型 / 架构决策」归 Winston（`bmad-architecture`）**：架构文档回答「**是否**选某模式、**为何**选、边界与取舍」（ADR 级决策）。
-- **模式「落地实现」归 Amelia（`bmad-build`）**：实现时按本 SKILL 的决策表 + 参照库写代码与测试。
+- **模式「选型 / 架构决策」归 Athena（`bmad-architecture`）**：架构文档回答「**是否**选某模式、**为何**选、边界与取舍」（ADR 级决策）。
+- **模式「落地实现」归 Hephaestus（`bmad-build`）**：实现时按本 SKILL 的决策表 + 参照库写代码与测试。
 - **重叠处只维护一处**：可操作的「问题→模式→参照路径」决策表 + 硬规则**只写在本 SKILL（`bmad-build/SKILL.md`）**；`bmad-architecture/SKILL.md` 只加一条「模式选型」交叉引用（指向本决策表与 `reference/`），**不复制规则**。这样选型只有一处真相、实现只有一处真相，避免双维护漂移。
 
 ## 收尾

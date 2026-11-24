@@ -21,7 +21,7 @@
 - **采纳日期**：2026-11-22
 - **owner**：Lead（决策 / 本模块维护）——见 `SKILL.md` metadata.owner
 - **复核日期**：2027-02-20（建议季度复核；上游规则变更或 DSH skill 发现契约变化时提前）
-- **许可**：本模块随 `dsh-agent-teams` 以 MIT 发布（见仓库 `LICENSE`）
+- **许可**：本模块随 `dsh-olympus` 以 MIT 发布（见仓库 `LICENSE`）
 
 ## Limitations（注入防火墙登记）
 

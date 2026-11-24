@@ -1,8 +1,8 @@
 /**
- * Host half of the dsh-agent-teams bundle.
+ * Host half of the dsh-olympus bundle.
  *
- * The bundle is primarily a configuration bundle: its patch inserts the BMad
- * squad agent presets (see cordis.patch.yml). It also declares a browser half
+ * The bundle is primarily a configuration bundle: its patch inserts the Olympus Squad
+ * agent presets (see cordis.patch.yml). It also declares a browser half
  * (`dsh.client` + `./client`), whose job is to keep the preset picker tidy.
  *
  * This Host entry has a second job: keep the built-in Agent Teams switch aligned
@@ -10,7 +10,7 @@
  * The rule (see SETUP.md / CHANGELOG.md):
  *   1. Switching between two NON-team presets leaves the switch untouched — a
  *      Team the user turned on by hand in a normal preset stays on.
- *   2. ENTERING a "team preset" (default: the squad dispatcher `bmad-squad-lead`)
+ *   2. ENTERING a "team preset" (default: the squad dispatcher `squad-lead`)
  *      forces Team on. The value the switch had before is first remembered as the
  *      Session's "non-team preference".
  *   3. LEAVING a team preset for a non-team preset restores that remembered
@@ -28,14 +28,14 @@
  * implements squad behavior — it just flips the existing per-session switch.
  */
 
-export const name = 'dsh-agent-teams'
+export const name = 'dsh-olympus'
 
 /**
  * Presets whose root Sessions should run with Agent Teams on. Edit this list
  * (or pass `config.teamPresets` on the Loader row) to add another squad preset
  * without touching the logic below.
  */
-export const TEAM_PRESETS = ['bmad-squad-lead']
+export const TEAM_PRESETS = ['squad-lead']
 
 /**
  * Agent lifecycle sources whose Team selection is not yet user-owned, so

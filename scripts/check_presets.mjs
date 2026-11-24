@@ -18,7 +18,7 @@
  *
  * What it asserts (per preset, by slicing the generated patch into preset segments):
  *   - config.id matches `preset-<id>` (preset-bmad-foo ⇄ config.id bmad-foo)
- *   - `name: 'dsh-agent-teams/rows/<role>'` points at an existing rows/<role>/index.js
+ *   - `name: 'dsh-olympus/presets/<role>'` points at an existing presets/<role>/index.js
  *   - the minimal indentation tree is well formed: no indentation drift, no duplicate keys
  *   - leader tool-fs has write/edit/applyPatch explicitly false (M-A guard)
  *   - members mount NO tool-subagent (M-B guard); only the lead owns the delegation tool
@@ -48,7 +48,7 @@ const SCRIPT_DIR = path.dirname(process.argv[1])
 const ROOT = path.resolve(SCRIPT_DIR, '..')
 const PATCH_PATH = path.join(ROOT, 'cordis.patch.yml')
 const ROLES_PATH = path.join(ROOT, 'squad.roles.json')
-const ROWS_DIR = path.join(ROOT, 'rows')
+const PRESETS_DIR = path.join(ROOT, 'presets')
 
 const ARGV = process.argv.slice(2)
 // --strict / --allow-known-gaps are accepted for CLI compatibility but are now no-ops:
@@ -335,13 +335,13 @@ function main() {
     check(configId === bare,
       `${label} config.id ${JSON.stringify(configId)} must equal ${JSON.stringify(bare)}`)
 
-    // structural: preset `name` must point at an existing rows/* module
+    // structural: preset `name` must point at an existing presets/* module
     const moduleName = mapGet(node, 'name')
-    const m = typeof moduleName === 'string' ? /dsh-agent-teams\/rows\/([^/'"]+)/.exec(moduleName) : null
-    check(Boolean(m), `${label} name ${JSON.stringify(moduleName)} is not 'dsh-agent-teams/rows/<role>'`)
+    const m = typeof moduleName === 'string' ? /dsh-olympus\/presets\/([^/'"]+)/.exec(moduleName) : null
+    check(Boolean(m), `${label} name ${JSON.stringify(moduleName)} is not 'dsh-olympus/presets/<role>'`)
     if (m) {
-      const idx = path.join(ROWS_DIR, m[1], 'index.js')
-      check(fs.existsSync(idx), `${label} points at rows/${m[1]} but ${path.relative(ROOT, idx)} does not exist`)
+      const idx = path.join(PRESETS_DIR, m[1], 'index.js')
+      check(fs.existsSync(idx), `${label} points at presets/${m[1]} but ${path.relative(ROOT, idx)} does not exist`)
     }
 
     const plugins = isMap(config) ? flattenPlugins(mapGet(config, 'plugins')) : []
@@ -426,8 +426,8 @@ function main() {
       }
     }
     walk(root)
-    check(!delegateTargets.includes('bmad-squad-lead'),
-      "bmad-squad-lead must NOT be a tool-subagent delegation target (no tool-subagent row may spawn the lead)")
+    check(!delegateTargets.includes('squad-lead'),
+      "squad-lead must NOT be a tool-subagent delegation target (no tool-subagent row may spawn the lead)")
   }
 
   // ---- report ------------------------------------------------------------

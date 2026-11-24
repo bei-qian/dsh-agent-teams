@@ -1,8 +1,8 @@
 ---
 name: bmad-test-strategy
-description: BMad 小队测试流程（Murat）。按风险产出测试策略与门禁，维护测试用例与追溯，按 bmad-squad-protocol 的固定目录落盘。
+description: Olympus Squad 测试流程（Argus）。按风险产出测试策略与门禁，维护测试用例与追溯，按 bmad-squad-protocol 的固定目录落盘。
 ---
-# 测试策略与门禁（Murat）
+# 测试策略与门禁（Argus）
 
 ## 何时用
 需要测试策略、测试设计、发布前门禁或追溯时。

@@ -17,7 +17,7 @@
 - **采纳日期**：2026-11-22
 - **owner**：Architect（P，canonical owner）；Dev/TEA（P）联合维护——见 `SKILL.md` metadata.owner
 - **复核日期**：2027-02-20（建议季度复核；Scorecard check 清单/WSTG 分类或 DSH 安全策略变更时提前）
-- **许可**：本模块随 `dsh-agent-teams` 以 MIT 发布（见仓库 `LICENSE`）；**不含 CC BY-SA 原文**。
+- **许可**：本模块随 `dsh-olympus` 以 MIT 发布（见仓库 `LICENSE`）；**不含 CC BY-SA 原文**。
 - **是否逐字**：**零逐字**（所有来源仅取思想/分类框架）。
 
 ## 去重定位（ADR-A4 / §5.2）

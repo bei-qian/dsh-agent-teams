@@ -21,7 +21,7 @@
 - **增补（TEA v4.4.0 思想改编）**：2026-11-23，TEA pin 由 `6fba06e8`（v4.3.1）更新为 `85fda574`（v4.4.0-2-g85fda574，即 v4.4.0 tag 后 2 个提交）；只取 5 条「测试证据完整性」思想（零动作缺陷探针 / 覆盖排除显式登记 / 证据摘要绑定与 stale / 发布前就绪清单 / 弱化机制不得冒充保证），零逐字自写、去 Playwright/Pact/uv 栈绑定。
 - **owner**：TEA（P，canonical owner）；Dev（P）、UX（C）联合——见 `SKILL.md` metadata.owner
 - **复核日期**：2027-02-20（建议季度复核；上游规则或团队测试框架变更时提前）
-- **许可**：本模块随 `dsh-agent-teams` 以 MIT 发布（见仓库 `LICENSE`）。
+- **许可**：本模块随 `dsh-olympus` 以 MIT 发布（见仓库 `LICENSE`）。
 - **是否逐字**：**零逐字**（所有来源仅取思想）。
 
 ## 去重定位（ADR-A4 / §5.2）

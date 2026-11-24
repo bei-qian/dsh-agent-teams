@@ -1,12 +1,12 @@
-# dsh-agent-teams v1 bundle patch — GENERATED FILE.
-# Source of truth: prompts/*.md (persona text) + cordis.patch.tmpl.yml (structure).
+# dsh-olympus v2 bundle patch. SOURCE = cordis.patch.tmpl.yml (structure) + persona/*.md (persona).
+# `cordis.patch.yml` is the GENERATED artifact: edit the two sources, never it.
 # Regenerate with:  node scripts/build_patch.mjs
 #
-# Inserts the BMad squad agent presets on top of the built-in Agent Teams mechanism
+# Inserts the Olympus Squad agent presets on top of the built-in Agent Teams mechanism
 # (the base bundle already mounts @deepseek-ai/dsh-agent-team + @deepseek-ai/dsh-tool-agent-team,
 # so shared task-board tools reach every agent once the root Session enables Team mode):
-#   - bmad-squad-lead : routes/delegates only (no implementation)
-#   - bmad-analyst/-pm/-po/-ux/-architect/-dev/-tea : named specialist members
+#   - squad-lead : routes/delegates only (no implementation)
+#   - analyst/-pm/-po/-ux/-architect/-dev/-tea : named specialist members
 # Delegation uses one @deepseek-ai/dsh-tool-subagent row per member (agentPreset is fixed per row).
 # 每个成员可独立选择模型：delegate_* 开启 modelSelection（委派时传 provider/model/reasoning_effort），
 # 并在一个实例上开 modelDiscovery（list_subagent_models）；需要固定默认模型时加 agentOptions。
@@ -17,14 +17,14 @@
     # Bundle host half: a bare-package row so @deepseek-ai/dsh-client-modules can
     # discover this package's `dsh.client` declaration and load client.js (the picker filter).
     - id: agent-teams
-      name: 'dsh-agent-teams'
+      name: 'dsh-olympus'
     # ============================ Leader ============================
-    - id: preset-bmad-squad-lead
-      name: 'dsh-agent-teams/rows/squad-lead'
+    - id: preset-squad-lead
+      name: 'dsh-olympus/presets/squad-lead'
       config:
-        id: bmad-squad-lead
-        name: BMad 小队 · 调度
-        description: BMad 小队负责人，只做路由与委派、不亲自实现。日常只需选这一个，它会自动把工作分派给下面各成员。
+        id: squad-lead
+        name: Olympus Squad · 调度
+        description: Olympus Squad 负责人，只做路由与委派、不亲自实现。日常只需选这一个，它会自动把工作分派给下面各成员。
         order: 20
         plugins:
           - id: persona
@@ -73,7 +73,7 @@
                 config:
                   provider: spawn
                   toolName: delegate_analyst
-                  agentPreset: bmad-analyst
+                  agentPreset: analyst
                   modelSelection: true
                   modelDiscovery: true
               - id: delegate-pm
@@ -81,42 +81,42 @@
                 config:
                   provider: spawn
                   toolName: delegate_pm
-                  agentPreset: bmad-pm
+                  agentPreset: pm
                   modelSelection: true
               - id: delegate-po
                 name: '@deepseek-ai/dsh-tool-subagent'
                 config:
                   provider: spawn
                   toolName: delegate_po
-                  agentPreset: bmad-po
+                  agentPreset: po
                   modelSelection: true
               - id: delegate-ux
                 name: '@deepseek-ai/dsh-tool-subagent'
                 config:
                   provider: spawn
                   toolName: delegate_ux
-                  agentPreset: bmad-ux
+                  agentPreset: ux
                   modelSelection: true
               - id: delegate-architect
                 name: '@deepseek-ai/dsh-tool-subagent'
                 config:
                   provider: spawn
                   toolName: delegate_architect
-                  agentPreset: bmad-architect
+                  agentPreset: architect
                   modelSelection: true
               - id: delegate-dev
                 name: '@deepseek-ai/dsh-tool-subagent'
                 config:
                   provider: spawn
                   toolName: delegate_dev
-                  agentPreset: bmad-dev
+                  agentPreset: dev
                   modelSelection: true
               - id: delegate-tea
                 name: '@deepseek-ai/dsh-tool-subagent'
                 config:
                   provider: spawn
                   toolName: delegate_tea
-                  agentPreset: bmad-tea
+                  agentPreset: tea
                   modelSelection: true
           - id: shell
             name: cordis:group
@@ -141,8 +141,8 @@
             config:
               includeDefaultRoots: false
               customSkillDirs:
-                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'playbooks')
-                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'capabilities')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'playbooks')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'capabilities')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
           - id: compaction
@@ -164,12 +164,12 @@
                   tailChars: 1024
 
     # ============================ Analyst / Mary ============================
-    - id: preset-bmad-analyst
-      name: 'dsh-agent-teams/rows/analyst'
+    - id: preset-analyst
+      name: 'dsh-olympus/presets/analyst'
       config:
-        id: bmad-analyst
-        name: 〔内部成员〕BMad · Mary 业务分析师
-        description: BMad 小队成员 Mary，负责调研、简报与 PRFAQ。仅供「BMad 小队 · 调度」内部委派，请勿直接选择。
+        id: analyst
+        name: Olympus · Apollo 业务分析师
+        description: Olympus Squad 成员 Apollo，负责调研、简报与 PRFAQ。仅供「Olympus Squad · 调度」内部委派，请勿直接选择。
         order: 21
         plugins:
           - id: persona
@@ -207,8 +207,8 @@
             config:
               includeDefaultRoots: false
               customSkillDirs:
-                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'playbooks')
-                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'capabilities')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'playbooks')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'capabilities')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
           - id: compaction
@@ -230,12 +230,12 @@
                   tailChars: 1024
 
     # ============================ PM / John ============================
-    - id: preset-bmad-pm
-      name: 'dsh-agent-teams/rows/pm'
+    - id: preset-pm
+      name: 'dsh-olympus/presets/pm'
       config:
-        id: bmad-pm
-        name: 〔内部成员〕BMad · John 产品经理
-        description: BMad 小队成员 John，负责 PRD 与各类规划文档。仅供「BMad 小队 · 调度」内部委派，请勿直接选择。
+        id: pm
+        name: Olympus · Prometheus 产品经理
+        description: Olympus Squad 成员 Prometheus，负责 PRD 与各类规划文档。仅供「Olympus Squad · 调度」内部委派，请勿直接选择。
         order: 22
         plugins:
           - id: persona
@@ -273,8 +273,8 @@
             config:
               includeDefaultRoots: false
               customSkillDirs:
-                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'playbooks')
-                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'capabilities')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'playbooks')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'capabilities')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
           - id: compaction
@@ -296,12 +296,12 @@
                   tailChars: 1024
 
     # ============================ PO / Sofia ============================
-    - id: preset-bmad-po
-      name: 'dsh-agent-teams/rows/po'
+    - id: preset-po
+      name: 'dsh-olympus/presets/po'
       config:
-        id: bmad-po
-        name: 〔内部成员〕BMad · Sofia 产品负责人
-        description: BMad 小队成员 Sofia，负责票据需求、切 epic/story、跑票板与重规划。仅供「BMad 小队 · 调度」内部委派，请勿直接选择。
+        id: po
+        name: Olympus · Themis 产品负责人
+        description: Olympus Squad 成员 Themis，负责票据需求、切 epic/story、跑票板与重规划。仅供「Olympus Squad · 调度」内部委派，请勿直接选择。
         order: 23
         plugins:
           - id: persona
@@ -334,8 +334,8 @@
             config:
               includeDefaultRoots: false
               customSkillDirs:
-                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'playbooks')
-                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'capabilities')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'playbooks')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'capabilities')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
           - id: compaction
@@ -357,12 +357,12 @@
                   tailChars: 1024
 
     # ============================ UX / Sally ============================
-    - id: preset-bmad-ux
-      name: 'dsh-agent-teams/rows/ux'
+    - id: preset-ux
+      name: 'dsh-olympus/presets/ux'
       config:
-        id: bmad-ux
-        name: 〔内部成员〕BMad · Sally UX 设计师
-        description: BMad 小队成员 Sally，负责 DESIGN.md 与 EXPERIENCE.md。仅供「BMad 小队 · 调度」内部委派，请勿直接选择。
+        id: ux
+        name: Olympus · Ariadne UX 设计师
+        description: Olympus Squad 成员 Ariadne，负责 DESIGN.md 与 EXPERIENCE.md。仅供「Olympus Squad · 调度」内部委派，请勿直接选择。
         order: 24
         plugins:
           - id: persona
@@ -395,8 +395,8 @@
             config:
               includeDefaultRoots: false
               customSkillDirs:
-                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'playbooks')
-                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'capabilities')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'playbooks')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'capabilities')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
           - id: compaction
@@ -418,12 +418,12 @@
                   tailChars: 1024
 
     # ============================ Architect / Winston ============================
-    - id: preset-bmad-architect
-      name: 'dsh-agent-teams/rows/architect'
+    - id: preset-architect
+      name: 'dsh-olympus/presets/architect'
       config:
-        id: bmad-architect
-        name: 〔内部成员〕BMad · Winston 架构师
-        description: BMad 小队成员 Winston，负责技术决策与架构脊（architecture spine）。仅供「BMad 小队 · 调度」内部委派，请勿直接选择。
+        id: architect
+        name: Olympus · Athena 架构师
+        description: Olympus Squad 成员 Athena，负责技术决策与架构脊（architecture spine）。仅供「Olympus Squad · 调度」内部委派，请勿直接选择。
         order: 25
         plugins:
           - id: persona
@@ -461,8 +461,8 @@
             config:
               includeDefaultRoots: false
               customSkillDirs:
-                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'playbooks')
-                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'capabilities')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'playbooks')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'capabilities')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
           - id: compaction
@@ -484,12 +484,12 @@
                   tailChars: 1024
 
     # ============================ Dev / Amelia ============================
-    - id: preset-bmad-dev
-      name: 'dsh-agent-teams/rows/dev'
+    - id: preset-dev
+      name: 'dsh-olympus/presets/dev'
       config:
-        id: bmad-dev
-        name: 〔内部成员〕BMad · Amelia 开发者
-        description: BMad 小队成员 Amelia，负责实现 story、写测试、评审与回顾。仅供「BMad 小队 · 调度」内部委派，请勿直接选择。
+        id: dev
+        name: Olympus · Hephaestus 开发者
+        description: Olympus Squad 成员 Hephaestus，负责实现 story、写测试、评审与回顾。仅供「Olympus Squad · 调度」内部委派，请勿直接选择。
         order: 26
         plugins:
           - id: persona
@@ -549,8 +549,8 @@
             config:
               includeDefaultRoots: false
               customSkillDirs:
-                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'playbooks')
-                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'capabilities')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'playbooks')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'capabilities')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
           - id: compaction
@@ -572,12 +572,12 @@
                   tailChars: 1024
 
     # ============================ Tea / Murat ============================
-    - id: preset-bmad-tea
-      name: 'dsh-agent-teams/rows/tea'
+    - id: preset-tea
+      name: 'dsh-olympus/presets/tea'
       config:
-        id: bmad-tea
-        name: 〔内部成员〕BMad · Murat 测试架构师
-        description: BMad 小队成员 Murat，负责测试策略、框架、自动化与发布门禁。仅供「BMad 小队 · 调度」内部委派，请勿直接选择。
+        id: tea
+        name: Olympus · Argus 测试架构师
+        description: Olympus Squad 成员 Argus，负责测试策略、框架、自动化与发布门禁。仅供「Olympus Squad · 调度」内部委派，请勿直接选择。
         order: 27
         plugins:
           - id: persona
@@ -635,8 +635,8 @@
             config:
               includeDefaultRoots: false
               customSkillDirs:
-                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'playbooks')
-                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'capabilities')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'playbooks')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'capabilities')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
           - id: compaction

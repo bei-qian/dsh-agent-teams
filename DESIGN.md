@@ -1,4 +1,4 @@
-# dsh-agent-teams — BMad 小队插件设计
+# dsh-olympus — Olympus Squad 插件设计
 
 > 版本：design draft · 2026-11-21
 > 目标读者：本项目维护者（以及后续接手实现的 agent）。
@@ -9,7 +9,7 @@
 
 把 DSH 内置的 **Agent Teams**（共享任务板 + 子代理树）当成底座，在其上做一层
 **「小队（Squad）」** 产品概念：**一个 Leader + 一份命名专家 Roster + 小队指令 + 一套 BMad 工作法**，
-让用户像 Multica 里「把 issue 指派给 squad」一样，把一段工作交给一支 BMad 小队，由 Leader 路由到对的角色。
+让用户像 Multica 里「把 issue 指派给 squad」一样，把一段工作交给一支 Olympus Squad，由 Leader 路由到对的角色。
 
 ---
 
@@ -37,7 +37,7 @@ Multica 的 squad = **Leader + Members + Role descriptions + Squad instructions*
 
 所以本插件补三层：
 
-1. **角色预设（agent presets）**：把 BMad 的角色做成可复用、可选择的 `dsh-agent-preset`。
+1. **角色预设（agent presets）**：把专家成员做成可复用、可选择的 `dsh-agent-preset`。
 2. **小队编制/路由**：Leader 预设 + 成员清单（含角色描述）+ 小队指令；委派用 DSH 子代理实现。
 3. **BMad 工作法**：四阶段（分析→规划→实现→验证）+ 票据即规格（initiative/epic/story）。
 
@@ -48,8 +48,8 @@ Multica 的 squad = **Leader + Members + Role descriptions + Squad instructions*
 | Multica Squads | 本插件的 DSH 实现 |
 |---|---|
 | Squad | 一组预设 + 一份「小队清单」（leader preset、members、instructions） |
-| Leader agent | `bmad-squad-lead` 预设：persona = 运行协议；工具 = 委派 + 任务板；**不亲自实现** |
-| Members（agents） | 成员预设 `bmad-analyst/-pm/-po/-ux/-architect/-dev/-tea`；作为具名子代理被创建 |
+| Leader agent | `squad-lead` 预设：persona = 运行协议；工具 = 委派 + 任务板；**不亲自实现** |
+| Members（agents） | 成员预设 `analyst/-pm/-po/-ux/-architect/-dev/-tea`；作为具名子代理被创建 |
 | Role descriptions | 写进 Leader persona 的「Roster」段落 |
 | Squad instructions | 写进 Leader persona 的「小队指令」段落（v2 可按小队自定义） |
 | Assign issue to squad | 新开一个 **Leader 会话**（可带上 issue/票据正文）；v2 用 `squad_run` 命令/UI |
@@ -74,21 +74,21 @@ Multica 的 squad = **Leader + Members + Role descriptions + Squad instructions*
 所以给 Leader 挂「每个成员一个委托工具行」，各自固定不同成员预设 —— Leader 就获得一组成员具名工具：
 
 ```yaml
-# dsh-agent-teams/cordis.patch.yml（节选，示意）
+# dsh-olympus/cordis.patch.yml（节选，示意）
 - insert:
     # ---------- Leader：只路由、不实现 ----------
-    - id: preset-bmad-squad-lead
+    - id: preset-squad-lead
       name: '@deepseek-ai/dsh-agent-preset'
       config:
-        id: bmad-squad-lead
-        name: BMad 小队 · 调度
-        description: BMad 小队的负责人。只做路由与委派，不亲自实现；供小队会话使用。
+        id: squad-lead
+        name: Olympus Squad · 调度
+        description: Olympus Squad 负责人。只做路由与委派，不亲自实现；供小队会话使用。
         order: 20
         plugins:
           - id: persona
             name: '@deepseek-ai/dsh-persona'
             config:
-              prefix: !!js process.getBuiltinModule('node:fs').readFileSync(process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'prompts', 'squad-lead.md'), 'utf8')
+              prefix: !!js process.getBuiltinModule('node:fs').readFileSync(process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'persona', 'squad-lead.md'), 'utf8')
           - id: agent-instructions
             name: '@deepseek-ai/dsh-agent-instructions'
             config: { maxBytes: 65536 }
@@ -109,29 +109,29 @@ Multica 的 squad = **Leader + Members + Role descriptions + Squad instructions*
           # 委派：每成员一个 subagent 行（各自固定 agentPreset）
           - id: delegate-analyst
             name: '@deepseek-ai/dsh-tool-subagent'
-            config: { provider: spawn, toolName: delegate_analyst, agentPreset: bmad-analyst }
+            config: { provider: spawn, toolName: delegate_analyst, agentPreset: analyst }
           - id: delegate-architect
             name: '@deepseek-ai/dsh-tool-subagent'
-            config: { provider: spawn, toolName: delegate_architect, agentPreset: bmad-architect }
+            config: { provider: spawn, toolName: delegate_architect, agentPreset: architect }
           - id: delegate-dev
             name: '@deepseek-ai/dsh-tool-subagent'
-            config: { provider: spawn, toolName: delegate_dev, agentPreset: bmad-dev }
+            config: { provider: spawn, toolName: delegate_dev, agentPreset: dev }
           - id: tool-subagent-control
             name: '@deepseek-ai/dsh-tool-subagent-control'
 
-    # ---------- 成员：Mary 业务分析师 ----------
-    - id: preset-bmad-analyst
+    # ---------- 成员：Apollo 业务分析师 ----------
+    - id: preset-analyst
       name: '@deepseek-ai/dsh-agent-preset'
       config:
-        id: bmad-analyst
-        name: BMad · Mary 业务分析师
-        description: BMad 小队的业务分析师 Mary，负责调研、简报与 PRFAQ。供小队成员使用。
+        id: analyst
+        name: Olympus · Apollo 业务分析师
+        description: Olympus Squad 成员 Apollo，负责调研、简报与 PRFAQ。供小队成员使用。
         order: 21
         plugins:
           - id: persona
             name: '@deepseek-ai/dsh-persona'
             config:
-              prefix: !!js process.getBuiltinModule('node:fs').readFileSync(process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'prompts', 'analyst.md'), 'utf8')
+              prefix: !!js process.getBuiltinModule('node:fs').readFileSync(process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'persona', 'analyst.md'), 'utf8')
           - id: agent-instructions
             name: '@deepseek-ai/dsh-agent-instructions'
             config: { maxBytes: 65536 }
@@ -151,7 +151,7 @@ Multica 的 squad = **Leader + Members + Role descriptions + Squad instructions*
             name: '@deepseek-ai/dsh-skill-filesystem'
             config:
               customSkillDirs:
-                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-agent-teams/package.json')), 'playbooks')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'playbooks')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
     # …pm / po / ux / architect / dev / (tea) 同构
@@ -166,7 +166,7 @@ Multica 的 squad = **Leader + Members + Role descriptions + Squad instructions*
 dsh-agent-teams/
 ├─ package.json                 # dsh.bundle.patch 指向 cordis.patch.yml
 ├─ cordis.patch.yml             # 插入 leader + 成员预设 + 委派工具行
-├─ prompts/
+├─ persona/
 │  ├─ squad-lead.md             # Leader 运行协议 + Roster + 小队指令
 │  ├─ analyst.md  pm.md  po.md  ux.md  architect.md  dev.md  tea.md
 ├─ playbooks/  capabilities/      # 运行时技能根（customSkillDirs）
@@ -175,7 +175,7 @@ dsh-agent-teams/
 ```
 
 **v1 优点**：零代码、安装即用；沿用 DSH 全部稳定性/持久化保证。
-**v1 限制**：小队是**固定编制**（一套 BMad 产品小队）；小队指令/角色描述写死在提示文件里；
+**v1 限制**：小队是**固定编制**（一套 Olympus Squad 产品小队）；小队指令/角色描述写死在提示文件里；
 要「多支不同小队 / 用户自定义小队 / 把小队作为一级对象指派」就必须上 v2。
 
 ### 3.2 v2：Host 插件 + Web 面板（Multica 完整形态）
@@ -204,39 +204,39 @@ dsh-agent-teams/
 │  ├─ squad-store.ts       # 小队持久化
 │  ├─ brief.ts             # Roster/指令注入
 │  └─ client/              # Web 面板（React slot）
-├─ prompts/  locale/
+├─ persona/  locale/
 ```
 
 **v2 何时做**：确需多支小队、非开发者自定义编制、或要把「小队」当成可指派的一级对象时。
 
 ---
 
-## 4. 默认 BMad 编制（Roster）
+## 4. 默认 Olympus Squad 编制（Roster）
 
-来自已安装的 `method` 模块的六个命名专家（+ 可选 TEA 模块的 Murat）：
+来自上游 `method` 模块的六个命名专家（+ 可选 TEA 模块的 Argus），本小队以希腊神话花名自称：
 
 | 预设 id | 角色 | BMad 技能 | 适合委派的工作 | 关键工具 |
 |---|---|---|---|---|
-| `bmad-squad-lead` | 调度/交付负责人 | （无实现） | 路由、拆解、协调、验收判定 | 委派工具 + team board + 只读 fs + todo + ask |
-| `bmad-analyst` | Mary 业务分析师 | `bmad-agent-analyst`, `bmad-deep-recon`, `bmad-brainstorming`, `bmad-forge-idea` | 调研、市场/竞品、brief、PRFAQ、BRD | fs, fs-search, web, todo, skill |
-| `bmad-pm` | John 产品经理 | `bmad-agent-pm` | PRD 及各类规划文档、就绪度检查 | fs, fs-search, web, todo, skill |
-| `bmad-po` | Sofia 产品负责人 | `bmad-agent-po` | 写票据需求、切 epic/story、跑票板、变更重规划 | fs, fs-search, todo, skill |
-| `bmad-ux` | Sally UX 设计师 | `bmad-agent-ux-designer`, `bmad-ux` | 外观与行为（DESIGN.md / EXPERIENCE.md） | fs, fs-search, todo, skill |
-| `bmad-architect` | Winston 架构师 | `bmad-agent-architect`, `bmad-architecture` | 技术决策、架构脊（architecture spine） | fs, fs-search, todo, skill |
-| `bmad-dev` | Amelia 开发者 | `bmad-agent-dev`, `bmad-build`, `bmad-code-review`, `bmad-retrospective` | 实现 story、写测试、评审、回顾 | fs(+write/edit), fs-search, bash, jobs, todo, skill |
-| `bmad-tea`（可选） | Murat 测试架构师 | `bmad-tea*` | 测试策略、框架、自动化、发布门禁 | fs, fs-search, bash, jobs, todo, skill |
+| `squad-lead` | 调度/交付负责人（Hermes） | （无实现） | 路由、拆解、协调、验收判定 | 委派工具 + team board + 只读 fs + todo + ask |
+| `analyst` | Apollo 业务分析师 | `bmad-agent-analyst`, `bmad-deep-recon`, `bmad-brainstorming`, `bmad-forge-idea` | 调研、市场/竞品、brief、PRFAQ、BRD | fs, fs-search, web, todo, skill |
+| `pm` | Prometheus 产品经理 | `bmad-agent-pm` | PRD 及各类规划文档、就绪度检查 | fs, fs-search, web, todo, skill |
+| `po` | Themis 产品负责人 | `bmad-agent-po` | 写票据需求、切 epic/story、跑票板、变更重规划 | fs, fs-search, todo, skill |
+| `ux` | Ariadne UX 设计师 | `bmad-agent-ux-designer`, `bmad-ux` | 外观与行为（DESIGN.md / EXPERIENCE.md） | fs, fs-search, todo, skill |
+| `architect` | Athena 架构师 | `bmad-agent-architect`, `bmad-architecture` | 技术决策、架构脊（architecture spine） | fs, fs-search, todo, skill |
+| `dev` | Hephaestus 开发者 | `bmad-agent-dev`, `bmad-build`, `bmad-code-review`, `bmad-retrospective` | 实现 story、写测试、评审、回顾 | fs(+write/edit), fs-search, bash, jobs, todo, skill |
+| `tea`（可选） | Argus 测试架构师 | `bmad-tea*` | 测试策略、框架、自动化、发布门禁 | fs, fs-search, bash, jobs, todo, skill |
 
 > 编制可按项目裁剪：小而快的项目用 `lead + analyst + architect + dev` 即可；重合规项目加 `tea`。
 > 预设行无法从预设选择器里隐藏 —— 名称/描述必须写明「供小队使用」，避免用户手动误选成员预设单干。
 
 ---
 
-## 5. 小队运行协议（写进 `prompts/squad-lead.md`）
+## 5. 小队运行协议（写进 `persona/squad-lead.md`）
 
-Leader 的 persona 承载 Multica 的 *Operating Protocol + Roster + Instructions* 的 BMad 版：
+Leader 的 persona 承载 Multica 的 *Operating Protocol + Roster + Instructions* 的 Olympus 版：
 
 1. **票据即规格**：先读 initiative / epic / story 文件（若存在）再决策；不臆造需求。
-2. **按 BMad 四阶段路由**：分析（Mary）→ 规划（John / Sofia / Sally / Winston）→ 实现（Amelia）→ 验证（Amelia / Murat）。
+2. **按 BMad 四阶段路由**：分析（Apollo）→ 规划（Prometheus / Themis / Ariadne / Athena）→ 实现（Hephaestus）→ 验证（Hephaestus / Argus）。
 3. **路由规则（关键词→角色）**：
    - 「值不值得做 / 调研 / 简报」→ `delegate_analyst`
    - 「PRD / 规划文档」→ `delegate_pm`
@@ -264,7 +264,7 @@ Leader 的 persona 承载 Multica 的 *Operating Protocol + Roster + Instruction
 | 预设行不能从选择器隐藏 | 用户可能误选成员预设单干 | 名称/描述显式标注「供小队使用」 |
 | Agent Teams 成员共享工作区、无 worktree | 并行写会互相覆盖 | Leader 分配 `writeScopes`；构建任务串行/分目录；最终 diff 由 Leader 复核 |
 | BMad 技能来源 | 需能在任意机器随插件分发 | 已采用：**零依赖 playbooks + capabilities 均随包**（流程 playbook 在 `playbooks/`、能力库在 `capabilities/`，作为两个 `customSkillDirs` 根随包分发），**无需目标项目 `_bmad/`、Python/uv**；上游 BMad 技能**不随包、不留仓**；MIT 全文在根 `LICENSE-BMAD-METHOD.txt` 随包分发（issue-06 方案 B + issue #16 方案 C） |
-| 提示文件注入 | persona prefix 是字符串 | 用 `!!js` + `baseUrl` 从 `prompts/*.md` 读取，安装后可迁移 |
+| 提示文件注入 | persona prefix 是字符串 | 用 `!!js` + `baseUrl` 从 `persona/*.md` 读取，安装后可迁移 |
 | KV cache | 预设组成变化会使缓存失效 | 预设保持稳定；成员/角色不频繁改 |
 | 安装 = 在 Host 进程执行插件代码 | 需 Full access / 审批 | 装前先 `plugin_manager list_*` 核对，再 `install_bundle` |
 
@@ -283,7 +283,7 @@ Leader 的 persona 承载 Multica 的 *Operating Protocol + Roster + Instruction
 
 1. **v1 形态**：配置型闭环（零 Host 代码）——已实现。
 2. **Roster 范围**：6 个 method 角色 + TEA 的 Murat，共 7 名成员 + 1 名负责人。
-3. **命名**：目录与包名 `dsh-agent-teams`。
+3. **命名**：目录 `dsh-agent-teams`、包名 `dsh-olympus`。
 4. **落地**：已在 `desktop` profile 安装，8 个预设行均 `enabled=true / active`（见 SETUP.md 的验证方式）。
 5. **提示语言**：中文。
 6. **待办（下一轮）**：v2 的 Host 服务 + Web 面板；以及本插件的图标/详情页展示资源（本地 bundle 可后补）。
@@ -295,6 +295,6 @@ Leader 的 persona 承载 Multica 的 *Operating Protocol + Roster + Instruction
 - DSH Agent Teams：`@deepseek-ai/dsh-agent-team`、`dsh-tool-agent-team`、`dsh-client-ui-agent-team` 的 README。
 - Agent 预设：`@deepseek-ai/dsh-agent-preset` README；出厂预设 `@deepseek-ai/dsh-web-app/presets/standard.patch.yml`。
 - 子代理工具：`@deepseek-ai/dsh-tool-subagent`、`dsh-tool-subagent-control`。
-- BMad 角色/路由：本机已安装 `bmad` 技能的 `method` 模块帮助（Mary/John/Sofia/Sally/Winston/Amelia）。
+- Olympus 角色/路由：本机已安装 `bmad` 技能的 `method` 模块帮助（Apollo/Prometheus/Themis/Ariadne/Athena/Hephaestus）。
 - 同仓库参考实现：`dsh-superagent-prototype/`（多 agent 编排、prompts、team 分工的实际工程范式）。
 - Multica Squads 概念：<https://multica.ai/docs/squads>。

@@ -8,7 +8,7 @@
 ## 如何运行
 
 ```bash
-# 在 dsh-agent-teams/capabilities/capability-router/ 目录下：
+# 在 dsh-olympus/capabilities/capability-router/ 目录下：
 node scripts/validate_selection.mjs evals/01-normal-bugfix.json
 # 或批量：
 for f in evals/*.json; do node scripts/validate_selection.mjs "$f"; echo "exit=$?"; done

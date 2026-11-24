@@ -1,8 +1,8 @@
 ---
 name: bmad-research
-description: BMad 小队调研/简报流程（Mary）。做市场/竞品/技术可行性调研，产出 brief 或 PRFAQ，按 bmad-squad-protocol 的固定目录落盘。
+description: Olympus Squad 调研/简报流程（Apollo）。做市场/竞品/技术可行性调研，产出 brief 或 PRFAQ，按 bmad-squad-protocol 的固定目录落盘。
 ---
-# 调研 / Brief（Mary）
+# 调研 / Brief（Apollo）
 
 ## 何时用
 需要外部事实、可行性判断、竞品/市场分析，或要把想法变成一页 brief / PRFAQ 时。
@@ -35,5 +35,5 @@ description: BMad 小队调研/简报流程（Mary）。做市场/竞品/技术�
 ```
 
 ## 收尾
-- 若调研引出新工作，提示 Lead 让 Sofia 建票据（不要自建 index 行）。
+- 若调研引出新工作，提示 Lead 让 Themis 建票据（不要自建 index 行）。
 - 交付后按 `bmad-squad-protocol` 阶段门跑校验器（你按固定位置写对即可，并对照本节自检清单）。

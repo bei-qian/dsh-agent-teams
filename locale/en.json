@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "BMad squad",
-    "description": "A leader-and-specialists squad on top of Agent Teams: the Lead routes work to BMad roles (Mary/analyst, John/PM, Sofia/PO, Sally/UX, Winston/architect, Amelia/dev, Murat/test) and tracks it on the shared task board. In a new session pick the preset \"BMad 小队 · 调度\" and turn on \"Use Agent Teams\"."
+    "title": "Olympus Squad",
+    "description": "A leader-and-specialists squad on top of Agent Teams: the Lead routes work to the Olympus roles (Apollo/analyst, Prometheus/PM, Themis/PO, Ariadne/UX, Athena/architect, Hephaestus/dev, Argus/test) and tracks it on the shared task board. In a new session pick the preset \"Olympus Squad · 调度\" and turn on \"Use Agent Teams\"."
   }
 }

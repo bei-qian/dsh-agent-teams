@@ -1,18 +1,18 @@
 ---
 name: bmad-ux
-description: BMad 小队 UX 流程（Sally）。产出 design.md（外观：9 段式 + token 契约）与 experience.md（行为：流程/状态/无障碍），内嵌五态/无障碍/反 AI 味硬 gate 勾选项，按 bmad-squad-protocol 的固定目录落盘。
+description: Olympus Squad UX 流程（Ariadne）。产出 design.md（外观：9 段式 + token 契约）与 experience.md（行为：流程/状态/无障碍），内嵌五态/无障碍/反 AI 味硬 gate 勾选项，按 bmad-squad-protocol 的固定目录落盘。
 ---
-# UX：外观与行为（Sally）
+# UX：外观与行为（Ariadne）
 
 ## 何时用
 - 需要明确**界面长什么样**（`design.md`）或**交互怎么走**（`experience.md`）时。
 - 为 story 补设计决策、状态与边界、无障碍底线，或给工程可实现的界面结构时。
-- 不做技术架构、不写前端代码（除非负责人要可看小样）；设计决策层归本技能，实现层归 Amelia（见「边界」）。
+- 不做技术架构、不写前端代码（除非负责人要可看小样）；设计决策层归本技能，实现层归 Hephaestus（见「边界」）。
 
 ## 先读
 - `bmad-output/initiative.md`、`bmad-output/prd.md`（若存在）
 - `bmad-output/index.md`
-- 参照库索引：`dsh-agent-teams/playbooks/bmad-ux/reference/README.md`（下方路径均相对该 `reference/`）
+- 参照库索引：`dsh-olympus/playbooks/bmad-ux/reference/README.md`（下方路径均相对该 `reference/`）
 
 ## 步骤
 1. 对齐用户与关键场景（谁、在什么情境、要完成什么）。
@@ -58,7 +58,7 @@ description: BMad 小队 UX 流程（Sally）。产出 design.md（外观：9 �
 断点（如 Desktop ≥1024 / Tablet 640–1023 / Phone <640）+ 每档栅格、间距、hero 高度变化。
 
 ## 9. 给实现 agent 的提示 Agent Prompt Guide
-3–6 条生成纪律（先排版与留白、accent 配额、颜色 token 不可臆造、section 数量上限等），供 Amelia 实现时遵循。
+3–6 条生成纪律（先排版与留白、accent 配额、颜色 token 不可臆造、section 数量上限等），供 Hephaestus 实现时遵循。
 
 ## 状态覆盖自查（五态硬 gate）
 五态/WCAG 底线见 `reference/craft/state-coverage.md`。
@@ -114,6 +114,12 @@ P2（可修）：
 ## 无障碍与一致性
 键盘可达、焦点顺序、语义结构、文案一致性；底线见下方无障碍硬 gate。
 
+## 平台约束与降级
+逐条列出本功能里**会改变设计可行性**的平台事实，每条一行：
+`交互 → 触屏行为 / 键盘行为 / 无 JS 时 / prefers-reduced-motion 时 → 依据篇目（playbooks/modern-web-guidance/guides/<category>/<slug>.md）`
+例：`看板换列 → 触屏不给拖拽、走「移动到…」菜单；键盘 Alt+←/→；无 JS 时表单提交；减少动效时不做落位动画 → guides/ui-behaviors/drag-and-drop.md`。
+这一段的结论归 UX；**具体写法归 Hephaestus，以 modern-web-guidance 原篇为准**，不在此重复。
+
 ## 状态覆盖自查（五态硬 gate）
 五态/WCAG 底线见 `reference/craft/state-coverage.md`。
 
@@ -125,6 +131,11 @@ P2（可修）：
 - [ ] 焦点可见：`:focus-visible`，禁止 `outline:none` 无替代
 - [ ] 表单标签：每个输入有可见 `<label>`（placeholder 不能当标签）；错误用 `aria-describedby` + `aria-invalid` + `role="alert"`
 - [ ] 键盘可达、无键盘陷阱、焦点顺序合阅读顺序；语义 landmark / heading 层级；`<html lang>`
+
+## 原型交付硬 gate（P0，不过不算交付）
+- [ ] **平台约束核对**：凡是原型里出现的交互，逐条写出「触屏 / 键盘 / 无 JS / `prefers-reduced-motion`」下的行为与降级，并标注依据篇目（`playbooks/modern-web-guidance/guides/<category>/<slug>.md`）；核对不了的写「未核对 + 原因」，**不得留空**。
+- [ ] **静态可跑证据**：`node scripts/check_prototype.mjs <原型目录>` 退出 0（无外链、token 收敛、图标非 emoji、区域带 `data-od-id`、基线文本非空非 lorem）。
+- [ ] **运行时证据（按需）**：有 Chrome 时 `node scripts/check_prototype.mjs <原型目录> --browser` 退出 0，且截图落在 `--out` 目录、console 无 error；无 Chrome 时输出 `SKIP` 并在交付说明里**原样写「SKIPPED（Chrome 缺失）」**——「没跑」与「跑了通过」不得混为一谈。
 ```
 
 ## 参照库按需深读（`reference/`）
@@ -141,11 +152,14 @@ P2（可修）：
 | 需要低保真**分步流程 / 红标注 spec**（greybox、annotated、mobile-flow、sketch） | `templates/wireframes/{wireframe-annotated,wireframe-greybox,wireframe-mobile-flow,wireframe-sketch}/SKILL.md` |
 | 需要页面级**结构蓝图 / 可粘贴 section**（landing、dashboard、mobile、onboarding、pricing、web） | `templates/prototypes/{web-prototype,dashboard,mobile-app,mobile-onboarding,saas-landing,pricing-page}/SKILL.md` |
 | token 四层模型与包结构契约、9 段式样例 | `design-systems/_schema/AGENTS.md`、`design-systems/samples/DESIGN.sample.md`、`design-systems/samples/default-DESIGN.md` |
+| 平台能力 / 交互实现期待（触屏拖拽、dialog 与 top-layer、scroll-snap、焦点可见、系统文字缩放、表单校验时机、响应式断点、`color-mix`/`forced-colors` 支持边界） | `playbooks/bmad-ux/platform-constraints.md`（**只索引**）→ 正文在 `modern-web-guidance` 的 `guides/ui-behaviors/`、`guides/ui-components/`、`guides/forms/`、`guides/css/`、`guides/accessibility/`、`guides/visual-design/` |
 
 ## 与 modern-web-guidance 的边界（重叠处只维护一处）
-- **设计决策层 = Sally（本技能 + `reference/craft`）**：该不该、做几个、何时做——五态总纲、accent 配额、CJK 行高、laws-of-ux、anti-ai-slop、token 契约、wireframe/prototype 参照。
-- **实现层 = Amelia（`modern-web-guidance`）**：具体 HTML/CSS/JS、WCAG SC 实现、`color-mix`、forced-colors、reduced-motion 实现、浏览器兼容。
+- **设计决策层 = Ariadne（本技能 + `reference/craft`）**：该不该、做几个、何时做——五态总纲、accent 配额、CJK 行高、laws-of-ux、anti-ai-slop、token 契约、wireframe/prototype 参照。
+- **实现层 = Hephaestus（`modern-web-guidance`）**：具体 HTML/CSS/JS、WCAG SC 实现、`color-mix`、forced-colors、reduced-motion 实现、浏览器兼容。
 - **重叠处只维护一处**：对比度数值、触控尺寸、WCAG 条款、reduced-motion 等——**实现细节以 `modern-web-guidance` 为准**；本技能清单只保留一句「设计验收底线」，不复制其实现规则；发现重复即删本技能份、链回 `modern-web-guidance`，避免双维护。
+- **平台能力事实 = Ariadne（第 1 层，本技能也吃）**：会改变「能不能这么设计」的硬约束与降级路径（触屏拖拽是否可靠、`<dialog>`/top-layer/`inert`/`popover` 可用性、`scroll-snap`、`:focus-visible`、`prefers-reduced-motion`、触摸目标、`color-mix`/`forced-colors` 的支持边界）**归本技能核对**，但只把**结论 + 依据篇目**写进 `experience.md` 的「平台约束与降级」段；**正文一律以 `playbooks/modern-web-guidance/guides/<category>/<slug>.md` 为准，不复制**。定位用 `playbooks/bmad-ux/platform-constraints.md`（只索引）。
+- **第 2 层（实现规则）仍不是本技能**：具体 HTML/CSS/JS、CSS 架构、性能、安全、兼容细节归 Hephaestus（`bmad-build`）。凡「同一句话在两边都写」的地方，删本技能那份、链回 `modern-web-guidance`。
 
 ## 收尾
 - 产出固定写 `bmad-output/design.md` 与 `bmad-output/experience.md`（见 `bmad-squad-protocol`）。

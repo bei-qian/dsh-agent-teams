@@ -31,10 +31,10 @@
 import assert from 'node:assert/strict'
 
 const mod = await import(new URL('../index.js', import.meta.url).href)
-const SQUAD = 'bmad-squad-lead'
+const SQUAD = 'squad-lead'
 const DEPS = ['agentTeams', 'agents', 'agentPresets', 'subagents', 'sessionProjections']
 
-assert.equal(mod.name, 'dsh-agent-teams', 'host module exports the bundle name')
+assert.equal(mod.name, 'dsh-olympus', 'host module exports the bundle name')
 assert.deepEqual(mod.TEAM_PRESETS, [SQUAD], 'default team-preset list is the squad dispatcher')
 assert.equal(typeof mod.apply, 'function', 'apply() is exported')
 
@@ -207,11 +207,11 @@ async function created(handlers, agent, preset, presetBySessionId, source = 'sta
   const agent = makeAgent('s5')
   const presetBySessionId = {}
   const { calls, handlers, state } = setup({
-    agentsById: { s5: agent }, presetBySessionId, config: { teamPresets: [SQUAD, 'bmad-squad-alt'] },
+    agentsById: { s5: agent }, presetBySessionId, config: { teamPresets: [SQUAD, 'squad-alt'] },
   })
   await created(handlers, agent, SQUAD, presetBySessionId) // new team-preset session -> ON
   assert.equal(state.s5, true, 'S5: new team-preset session enables Team')
-  handlers['agent-preset/selected']('s5', 'bmad-squad-alt')
+  handlers['agent-preset/selected']('s5', 'squad-alt')
   await settle()
   assert.equal(state.s5, true, 'S5: team -> team stays on')
   assert.deepEqual(calls, [{ id: 's5', enabled: true }], 'S5: team -> team does not toggle again')
