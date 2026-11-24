@@ -12,20 +12,20 @@
  * Two assertion directions only (no second allow-list):
  *   1) product  ⊇  required set   (required set is DERIVED, never handwritten)
  *   2) product  ∩  {node_modules, .git}  =  ∅
- * Extra `files` entries (examples/scripts/docs) are NOT red. `skills/` presence is only
- * checked for consistency with `files` (both present or both absent pass — its keep/drop
- * is issue #8, not decided here).
+ * Extra `files` entries (examples/scripts/docs) are NOT red. `skills/` is no longer
+ * vendored in the repo (issue #16); the guard below is kept only as a
+ * "declared-but-absent" detector.
  *
  * The required set is derived from single sources (never from `files`, which would be
  * proving itself):
  *   - cordis.patch.yml  skill-filesystem customSkillDirs join(..., 'X')  → playbooks, capabilities
  *   - package.json exports each value's first path segment + dsh.bundle.patch
- *                                         → index.js, client.js, rows, locale, icon.svg, cordis.patch.yml (…)
- *   - prompts/  (build source dir) — included only when it exists on disk
+ *                                         → index.js, client.js, presets, locale, icon.svg, cordis.patch.yml (…)
+ *   - persona/  (build source dir) — included only when it exists on disk
  *
  * Exit codes:
  *   0 = product satisfies both directions
- *   1 = a required item is missing, a forbidden path is present/declared, or skills drift
+ *   1 = a required item is missing, a forbidden path is present/declared, or a declared skill root is absent from the product
  *   2 = SKIP — npm unavailable or npm pack failed for environmental reasons (NEVER a silent 0)
  *
  * Only stdlib: node:child_process / node:fs / node:path / node:os / node:process.
@@ -56,7 +56,7 @@ function deriveRequired() {
   const pkg = readJson(path.join(ROOT, 'package.json'))
   const required = new Set()
 
-  // (1) exports.* value first path segment → index.js, client.js, rows, locale, icon.svg, package.json
+  // (1) exports.* value first path segment → index.js, client.js, presets, locale, icon.svg, package.json
   for (const value of Object.values(pkg.exports || {})) {
     if (typeof value !== 'string') continue // ignore conditional/nested export objects
     const first = topSegment(value)
@@ -79,8 +79,8 @@ function deriveRequired() {
     if (quoted.length) required.add(quoted[quoted.length - 1]) // last join argument
   }
 
-  // (4) prompts/ — the build_patch source dir; include in the required set only if it exists
-  if (isDir(path.join(ROOT, 'prompts'))) required.add('prompts')
+  // (4) persona/ — the build_patch source dir; include in the required set only if it exists
+  if (isDir(path.join(ROOT, 'persona'))) required.add('persona')
 
   return { pkg, required }
 }
@@ -174,12 +174,12 @@ function main() {
     }
   }
 
-  // ---- skills consistency only (issue #8 decides keep/drop, not this gate) -----------
+  // ---- vendored-skills guard (issue #16: skills/ removed from the repo; kept as declared-but-absent) ----
   const skillsDeclared = declaredFiles.some((e) => typeof e === 'string' && topSegment(e) === 'skills')
   const skillsShipped = present('skills')
   if (skillsDeclared !== skillsShipped) {
     errors.push(`skills consistency drift: declared in files=${skillsDeclared} but shipped=${skillsShipped} `
-      + '(issue #8 not yet decided; must be both present or both absent)')
+      + '(declared in package.json files but absent from the product)')
   } else if (skillsShipped) {
     notes.push(`skills: present in files and shipped (${countUnder('skills')} files) — consistent`)
   } else {

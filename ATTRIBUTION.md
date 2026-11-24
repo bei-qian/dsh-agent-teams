@@ -1,22 +1,26 @@
-# Bundled BMad skills — attribution
+# Upstream BMad skills — attribution
 
-The `skills/` directory is **kept in the repository only and is not shipped in the
-package（不随包分发）** (`package.json#files` does not include it). It is a **distillation
-reference copy**: the squad's effective BMad instructions live in `playbooks/` (plus
-`capabilities/`), which were distilled from these upstream skills. Keeping the
-originals in the repo — but out of the package — lets us diff the distillation and
-trace conclusions back to source, without carrying ~653 dead-weight files in every
-install. A consumer who needs the originals can `git clone` the upstream repo below;
-the plugin package does not carry them.
+The vendored reference copy of the BMad skills is **no longer kept in this repository**
+— it was removed in issue #16 (2026-11-24), and it was **never shipped in the package**
+(`package.json#files` has never included it). The squad's effective BMad instructions
+live in `playbooks/` (plus `capabilities/`), which were distilled from these upstream
+skills; those two roots are the **only** runtime skill roots. A consumer who needs the
+originals can `git clone` the two upstream repositories below; the plugin package does not
+carry them.
 
 The squad actually works because of `playbooks/` + `capabilities/`, which are wired
-as the runtime skill roots — not because of `skills/`, which has never been mounted.
+as the runtime skill roots — not because of the former vendored copy, which has never
+been mounted (removed from the repo in issue #16).
 
-- **Source**: `github:bmad-code-org/BMAD-METHOD` (skills: core-tools, method, tea)
-- **Upstream pin**: TODO(需 pin sha) — record the exact upstream commit sha here once available (do not guess).
+- **Sources** (two upstream repositories; the 38 former vendored dirs map 1:1 — see
+  `docs/vendored-skills-baseline.md`):
+  - `github:bmad-code-org/BMAD-METHOD` — 28 dirs, under its `core-tools` and `method` skill categories (`core-tools` 12 + `method` 16)
+  - `github:bmad-code-org/bmad-method-test-architecture-enterprise` — the other 10 dirs (`bmad-tea`, `bmad-tea-*`, `bmod-tea`), flat layout under its skill root
+- **Upstream pins** (对照基线，2026-11-24 本机 clone 的 HEAD；**≠ 经 bisect 证实的快照来源**): `BMAD-METHOD` @ `e435a22574fe55722841086e5566420178b98df3`; `bmad-method-test-architecture-enterprise` @ `85fda574351f34c4f3ec2f9611b642c64b8601a0`. 这是在本机与仓库内快照抽检一致的上游状态，作为日后 diff 的**对照基线**，不是经 bisect 证实的快照来源 sha（issue 草稿曾记 `a2819f62…`，是本机 clone 的历史祖先）。
 - **License**: MIT — Copyright (c) 2025 BMad Code, LLC (full text in the repo-root `LICENSE-BMAD-METHOD.txt`, which is shipped in the package)
-- **Snapshot**: copied from a local install of the BMad skills; upstream is the
-  authority. Update by re-copying the upstream skills and bumping the plugin version.
+- **Snapshot**: the repository no longer stores a copy; to rebuild the distillation
+  baseline, clone the two upstream repositories and diff against the mapping in
+  `docs/vendored-skills-baseline.md`.
 
 ## Runtime note
 
@@ -31,8 +35,9 @@ need:
 
 The squad's **personas** (routing, roles, tone) work from the packaged `playbooks/`
 without that setup, but the deep BMad workflows degrade to telling the agent to run
-`bmad setup`. Since `skills/` is no longer shipped, bootstrap the full BMad toolkit
-from the upstream repo (`github:bmad-code-org/BMAD-METHOD`), not from this package.
+`bmad setup`. Since the repo no longer carries a skills copy, bootstrap the full BMad toolkit
+from the upstream repositories (`github:bmad-code-org/BMAD-METHOD` and
+`github:bmad-code-org/bmad-method-test-architecture-enterprise`), not from this package.
 
 ---
 

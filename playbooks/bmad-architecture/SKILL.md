@@ -1,8 +1,8 @@
 ---
 name: bmad-architecture
-description: BMad 小队架构流程（Winston）。产出 architecture.md（架构脊 + ADR 摘要），让各部分保持一致，按 bmad-squad-protocol 的固定目录落盘。
+description: Olympus Squad 架构流程（Athena）。产出 architecture.md（架构脊 + ADR 摘要），让各部分保持一致，按 bmad-squad-protocol 的固定目录落盘。
 ---
-# 架构（Winston）
+# 架构（Athena）
 
 ## 何时用
 需要定技术选型、模块边界、接口/数据流，让分开构建的部分保持一致时。
@@ -26,7 +26,7 @@ description: BMad 小队架构流程（Winston）。产出 architecture.md（架
 - **威胁建模深度 / 具体技术约束归能力**：威胁建模方法（STRIDE）、认证与输入校验细节、供应链检查等**深度内容见 `cap-security-baseline`**（`capabilities/cap-security-baseline/references/*`）；本技能只负责「架构需产出安全分析」这一骨架与产出要求，不复制逐条约束。
 
 ## 模式选型（交叉引用）
-后端设计模式**怎么选、要不要上**属架构决策——**归本技能（Winston）**：回答是否/为何选某个模式、边界与取舍；**落地实现归 Amelia**（`bmad-build`）。决策表与实现规则**只在 `bmad-build` 维护一处**，本技能**不复制正文**，只给入口：
+后端设计模式**怎么选、要不要上**属架构决策——**归本技能（Athena）**：回答是否/为何选某个模式、边界与取舍；**落地实现归 Hephaestus**（`bmad-build`）。决策表与实现规则**只在 `bmad-build` 维护一处**，本技能**不复制正文**，只给入口：
 - 选型与硬规则：`bmad-build/SKILL.md` 的〈后端设计规范（取自 java-design-patterns 精选）〉节及其「问题→模式→参照路径」决策表。
 - 按需深读：`bmad-build/reference/`——先用一页摘要索引 `reference/README.md` 速查，再读 `<类别>/<pattern>.md`。
 

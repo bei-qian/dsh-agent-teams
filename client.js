@@ -1,15 +1,15 @@
-// Browser half of the dsh-agent-teams bundle.
+// Browser half of the dsh-olympus bundle.
 //
-// The BMad squad registers 1 dispatcher + 7 member presets. DSH has no
+// The Olympus Squad registers 1 dispatcher + 7 member presets. DSH has no
 // declarative way to hide a single preset, so the picker (new-session chip and
 // Settings → Agent presets) lists all 8. Everyday use only needs the dispatcher;
 // members are meant to be reached through the dispatcher's delegate_* tools.
 //
 // This module wraps `ctx.remote.agentPresets.list()` on the Client and drops the
 // 7 known member presets, keeping the dispatcher and every other preset
-// (including any future non-member `bmad-*` preset). Only the Client-facing
+// (including any future non-member preset). Only the Client-facing
 // roster is filtered — the Host registry still declares all 8 presets, so
-// `delegate_*` (agentPreset: bmad-analyst … bmad-tea) keeps resolving.
+// `delegate_*` (agentPreset: analyst … tea) keeps resolving.
 //
 // Safety: today the roster shape is `{ ok, value: { presets: [...] } }` and
 // `list` is a configurable own accessor installed by the remote namespace
@@ -18,24 +18,24 @@
 // skipped outright when `list` is not a configurable own property or the
 // context offers no `ctx.effect` to restore it on unload.
 window.__ModuleLoader__.load({
-  id: 'dsh-agent-teams',
+  id: 'dsh-olympus',
   factory() {
     // The 7 internal members, by registry id (= each preset's config.id).
-    // An explicit set (not a `bmad-` prefix): a future non-member `bmad-*`
-    // preset is never hidden by accident, and a renamed dispatcher is never
+    // An explicit set (not a prefix): a future non-member preset
+    // is never hidden by accident, and a renamed dispatcher is never
     // lost from the picker.
     const MEMBER_IDS = new Set([
-      'bmad-analyst', 'bmad-pm', 'bmad-po', 'bmad-ux',
-      'bmad-architect', 'bmad-dev', 'bmad-tea',
+      'analyst', 'pm', 'po', 'ux',
+      'architect', 'dev', 'tea',
     ])
-    const LEAD_ID = 'bmad-squad-lead'
-    const WRAPPED = Symbol.for('dsh-agent-teams.agentPresets.list.wrapped')
+    const LEAD_ID = 'squad-lead'
+    const WRAPPED = Symbol.for('dsh-olympus.agentPresets.list.wrapped')
     let warnedShape = false
     const warnShape = (result) => {
       if (warnedShape) return
       warnedShape = true
       // eslint-disable-next-line no-console
-      console.warn('[dsh-agent-teams] unexpected agentPresets/list shape; picker filter inactive', result)
+      console.warn('[dsh-olympus] unexpected agentPresets/list shape; picker filter inactive', result)
     }
 
     return {

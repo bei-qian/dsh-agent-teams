@@ -16,7 +16,7 @@
 
 ## ✅ R1 · 零依赖自包含 playbook（已完成）
 
-**状态（已完成）**：校验器 + 协议 + 7 个角色 playbook（`playbooks/`）；成员预设已改扫 `playbooks/`（`includeDefaultRoots:false`）并安装验证，8 预设全 `active`。完整 BMad 技能保留在 `skills/` 但**未启用**（可回退/删除）。阶段门由 Lead 跑校验器；`verify.mjs` 与 CI 覆盖 playbook + 校验器。
+**状态（已完成）**：校验器 + 协议 + 7 个角色 playbook（`playbooks/`）；成员预设已改扫 `playbooks/`（`includeDefaultRoots:false`）并安装验证，8 预设全 `active`。完整 BMad 技能保留在 `skills/` 但**未启用**（可回退/删除）。（注：`skills/` 副本已于 issue #16 从仓库移除）阶段门由 Lead 跑校验器；`verify.mjs` 与 CI 覆盖 playbook + 校验器。
 关键提交：`3b6c2f3`（校验器 + 协议 + 示例）→ `dbe7782`（接入 7 角色 playbook）→ `6ebe33a`（index/initiative 归 Sofia，Lead 只读 + 门禁）。
 
 **当初要解决的问题**：插件已内置完整 BMad 技能，但它们是「方法驱动器」——`SKILL.md` 里会
@@ -27,7 +27,7 @@ list_templates…）并调用兄弟技能，所以完整流程需要目标项目
 - 保留：角色人设、BMad 四阶段路由、各文档模板（PRD / brief / 架构 / 票据等以 Markdown 内联）、验收清单；
 - 去掉：一切 `uv`/Python 调用与 `_bmad` 项目状态依赖；
 - 做法：`skills/` 换成一套精简 playbook（每角色一个 `SKILL.md`，内联模板与步骤），agent 用自身
-  read/write/bash 工具直接执行，不再跑外部脚本。
+  read/write/bash 工具直接执行，不再跑外部脚本。（`skills/` 副本已于 issue #16 删除）
 
 **代价**：失去 BMad「引擎」的自动化（配置驱动定制、ticket-store 脚本、模板库脚本、跨模块知识、
 自动校验），能力更「轻」、更依赖提示词质量；上游 BMad 更新不会自动流入，模板需自行维护。

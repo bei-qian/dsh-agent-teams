@@ -1,11 +1,11 @@
-# SETUP · 安装与使用 BMad 小队插件
+# SETUP · 安装与使用 Olympus Squad 插件
 
 本插件是一个 **配置型 DSH bundle + 轻量客户端半边**：在 Host 侧只新增若干「agent 预设」（不写业务 Host 代码），并由浏览器半边 `client.js` 负责在选择器里隐藏成员预设。
 它复用 DSH 内置的 Agent Teams（共享任务板 + 子代理）。
 
 > 两类读者，看不同章节：
 > - **外部用户**（从 GitHub 拿到本仓库，想装进自己的 DSH）：读 [从 GitHub 下载安装到 DSH](#从-github-下载安装到-dsh)。`cordis.patch.yml` 已随仓库提交，**无需 Python/Node 构建**。
-> - **开发者**（改了 `cordis.patch.tmpl.yml` / `prompts/*.md` 后要重建产物）：读 [开发者：改模板后重建](#开发者改模板后重建)。
+> - **开发者**（改了 `cordis.patch.tmpl.yml` / `persona/*.md` 后要重建产物）：读 [开发者：改模板后重建](#开发者改模板后重建)。
 
 ## 从 GitHub 下载安装到 DSH
 
@@ -60,15 +60,15 @@ install_bundle  target = /绝对/路径/to/dsh-agent-teams
 
 安装后到 **Plugins** 列表确认出现：
 
-- **插件本体行** `dsh-agent-teams`（非预设行，属正常现象）；
-- **8 个预设行**，均处于激活（active）状态：`preset-bmad-squad-lead` 以及 `preset-bmad-analyst / -pm / -po / -ux / -architect / -dev / -tea`。
+- **插件本体行** `dsh-olympus`（非预设行，属正常现象）；
+- **8 个预设行**，均处于激活（active）状态：`preset-squad-lead` 以及 `preset-analyst / -pm / -po / -ux / -architect / -dev / -tea`。
 
-每行显示各自的角色名与说明（如「〔内部成员〕BMad · Mary 业务分析师」），而不是统一的「Agent 预设定义 / 声明一个 Agent 预设及其使用的插件组合。」——它们各自挂载 `dsh-agent-teams/rows/<role>` 薄模块并带自己的 locale。
+每行显示各自的角色名与说明（如「Olympus · Apollo 业务分析师」），而不是统一的「Agent 预设定义 / 声明一个 Agent 预设及其使用的插件组合。」——它们各自挂载 `dsh-olympus/presets/<role>` 薄模块并带自己的 locale。
 
 ### 首次使用
 
 1. 新建一个会话。
-2. 在 **模型/推理 → 预设** 里选 **「BMad 小队 · 调度」**（`bmad-squad-lead`）。
+2. 在 **模型/推理 → 预设** 里选 **「Olympus Squad · 调度」**（`squad-lead`）。
 3. **Agent Teams 会自动开启**（随预设走、不覆盖你的手动选择，详见下文「注意」）。
 4. 预设选择器**默认只显示「调度」**：7 个成员预设被 `client.js` 从选择器过滤掉（Host 端 8 个预设仍全部注册，供 `delegate_*` 使用）——日常只需选这一个，它会自动点名成员。
 
@@ -79,16 +79,16 @@ cd /你的/dsh-agent-teams
 git pull
 ```
 
-然后在 **Plugins** 里把 `dsh-agent-teams` 插件**关开一次**，或**重启 DSH**，让新内容生效（Host 半边不像浏览器半边那样热更）。
+然后在 **Plugins** 里把 `dsh-olympus` 插件**关开一次**，或**重启 DSH**，让新内容生效（Host 半边不像浏览器半边那样热更）。
 
 ### 卸载
 
-在 **Plugins** 里移除 `dsh-agent-teams` bundle 即可（或在 profile 的 `cordis.patch.yml` 中删除对应插入）。
+在 **Plugins** 里移除 `dsh-olympus` bundle 即可（或在 profile 的 `cordis.patch.yml` 中删除对应插入）。
 
 ## 常见问题（FAQ）
 
 - **为什么安装后不能删除 / 移动克隆下来的目录？**
-  DSH 的「本地目录」安装是**链接（link）**而非拷贝：插件运行时直接读这个 checkout 里的文件（`index.js` / `client.js` / `cordis.patch.yml` / `rows/` / `playbooks/` 等）。删除或移动目录会让插件失效。若要换位置，先在 **Plugins** 里卸载，把目录移到新位置后，再按上面步骤重新安装。
+  DSH 的「本地目录」安装是**链接（link）**而非拷贝：插件运行时直接读这个 checkout 里的文件（`index.js` / `client.js` / `cordis.patch.yml` / `presets/` / `playbooks/` 等）。删除或移动目录会让插件失效。若要换位置，先在 **Plugins** 里卸载，把目录移到新位置后，再按上面步骤重新安装。
 - **能不能直接填 git URL / npm 包名安装？**
   不能。DSH 目前只支持从**本地目录**安装插件 bundle，没有「从 git URL 或 npm spec 直接安装 bundle」的能力。务必先 `git clone` 或下载 ZIP 解压，再用本地目录方式安装。
 - **Windows 上 target 路径怎么写？**
@@ -102,21 +102,21 @@ git pull
 
 ## 使用一支小队
 
-1. 新建一个会话，在 **模型/推理菜单** 里选预设 **「BMad 小队 · 调度」**（即 `bmad-squad-lead`）。
-2. **Agent Teams 会自动跟着预设走（但不覆盖你的手动选择）**：Host 半边（`index.js`）在**进入**团队预设（默认「BMad 小队 · 调度」）时自动把 **「Use Agent Teams / 启用 agent 协作」** 打开；在**非团队预设之间切换时保持当前开关不动**（你手动开的 Team 会一直开着）；从团队预设**切回**非团队预设时，恢复到**进入团队预设之前**你的非团队选择（原先关→关、原先开→开）。共享任务板因此对「调度」开箱可用。（该开关仍在模型/推理菜单里，可随时手动改。）
+1. 新建一个会话，在 **模型/推理菜单** 里选预设 **「Olympus Squad · 调度」**（即 `squad-lead`）。
+2. **Agent Teams 会自动跟着预设走（但不覆盖你的手动选择）**：Host 半边（`index.js`）在**进入**团队预设（默认「Olympus Squad · 调度」）时自动把 **「Use Agent Teams / 启用 agent 协作」** 打开；在**非团队预设之间切换时保持当前开关不动**（你手动开的 Team 会一直开着）；从团队预设**切回**非团队预设时，恢复到**进入团队预设之前**你的非团队选择（原先关→关、原先开→开）。共享任务板因此对「调度」开箱可用。（该开关仍在模型/推理菜单里，可随时手动改。）
 3. 直接把一段工作发给它，例如：
    > 帮我做一个「周报自动汇总」的小功能：先调研可行性，再出个 PRD，然后实现并加测试。
-   负责人会按「分析→规划→实现→验证」把它分派给 Mary / John / Amelia 等成员，
+   负责人会按「分析→规划→实现→验证」把它分派给 Apollo / Prometheus / Hephaestus 等成员，
    成员在各自子代理里干活，完成后回报，负责人在合适时机交回结果。
 4. 会话头部的 **子代理/共享任务** 面板可看到成员与任务进度。
 
 ## 注意
 
-- **预设选择器默认只显示「BMad 小队 · 调度」**：浏览器半边 `client.js` 会把 7 个成员预设从选择器里过滤掉
+- **预设选择器默认只显示「Olympus Squad · 调度」**：浏览器半边 `client.js` 会把 7 个成员预设从选择器里过滤掉
   （Host 端 8 个预设仍全部注册，`delegate_*` 照常可用）。若某次升级导致该过滤失效，成员预设会退而显示为
-  「〔内部成员〕…」并标注「仅供内部委派、请勿直接选择」。正常只需选「调度」，它会自动点名成员。
+  「Olympus · <花名> <职能>」并标注「仅供内部委派、请勿直接选择」。正常只需选「调度」，它会自动点名成员。
 - **Team 模式跟着预设走（可配置 + 不覆盖手动选择）**：Host 半边把「Agent Teams 开关」对齐到当前预设——
-  - **哪些预设算「团队预设」**：默认 `['bmad-squad-lead']`，改 `index.js` 顶部的 `TEAM_PRESETS`（或在 Loader 行上加
+  - **哪些预设算「团队预设」**：默认 `['squad-lead']`，改 `index.js` 顶部的 `TEAM_PRESETS`（或在 Loader 行上加
     `config.teamPresets`）即可，不用改逻辑；列表内=进入即强制开，列表外=非团队预设。
   - **切换规则**：**进入团队预设→开**；**离开团队预设回到非团队预设→还原进入前的非团队选择**（原先关→关、原先开→开）；
     **非团队预设之间切换→保持当前状态不动**（手动开着就一直开）。
@@ -133,7 +133,7 @@ git pull
   每个角色一份自包含 `SKILL.md`，固定写到工作区 `bmad-output/`（`index.md` 当票据真相）；**不需要** Python/uv/`_bmad`。
   **校验器** `scripts/squad_validate.mjs`（Node，零依赖）在每个阶段门由 **Lead** 执行（dev/tea 可自行执行）：
   `node scripts/squad_validate.mjs ./bmad-output`，退出码 0/1 决定能否继续。
-  仓库仍保留完整 BMad 技能于 `skills/`（**未启用**，可日后参考或回退；不需要可删）。
+  需要上游原文时请 clone `bmad-code-org/BMAD-METHOD` / `bmad-code-org/bmad-method-test-architecture-enterprise`（见 `ATTRIBUTION.md`）；仓库不再保留副本。
   来源与许可见 `ATTRIBUTION.md`（MIT © 2025 BMad Code, LLC）。
 - **每个成员可选模型**：默认成员跟随调度会话的当前模型。要在**委派时**给某个成员换模型，先打开
   **Plugins → Subagent → Model selection** 启用并勾选允许的模型路由，之后调度会在 `delegate_*` 里按需传
@@ -143,7 +143,7 @@ git pull
 
 ## 开发者：改模板后重建
 
-> 仅当你**改动了 `cordis.patch.tmpl.yml` 或 `prompts/*.md`** 时才需要这一节。普通外部用户装完即用，可忽略。
+> 仅当你**改动了 `cordis.patch.tmpl.yml` 或 `persona/*.md`** 时才需要这一节。普通外部用户装完即用，可忽略。
 
 1. 重新生成 `cordis.patch.yml`（模板 / 提示词改动后需要重跑）：
    ```bash

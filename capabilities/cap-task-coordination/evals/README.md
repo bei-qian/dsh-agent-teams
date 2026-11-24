@@ -12,7 +12,7 @@
 ## 如何运行
 
 ```bash
-# 在 dsh-agent-teams/capabilities/cap-task-coordination/ 目录下：
+# 在 dsh-olympus/capabilities/cap-task-coordination/ 目录下：
 node scripts/run_evals.mjs          # 跑全部 fixture，全部 [PASS] 则 exit 0
 node scripts/check_dag.mjs evals/01-normal-decompose.json   # 单独校验样例计划的 DAG（exit 0）
 node scripts/check_dag.mjs evals/02-boundary-dag-cycle.json # 有环用例（exit 1）

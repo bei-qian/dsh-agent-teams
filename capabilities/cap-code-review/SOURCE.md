@@ -21,7 +21,7 @@
 - **采纳日期**：2026-11-22
 - **复核日期**：2027-02-20（建议季度复核；上游 review 实践变更或 DSH skill 发现契约变化时提前）
 - **owner**：Dev（被审）/ 独立评审 = Architect 或 TEA 或另一位 Dev——见 `SKILL.md` metadata.owner
-- **许可**：本模块随 `dsh-agent-teams` 以 MIT 发布（见仓库 `LICENSE`）
+- **许可**：本模块随 `dsh-olympus` 以 MIT 发布（见仓库 `LICENSE`）
 
 ## Limitations（注入防火墙登记）
 

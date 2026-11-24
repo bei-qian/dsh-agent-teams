@@ -1,6 +1,6 @@
 # Attribution / NOTICE — vendored 设计参照切片
 
-本目录 `dsh-agent-teams/playbooks/bmad-ux/reference/` 内所有文件均为 **原样快照（snapshot）**，复制自本地仓库 `open-design`，正文未改写，仅用于 BMad 小队 UX 设计师（Sally）随取随读的**品牌无关设计参照**。
+本目录 `dsh-olympus/playbooks/bmad-ux/reference/` 内所有文件均为 **原样快照（snapshot）**，复制自本地仓库 `open-design`，正文未改写，仅用于 BMad 小队 UX 设计师（Ariadne）随取随读的**品牌无关设计参照**。
 
 ## 来源仓库与快照
 

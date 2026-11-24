@@ -1,15 +1,15 @@
 ---
 name: bmad-prd
-description: BMad 小队 PRD 流程（John）。把已确认的想法/调研写成结构化 PRD，按 bmad-squad-protocol 的固定目录落盘。
+description: Olympus Squad PRD 流程（Prometheus）。把已确认的想法/调研写成结构化 PRD，按 bmad-squad-protocol 的固定目录落盘。
 ---
-# PRD（John）
+# PRD（Prometheus）
 
 ## 何时用
 想法已成形、需要一份团队可据此实现的 PRD 时。
 
 ## 先读
 - `bmad-output/initiative.md`
-- `bmad-output/research/`（若 Mary 已调研）
+- `bmad-output/research/`（若 Apollo 已调研）
 - `bmad-output/index.md`
 
 ## 步骤
@@ -34,5 +34,5 @@ description: BMad 小队 PRD 流程（John）。把已确认的想法/调研写�
 ```
 
 ## 收尾
-- 交付后提示 Lead 让 Sofia 据此切 epic/story。
+- 交付后提示 Lead 让 Themis 据此切 epic/story。
 - 交付后按 `bmad-squad-protocol` 阶段门跑校验器（你按固定位置写对即可，并对照本节自检清单）。

@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+- **删除 vendored `skills/` 参考副本**（issue #16，方案 C）：移除仓库内 38 个 BMad 技能目录 + `skills/LICENSE-BMAD-METHOD.txt`（**653 文件 / 6.9MB**）——运行时从未接线、发布物从未包含它。同步：`scripts/verify.mjs` 删除第 4 段 skills 计数断言（`REQUIRED_SKILLS` / `skillDirs` / 末行 `N bundled skills` 一并清理，末行改为只报 presets+delegates）；`scripts/check_pack.mjs` **仅注释级改动**（保留 declared-but-absent 守卫，不改断言方向）；`ATTRIBUTION.md` 改写为「上游两仓、不随包不留仓」并修正 `tea` 归属（原误列为 BMAD-METHOD 子集，实为独立仓 `bmad-method-test-architecture-enterprise`）；`README` / `SETUP` / `ROADMAP` / `DESIGN` 同步；新增 `docs/vendored-skills-baseline.md`（38→上游路径映射 + 两仓 pin + 整树 sha256；`docs/` 不随包）。合规前置（根 `LICENSE-BMAD-METHOD.txt` MIT 全文随包分发）已在 issue-06 方案 B 落地，本次不动。**产物零变化（针对删除 `skills/` 目录这一操作）**：`skills/` 从未进包，删该目录前后 `npm pack` 产物文件集均为 **458 文件 / `skills: 0` / 根 `LICENSE-BMAD-METHOD.txt` 随包**；因 `scripts/` 与各文档本身在 `package.json#files` 内，本次对其内容的修改会使 tarball 字节数相应变化，属预期。
+
+## 0.2.0 — 2026-11-24
+
+### Breaking
+- **preset id 改名，不保留别名、不做兼容 shim**：`bmad-squad-lead → squad-lead`、`bmad-analyst → analyst`、`bmad-pm → pm`、`bmad-po → po`、`bmad-ux → ux`、`bmad-architect → architect`、`bmad-dev → dev`、`bmad-tea → tea`。旧 id 一律不存在——已开着旧预设的会话需在新会话里改选 `squad-lead`；自定义 `config.teamPresets` 若写过旧 id 也要同步改。
+- **包名 `dsh-agent-teams → dsh-olympus`**：profile 的依赖名与 `dsh.profile.bundles` 必须同步改并重装（新开会话才生效）。本地目录名 `dsh-agent-teams/` 与 GitHub 仓库名不变。
+
+### 变更
+- **UX 接入 modern-web-guidance 的第 1 层（平台能力事实）+ 原型可验证门**（issue #19 / 内部 issue-14）：`playbooks/bmad-ux/SKILL.md` 的「与 modern-web-guidance 的边界」段补「平台能力事实归 UX、只写结论不抄正文」「第 2 层仍归 Hephaestus」两条 bullet，`experience.md` 模板新增「平台约束与降级」段与「原型交付硬 gate」三条勾选项（平台约束核对 / 静态证据 / 运行时证据），参照表加一行指向新索引；新增 `playbooks/bmad-ux/platform-constraints.md`（只含「主题 → `modern-web-guidance` 篇目」索引，**不复制正文**）；新增零依赖 `scripts/check_prototype.mjs`（静态 6 条 `P1`–`P6` 常开 + `--browser` CDP 三档截图/console/五态、Chrome 缺失时 exit 2 SKIP + `--self-test` 合法 fixture 绿 / `P1`–`P6` 各注入一次红），挂进 `package.json` 的 `check:prototype` 与 `verify.mjs` 第 14 段（仅跑 `--self-test`）。实现层边界不变：具体写法仍以 `modern-web-guidance` 为准。
+- 产品身份层去 BMad 品牌：插件卡片与 8 个预设行的标题/描述改为 `Olympus Squad` + 希腊神话花名（Hermes/Apollo/Prometheus/Themis/Ariadne/Athena/Hephaestus/Argus）；persona 自称同步换花名，保留一行「方法来源：BMad Method」合规声明；队长仍不叫裸 `lead`（与运行时根 agent 名冲突）。
+- 新增命名门禁 `scripts/check_naming.mjs`（包名 / 8 个 preset id / 18 张 locale 卡片的标题与描述不得含 BMad 字样），并接入 `verify.mjs` 第 13 段与 `scripts.check:naming`。
+- 协议 `bmad-squad-protocol`（skill id 不变）新增「花名 ↔ id ↔ 上游角色」映射表，含 `reviewer`/Nemesis **占位行**（未建 preset）；Roster 表的显示名前缀改为希腊名（`apollo-n` 等）。
+- **不做**：skill id、`playbooks/` `capabilities/` `skills/` `bmad-output/` 的目录名、上游归属文件（`LICENSE-BMAD-METHOD.txt` / `ATTRIBUTION.md`）均不变；`reviewer` 座位不开。
+- **目录命名对齐运行时词汇**：`prompts/ → persona/`（定义的是人格，且每个座位挂的插件 id 就是 `persona` / `@deepseek-ai/dsh-persona`）、`rows/ → presets/`（它们确实是 preset 行模块；`package.json` 的 24 条 `./presets/<seat>/…` 子路径导出、`cordis.patch.tmpl.yml` 的 8 处 `name` 同步）；门禁 `verify/check_presets/check_naming/check_pack` 与 5 份文档同步。`capabilities/` `playbooks/` `skills/` `scripts/` `examples/` `locale/` 目录名不变。
+- **仓库根目录与 GitHub 仓库名 → `dsh-olympus`**：包名（0.2.0 已改）、目录名、仓库名三者一致；profile 依赖改 `github:<owner>/dsh-olympus` 并重装（属 0.2.0 的落地步骤，非新版本）。
+- 新增 `docs/GLOSSARY.md`：花名 ↔ preset id ↔ 上游角色 ↔ 座位职责 ↔ 希腊词义，含「为什么这样命名」设计原则（机器层职能词、人读层神话；id 是地址、花名是称号）；`reviewer`/Nemesis 仅占位，不建座位。
+- 遗留清理（issue-12 §10 中本条顺手清掉的部分）：7 份非协议 playbook 的旧人名与「BMad 小队」措辞、README/DESIGN/SETUP 叙事统一为 `Olympus Squad`；`bmad-output/` 目录名与 `skills/` 参考副本**仍不动**。
+
 ## 0.1.2 — 2026-11-24
 
 - **上游更新吸收（epic-004）**：①TEA v4.4 测试证据完整性思想零逐字改编入 cap-testing-strategy / bmad-test-strategy（零动作缺陷探针 / 覆盖排除显式登记 / 证据版本绑定·变动即 stale / 发布前就绪清单 / 弱化机制不得冒充保证；SOURCE pin 85fda574，新增 06 回归 fixture）；②modern-web-guidance playbook 快照 v1.0.1(6971ebbe)→888035b5 整体刷新（210 篇对齐，+context-menu/+teaser、−prompt-api(重复)/−soft-edge-content-fade(改名)，20 篇正文更新含 dialog 无障碍重写；零依赖纯 markdown、212 处交叉引用 0 broken、SKILL 分类计数同步）；③ATTRIBUTION 补 modern-web-guidance 逐字 vendoring 归属（guides 正文 CC-BY 4.0 + 代码 Apache-2.0，Upstream pin 888035b5，© Google LLC 及 contributors）。门禁：verify.mjs OK / squad_validate OK(24) / 独立评审 murat-3·amelia-3 PASS。

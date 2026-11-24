@@ -1,6 +1,6 @@
 # Attribution / NOTICE — vendored 后端模式参照切片
 
-本目录 `dsh-agent-teams/playbooks/bmad-build/reference/` 内的全部模式 README 均为 **原样快照（snapshot）**，逐篇 `cp` 自本地只读仓库 `./java-design-patterns`，**正文未改写、未删节**（README 顶部 YAML frontmatter 一并保留）。仅用于 BMad 小队开发者（Amelia）随取随读的后端设计参照库。
+本目录 `dsh-olympus/playbooks/bmad-build/reference/` 内的全部模式 README 均为 **原样快照（snapshot）**，逐篇 `cp` 自本地只读仓库 `./java-design-patterns`，**正文未改写、未删节**（README 顶部 YAML frontmatter 一并保留）。仅用于 BMad 小队开发者（Hephaestus）随取随读的后端设计参照库。
 
 ## 来源仓库与快照
 

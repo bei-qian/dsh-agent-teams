@@ -1,6 +1,6 @@
-# bmad-build/reference — Amelia 后端模式参照库（vendored 快照）
+# bmad-build/reference — Hephaestus 后端模式参照库（vendored 快照）
 
-本目录是 BMad 小队开发者（Amelia）的**后端设计模式参照库**，按方案③「混合」从 `java-design-patterns` 原样快照（vendoring）而来。Amelia 实现 story 时按需深读全文，日常用本索引速查「这问题该不该用该模式」。
+本目录是 BMad 小队开发者（Hephaestus）的**后端设计模式参照库**，按方案③「混合」从 `java-design-patterns` 原样快照（vendoring）而来。Hephaestus 实现 story 时按需深读全文，日常用本索引速查「这问题该不该用该模式」。
 
 - **来源仓库**：[`iluwatar/java-design-patterns`](https://github.com/iluwatar/java-design-patterns)（本地只读副本 `./java-design-patterns`）
 - **快照 commit**：`4cabb204f240240bea319605a5ffa46ded728001`
@@ -9,7 +9,7 @@
 
 > **图片链说明**：vendored 正文里指向 `./etc/*.png` 等相对图片的链接会因**只收正文、不复制图**而失效——**这是可接受的快照取舍**（本库只收正文，图片/图示链回上游 `java-design-patterns/<pattern>/etc/`）。正文链接未改写。
 
-> **边缘（避免双维护）**：「是否/为何选某模式」的架构决策归 Winston（`bmad-architecture`）；「模式落地实现」归 Amelia（`bmad-build`）。本库只做**实现期参照**，决策表与硬规则在 `bmad-build/SKILL.md`（story-004 蒸馏），此处不重复规则。
+> **边缘（避免双维护）**：「是否/为何选某模式」的架构决策归 Winston（`bmad-architecture`）；「模式落地实现」归 Hephaestus（`bmad-build`）。本库只做**实现期参照**，决策表与硬规则在 `bmad-build/SKILL.md`（story-004 蒸馏），此处不重复规则。
 
 **档位说明**：**A 档 = 43 篇**，直接 vendor 全文（后端高频、意图稳定、README 自洽）。**B 档**只在下方索引给一行摘要，**不 vendor 正文**，需要时深读上游 `java-design-patterns/<pattern>/`。**C 档**（前端表现层/游戏/UI 测试）与 `localization/` 译文**不纳入**。
 

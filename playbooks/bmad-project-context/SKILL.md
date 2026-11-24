@@ -1,6 +1,6 @@
 ---
 name: bmad-project-context
-description: '项目级 agent 指令（AGENTS.md 受管 block）能力：为项目根 AGENTS.md 做 setup / adopt / refresh / record / audit。小队内由 architect（Winston）执行，访谈与写前批准经 Lead 中介；条件触发——无 / 空 / 无受管 block 时 setup/adopt，已有 `<!-- bmad:context -->` 时按需 refresh/audit。Use when invoked by name.'
+description: '项目级 agent 指令（AGENTS.md 受管 block）能力：为项目根 AGENTS.md 做 setup / adopt / refresh / record / audit。小队内由 architect（Athena）执行，访谈与写前批准经 Lead 中介；条件触发——无 / 空 / 无受管 block 时 setup/adopt，已有 `<!-- bmad:context -->` 时按需 refresh/audit。Use when invoked by name.'
 ---
 # 项目级 agent 指令（AGENTS.md）
 
@@ -15,7 +15,7 @@ description: '项目级 agent 指令（AGENTS.md 受管 block）能力：为项�
 
 **判定口径**：脚手架空文件（空标题、注释、孤立 import 行）不算 meaningful → `setup`；拿不准时按 `adopt`（吸收近空文件只多一条 ledger，而把有内容的文件当 setup 会丢指令）。用户给的 intent 与探测结果矛盾时（例如对已有内容的文件下 `setup`）要上报确认，绝不静默照办。
 
-**执行者与中介**：本 playbook 由 architect（Winston）执行；Winston 无 `ask_user`、无 shell。**访谈用户 / 写入前用户批准 → 经 Lead 中介**；**SHA / `git log` / 需实跑的命令 → 请 Lead 代跑**，拿不到写 `TODO(待 Lead 补)`。
+**执行者与中介**：本 playbook 由 architect（Athena）执行；Athena 无 `ask_user`、无 shell。**访谈用户 / 写入前用户批准 → 经 Lead 中介**；**SHA / `git log` / 需实跑的命令 → 请 Lead 代跑**，拿不到写 `TODO(待 Lead 补)`。
 
 ## 先读
 - `bmad-output/initiative.md`（greenfield 播种口径）
@@ -45,10 +45,10 @@ description: '项目级 agent 指令（AGENTS.md 受管 block）能力：为项�
 ### 2. 问他们带来什么（经 Lead）
 无论仓库做什么都要遵守的规则：治理、安全与合规、编码标准、风格指南、冻结区。也问外部文档——手册、wiki、架构文档、MCP 知识库。记下路径，先不读。Greenfield：这就是全部内容。Brownfield：这是扫描够不着的那一半。
 
-**Winston 不能直连用户**：由 architect 把问题清单交回 Lead（**每批 ≤8 问，越少越好**），Lead 用 `ask_user` 收集答复后回传。
+**Athena 不能直连用户**：由 architect 把问题清单交回 Lead（**每批 ≤8 问，越少越好**），Lead 用 `ask_user` 收集答复后回传。
 
 ### 3. 发现与核实（用自身工具顺序扫描）
-用自身 `read` / `glob` / `grep` / `web` 工具**顺序扫描**（Winston 无 subagent，不并行扇出），针对各小节所需：可执行配置与 CI（政策、以及它们已声明的内容）、受版本控制的源码（约定与边界）、有针对性的历史（其理由仍须成立的那些约束）。
+用自身 `read` / `glob` / `grep` / `web` 工具**顺序扫描**（Athena 无 subagent，不并行扇出），针对各小节所需：可执行配置与 CI（政策、以及它们已声明的内容）、受版本控制的源码（约定与边界）、有针对性的历史（其理由仍须成立的那些约束）。
 
 读 `package.json`、`Makefile`、`pyproject.toml`、贡献指南、PR 模板、CI 配置，是为了知道 block **不该重复**什么；其注意事项来自第 4 步的人。对每条点名文件的断言做**路径核对**。对 block 关于某命令行为的每条断言，读真正执行它的 target 或脚本核实。第 1 步商定的每个 child 按其自身 manifest 作为独立范围扫描。
 
