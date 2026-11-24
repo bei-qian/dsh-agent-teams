@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- **文档残留更正（0.2.0 改名收尾）**：仓库/目录名已在 0.2.0 定为 `dsh-olympus`（详见 0.2.0 段），本次仅补齐活文档中残留的旧名 `dsh-agent-teams`——`README` / `SETUP` 的 clone 地址与目录名示例（含 `~/plugins`、`C:\Users\<你>\plugins`、`cd`、`install_bundle target` 等路径占位）、`DESIGN` 的两处 v1/v2 目录树根名与 L286 命名决策、`LICENSE` 版权署名，均更正为 `dsh-olympus`。**无产物 / 接口 / 运行时变化**；历史 CHANGELOG 条目中的旧名按存档保留，不回改。
+
 - **删除 vendored `skills/` 参考副本**（issue #16，方案 C）：移除仓库内 38 个 BMad 技能目录 + `skills/LICENSE-BMAD-METHOD.txt`（**653 文件 / 6.9MB**）——运行时从未接线、发布物从未包含它。同步：`scripts/verify.mjs` 删除第 4 段 skills 计数断言（`REQUIRED_SKILLS` / `skillDirs` / 末行 `N bundled skills` 一并清理，末行改为只报 presets+delegates）；`scripts/check_pack.mjs` **仅注释级改动**（保留 declared-but-absent 守卫，不改断言方向）；`ATTRIBUTION.md` 改写为「上游两仓、不随包不留仓」并修正 `tea` 归属（原误列为 BMAD-METHOD 子集，实为独立仓 `bmad-method-test-architecture-enterprise`）；`README` / `SETUP` / `ROADMAP` / `DESIGN` 同步；新增 `docs/vendored-skills-baseline.md`（38→上游路径映射 + 两仓 pin + 整树 sha256；`docs/` 不随包）。合规前置（根 `LICENSE-BMAD-METHOD.txt` MIT 全文随包分发）已在 issue-06 方案 B 落地，本次不动。**产物零变化（针对删除 `skills/` 目录这一操作）**：`skills/` 从未进包，删该目录前后 `npm pack` 产物文件集均为 **458 文件 / `skills: 0` / 根 `LICENSE-BMAD-METHOD.txt` 随包**；因 `scripts/` 与各文档本身在 `package.json#files` 内，本次对其内容的修改会使 tarball 字节数相应变化，属预期。
 
 ## 0.2.0 — 2026-11-24

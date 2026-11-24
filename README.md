@@ -12,7 +12,7 @@
 从 GitHub 克隆或下载本仓库后，用 DSH 的**本地目录**方式安装即可（无需发布 npm、无需构建）：
 
 ```bash
-git clone https://github.com/bei-qian/dsh-agent-teams.git   # 或 GitHub 页 Code → Download ZIP 解压
+git clone https://github.com/bei-qian/dsh-olympus.git   # 或 GitHub 页 Code → Download ZIP 解压
 ```
 
 然后 DSH → **Plugins → Add plugin → 选择本地目录**（或让 agent 跑 `plugin_manager` 的 `install_bundle`，`target` 填该目录绝对路径）。完整步骤（前置条件、两种安装方式、成功标志、首次使用、更新、卸载、常见问题）见 [从 GitHub 安装](./SETUP.md#从-github-下载安装到-dsh)。
