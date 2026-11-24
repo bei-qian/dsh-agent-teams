@@ -1,0 +1,15 @@
+{
+  "fixture": "07-boundary-coverage-full",
+  "category": "boundary",
+  "description": "覆盖率边界（全覆盖）：3 个分母文件全部有终态——2 个 reviewed、1 个 skipped 带可核理由（纯文档）。期望 exit 0 并打印 coverage_rate=2/3。",
+  "input": {
+    "files": ["src/app.js", "src/db.js", "docs/legacy.md"],
+    "ledger": "evals/fixtures/coverage-full.ledger.json"
+  },
+  "expect": {
+    "activate": true,
+    "gate": "coverage",
+    "expected_exit": 0,
+    "expected_coverage_rate": 0.6667
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "fixture": "08-boundary-coverage-trivial-reason",
+  "category": "boundary",
+  "description": "覆盖率边界（空洞理由）：账本对 3 个分母文件全部 skip，但理由为平凡词（n/a / later / skip，无具体依据）。期望脚本视同未记账 → exit≠0，杜绝用占位词假跳过。",
+  "input": {
+    "files": ["src/a.js", "src/b.js", "src/c.js"],
+    "ledger": "evals/fixtures/coverage-trivial-reason.ledger.json"
+  },
+  "expect": {
+    "activate": true,
+    "gate": "coverage",
+    "expected_exit_nonzero": true,
+    "expected_unaccounted": ["src/a.js", "src/b.js", "src/c.js"]
+  }
+}
