@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.2 — 2026-11-25
+
+- **epic-009 团队能力沉淀：上游更新吸收例程 + 漂移脚本**：新增 `playbooks/bmad-upstream-sync/` 上游更新吸收例程（四阶段：更新参考克隆 fetch+ff → `upstream_drift.mjs` 漂移表 → 差距分类 absorb/skip·ADR-A5 → 切票/实现/门禁/独立评审/发版；含源仓库→消费 skill 映射表与何时用/不用）；新增零依赖 `scripts/upstream_drift.mjs`（`--root` 漂移表 + `--self-test` 临时仓库自证 + `--json`/`--fetch` 可选、只读）；文档 playbook 技能计数 9→10（纳入 `bmad-upstream-sync`）。
+
 ## 0.2.1 — 2026-11-25
 
 - **epic-008 上游更新吸收（TEA v4.5.0 的 A/B/C/D 思想零逐字·去栈绑定）**：A（不可测验收标准上报与受控降级）+ B（可配置门禁阈值 + 来源溯源 + 非法即拒）入 `cap-testing-strategy` + `bmad-test-strategy`；C（无人值守红停摆显式 blocked）+ D（PR 评审测试发现 + 重命名归因）入 `cap-testing-strategy` + `cap-code-review`；`capabilities/cap-testing-strategy/SOURCE.md` 的 TEA pin 由 `85fda574` 抬到 `75dbfb83`（v4.5.0）；`open-design` `5fdcc3db` **仅登记 pin、不刷快照**；**F1 硬化**（A/B/C 纳入确定性 eval 覆盖并附先红后绿证据，D 文档级由评审覆盖）+ F2（B/C 补「怎么判/反模式」）/ F3（「忘报」→「漏报」）措辞修正。

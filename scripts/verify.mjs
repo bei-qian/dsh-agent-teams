@@ -280,6 +280,16 @@ function main() {
     }
   }
 
+  // 4e-2. upstream drift report self-test: the zero-dependency drift script proves itself on a
+  //      throwaway temp git repo (bare origin + clone; upstream ahead 1 => behind=1; aligned => 0/0).
+  //      Only --self-test is wired into CI; real-repo scanning stays a manual read-only step.
+  const driftScript = join(ROOT, 'scripts', 'upstream_drift.mjs')
+  check(exists(driftScript), 'missing scripts/upstream_drift.mjs (upstream drift report)')
+  if (exists(driftScript) && hasNode) {
+    const dt = spawnSync(process.execPath, [driftScript, '--self-test'], { encoding: 'utf-8' })
+    check(dt.status === 0, 'upstream_drift.mjs --self-test failed ' + fmtExit(dt) + ': ' + tail(dt, 600))
+  }
+
   // 4f. capability-router reference module present (SKILL/references/scripts/SOURCE + evals)
   const router = join(capabilities, 'capability-router')
   for (const rel of ['SKILL.md', 'references/capability-index.yaml', 'references/routing-rules.md',
@@ -359,7 +369,7 @@ function main() {
   }
   check(exists(join(ROOT, 'icon.svg')), 'missing icon.svg')
   const pkg = JSON.parse(read(join(ROOT, 'package.json')))
-  check(pkg.version === '0.2.1', `unexpected version ${pkg.version} (expected 0.2.1)`)
+  check(pkg.version === '0.2.2', `unexpected version ${pkg.version} (expected 0.2.2)`)
   check(Boolean(pkg && pkg.dsh && pkg.dsh.bundle && pkg.dsh.bundle.patch),
     'package.json missing dsh.bundle.patch')
 

@@ -3,7 +3,7 @@
 把 DeepSeek Harness 内置的 **Agent Teams** 机制，升级成类似 Multica **Squads** 的「小队」产品概念，
 并用古希腊神话花名的角色（Apollo / Prometheus / Themis / Ariadne / Athena / Hephaestus / Argus，方法参考 BMad Method）作为默认成员编制。
 
-![version](https://img.shields.io/badge/version-0.2.1-blue) ![license](https://img.shields.io/badge/license-MIT-green) ![type](https://img.shields.io/badge/DSH-bundle-7c3aed)
+![version](https://img.shields.io/badge/version-0.2.2-blue) ![license](https://img.shields.io/badge/license-MIT-green) ![type](https://img.shields.io/badge/DSH-bundle-7c3aed)
 
 > 状态：**v1 已安装验证**（8 个预设 active，技能根 = `playbooks/` + `capabilities/`）。设计见 [DESIGN.md](./DESIGN.md)，安装与用法见 [SETUP.md](./SETUP.md)。
 
@@ -47,7 +47,7 @@ DSH 已经自带 Agent Teams：
 
 ## 版本
 
-- 包版本：**0.2.1**（见 `package.json`）。安装后可在 DSH「Plugins」里看到 `dsh-olympus` 及其版本。
+- 包版本：**0.2.2**（见 `package.json`）。安装后可在 DSH「Plugins」里看到 `dsh-olympus` 及其版本。
 - 形态：**配置型 bundle + 轻量客户端半边**：新增 8 个 agent 预设 + 零依赖 `playbooks/`（默认启用）；并带一个浏览器半边（`client.js`），把 7 个成员预设从预设选择器里过滤掉、只留「调度」一个（Host 端 8 个预设仍全部注册，供 `delegate_*` 委派）。Host 半边（`index.js`）会让内置 Agent Teams 跟着预设走、但不覆盖你的手动选择：**进入**团队预设（默认「调度」）时**自动打开**，**离开**团队预设回到非团队预设时**还原进入前的非团队选择**（原先关→关、原先开→开），**非团队预设之间切换则保持当前状态不动**，无需每次手动勾「启用 agent 协作」。团队预设列表可配置（`TEAM_PRESETS` / `config.teamPresets`），且在插件启用时只对当前已打开的**空白**会话补开团队预设（不擅自改动非团队会话的手动状态）。
 - 版本策略：维持在 **0.2.x** 迭代，重大改动再升大版本（按维护者约定）。
 
@@ -57,7 +57,7 @@ profile 里对 `dsh-olympus` 的依赖应**锁定到显式 ref**，不要用会�
 
 ```yaml
 # ~/.dsh/profiles/<profile>/package.json（dependencies 字段）
-"dsh-olympus": "github:bei-qian/dsh-olympus#v0.2.1"   # 推荐：锁到发布 tag
+"dsh-olympus": "github:bei-qian/dsh-olympus#v0.2.2"   # 推荐：锁到发布 tag
 # 或锁到具体 commit sha（可复现性更强）：
 # "dsh-olympus": "github:bei-qian/dsh-olympus#<40 位 commit sha>"
 ```
@@ -68,7 +68,7 @@ profile 里对 `dsh-olympus` 的依赖应**锁定到显式 ref**，不要用会�
 2. 重装（`pnpm install`，或走 DSH 的安装流程）；
 3. 核对两处一致：
    - `pnpm-lock.yaml` 里该依赖解析到的 tarball commit == 所选 ref 指向的 commit；
-   - `require('dsh-olympus/package.json').version` == 所选 tag 的版本号（如 `0.2.1`）。
+   - `require('dsh-olympus/package.json').version` == 所选 tag 的版本号（如 `0.2.2`）。
 
 > **发版 = 打 tag**（tag 推送即触发 CI `verify`：`on: push` 未加 branches/tags 过滤器，tag 推送同样会跑）；**不使用 prepack** 作为安装门禁——本机 pnpm 11.28.5 实测，git 依赖默认受 `allowBuilds` 白名单约束、`prepack` **不会**自动执行（未列入白名单时安装直接报 `ERR_PNPM_GIT_DEP_PREPARE_NOT_ALLOWED`）。
 
@@ -89,6 +89,7 @@ profile 里对 `dsh-olympus` 的依赖应**锁定到显式 ref**，不要用会�
 
 > **默认启用零依赖 playbook**：成员预设的 `skill-filesystem.customSkillDirs` 指向 `playbooks/`（自包含，不依赖 `_bmad`/Python/uv）。
 > 每个角色一份 `SKILL.md` + 固定 `bmad-output/` 目录 + `index.md` 票据真相，收尾用 `scripts/squad_validate.mjs` 校验器把关（由 Lead 执行）。
+> 内置 **10 份 `bmad-*` 流程 playbook**（含新增 `bmad-upstream-sync` 上游更新吸收例程：fetch+ff 更新参考克隆 → `scripts/upstream_drift.mjs` 漂移表 → 差距分类 absorb/skip → 切票/实现/门禁/评审/发版）+ `modern-web-guidance` 前端参照（非 `bmad-*`）。
 > 需要上游原文时请 clone `bmad-code-org/BMAD-METHOD` / `bmad-code-org/bmad-method-test-architecture-enterprise`（见 `ATTRIBUTION.md`）；仓库不再保留副本。
 > 技能来源与许可：MIT © 2025 BMad Code, LLC（见 `ATTRIBUTION.md`）。
 
