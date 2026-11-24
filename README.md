@@ -51,6 +51,27 @@ DSH 已经自带 Agent Teams：
 - 形态：**配置型 bundle + 轻量客户端半边**：新增 8 个 agent 预设 + 零依赖 `playbooks/`（默认启用）；并带一个浏览器半边（`client.js`），把 7 个成员预设从预设选择器里过滤掉、只留「调度」一个（Host 端 8 个预设仍全部注册，供 `delegate_*` 委派）。Host 半边（`index.js`）会让内置 Agent Teams 跟着预设走、但不覆盖你的手动选择：**进入**团队预设（默认「调度」）时**自动打开**，**离开**团队预设回到非团队预设时**还原进入前的非团队选择**（原先关→关、原先开→开），**非团队预设之间切换则保持当前状态不动**，无需每次手动勾「启用 agent 协作」。团队预设列表可配置（`TEAM_PRESETS` / `config.teamPresets`），且在插件启用时只对当前已打开的**空白**会话补开团队预设（不擅自改动非团队会话的手动状态）。
 - 版本策略：维持在 **0.2.x** 迭代，重大改动再升大版本（按维护者约定）。
 
+## 升级与版本锁定（07a）
+
+profile 里对 `dsh-olympus` 的依赖应**锁定到显式 ref**，不要用会随默认分支漂移的写法：
+
+```yaml
+# ~/.dsh/profiles/<profile>/package.json（dependencies 字段）
+"dsh-olympus": "github:bei-qian/dsh-olympus#v0.2.0"   # 推荐：锁到发布 tag
+# 或锁到具体 commit sha（可复现性更强）：
+# "dsh-olympus": "github:bei-qian/dsh-olympus#<40 位 commit sha>"
+```
+
+升级流程 = **改 specifier → 重装 → 核对**：
+
+1. 把 profile 依赖的 specifier 改到目标 tag / commit；
+2. 重装（`pnpm install`，或走 DSH 的安装流程）；
+3. 核对两处一致：
+   - `pnpm-lock.yaml` 里该依赖解析到的 tarball commit == 所选 ref 指向的 commit；
+   - `require('dsh-olympus/package.json').version` == 所选 tag 的版本号（如 `0.2.0`）。
+
+> **发版 = 打 tag**（tag 推送即触发 CI `verify`：`on: push` 未加 branches/tags 过滤器，tag 推送同样会跑）；**不使用 prepack** 作为安装门禁——本机 pnpm 11.28.5 实测，git 依赖默认受 `allowBuilds` 白名单约束、`prepack` **不会**自动执行（未列入白名单时安装直接报 `ERR_PNPM_GIT_DEP_PREPARE_NOT_ALLOWED`）。
+
 ## 小队编制（Roster）
 
 装好后这些预设会出现在「模型/推理 → 预设」选择器里（描述都标注「供小队…使用」）：
