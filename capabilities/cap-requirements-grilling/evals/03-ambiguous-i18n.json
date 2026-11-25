@@ -1,0 +1,41 @@
+{
+  "fixture": "03-ambiguous-i18n",
+  "category": "ambiguous",
+  "description": "模糊需求『支持多语言』：隐含 语种/runtime-vs-build/回退/RTL/覆盖界面 五类假设。期望覆盖全部，其中 runtime-vs-build（架构选型、难回退）必须问，回退语言可假设。",
+  "input": {
+    "request": "让产品支持多语言。",
+    "facts_lookup_hints": [
+      "现有 i18n 框架与已翻译文案（读代码与资源目录）"
+    ]
+  },
+  "output": {
+    "design_tree": true,
+    "direct_execute": false,
+    "question_count": 2,
+    "decision_record": [
+      { "decision": "首版支持语种", "chosen": "zh-CN + en-US", "rationale": "覆盖现有主要用户", "status": "decided" },
+      { "decision": "runtime-vs-build 翻译加载方式", "chosen": "构建期打包各语种资源，运行时零 fetch", "rationale": "架构选型、影响打包体积与更新方式，难回退，必须用户确认", "status": "must-ask" },
+      { "decision": "回退语言", "chosen": "缺失键回退 en-US（可后改）", "rationale": "低影响、可回填", "status": "assumed" },
+      { "decision": "RTL 支持范围", "chosen": "首版语种不含 RTL 语言，暂不做 RTL，后续加需重排样式", "rationale": "按语种推导，显式登记避免漏项", "status": "decided" },
+      { "decision": "覆盖界面清单", "chosen": "导航 + 表单 + 错误提示三类优先", "rationale": "用户可见高频界面先做", "status": "decided" }
+    ],
+    "open_questions": [
+      { "question": "翻译资源用构建期打包还是运行时加载？（影响体积与更新方式）", "owner": "user", "blocking": true },
+      { "question": "现有 i18n 框架与已翻译文案是什么？（自查代码/资源）", "owner": "fact", "blocking": false }
+    ],
+    "assumptions_defaulted": ["回退语言默认 en-US，后续按需调整"]
+  },
+  "expect": {
+    "activate": true,
+    "require_design_tree": true,
+    "implicit_assumptions": ["语种", "runtime-vs-build", "回退", "RTL", "覆盖界面"],
+    "decision_record_required_fields": ["decision", "chosen", "rationale", "status"],
+    "open_question_required_fields": ["question", "owner", "blocking"],
+    "min_decisions": 4,
+    "min_open_questions": 2,
+    "facts_self_checked": [],
+    "must_ask_decisions": ["runtime-vs-build"],
+    "allow_defaulted_assumptions": true,
+    "max_questions": null
+  }
+}

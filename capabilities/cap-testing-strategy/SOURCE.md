@@ -10,6 +10,7 @@
 | **BMad Test Architecture（TEA）** `bmad-method-test-architecture-enterprise` | @ commit `75dbfb83`（v4.5.0） | **MIT**（`LICENSE`） | 风险治理、测试层级框架、测试质量/evidence-integrity、置信门、索引式追溯（`tea-index` 思想）；v4.4.0 追加：零动作缺陷探针（zero-action defect probe）、覆盖排除显式登记（coverage exclusion）、证据按版本/材料摘要绑定、变更即 stale（evidence-digest binding）、发布前就绪清单（pre-PR readiness checklist）、弱化机制不得冒充保证（no-weak-guarantee）；v4.5.0 追加：**A 不可测验收标准的显式上报与受控降级**、**B 可配置门禁阈值 + 阈值来源溯源 + 非法即拒** | adapt（**思想改编·零逐字**；**已去 Playwright-Pact-uv 栈绑定**） |
 | **BMAD-METHOD** · `bmad-qa-generate-e2e` | @ commit `e435a225…178b98df3`（2026-11-22） | **MIT**（`LICENSE`） | E2E 生成与对齐方式 | reference（方法思想） |
 | **nexu-io/open-design** / **wshobson/agents** | open-design @ `e033aad1…d7fd32619`；wshobson @ `12bcec79…bf5e96d0` | Apache-2.0 / MIT | 渲染-截图验证思路（多数已内置，未新增实现） | reference（思想） |
+| **skills · engineering/tdd** | `skills/skills/engineering/tdd/SKILL.md`（本地快照，2026-11-26 复核） | **MIT**（`LICENSE`） | 「好测试=验证行为（经公共接口、非实现细节）」、TDD **纵向切片 / tracer bullet**、测试反模式（implementation-coupled / 断言脆弱等）识别；只取思想，判据与反模式清单自写 | adapt（**思想改编·零逐字**；2026-11-26 增补） |
 
 > 说明：以上仓库/local snapshot 仅用于**阅读与思想提炼**；本模块 `SKILL.md`、`references/*`、`scripts/falsification_demo.mjs`、`evals/*` 均为**本项目自写**，未复制上述来源正文/代码/脚本，不含任何逐字片段；去除了对 Playwright/Pact/uv 等具体栈的绑定。
 >
@@ -22,6 +23,7 @@
 - **采纳日期**：2026-11-22
 - **增补（TEA v4.4.0 思想改编）**：2026-11-23，TEA pin 由 `6fba06e8`（v4.3.1）更新为 `85fda574`（v4.4.0-2-g85fda574，即 v4.4.0 tag 后 2 个提交）；只取 5 条「测试证据完整性」思想（零动作缺陷探针 / 覆盖排除显式登记 / 证据摘要绑定与 stale / 发布前就绪清单 / 弱化机制不得冒充保证），零逐字自写、去 Playwright/Pact/uv 栈绑定。
 - **增补（TEA v4.5.0 思想改编）**：2026-11-25，TEA pin 由 `85fda574`（v4.4.0-2）更新为 `75dbfb83`（**v4.5.0**）；只取 **A（不可测验收标准的显式上报与受控降级）/ B（可配置门禁阈值 + 阈值来源溯源 + 非法即拒）** 两条思想，零逐字自写、去 Playwright/Pact/uv 栈绑定。
+- **增补（engineering/tdd 思想改编）**：2026-11-26（epic-013 P1），新增上游 `skills/skills/engineering/tdd/SKILL.md`（**MIT**）来源行；只取「好测试=行为 / 纵向切片 / 测试反模式识别」思想，零逐字自写。
 - **owner**：TEA（P，canonical owner）；Dev（P）、UX（C）联合——见 `SKILL.md` metadata.owner
 - **复核日期**：2027-02-20（建议季度复核；上游规则或团队测试框架变更时提前）
 - **许可**：本模块随 `dsh-olympus` 以 MIT 发布（见仓库 `LICENSE`）。

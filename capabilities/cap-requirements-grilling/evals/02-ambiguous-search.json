@@ -1,0 +1,41 @@
+{
+  "fixture": "02-ambiguous-search",
+  "category": "ambiguous",
+  "description": "模糊需求『让搜索更快』：目标与基线都不明确，存在多解。期望把 目标延迟/查询范围 作为决策、把 基线/数据规模 作为事实自查，区分事实与决策，产出覆盖四类假设的记录。",
+  "input": {
+    "request": "让搜索更快一点。",
+    "facts_lookup_hints": [
+      "现网搜索 p95 基线与慢查询日志（读监控/日志）",
+      "文档当前规模与年增长率（查库统计）"
+    ]
+  },
+  "output": {
+    "design_tree": true,
+    "direct_execute": false,
+    "question_count": 2,
+    "decision_record": [
+      { "decision": "目标延迟目标", "chosen": "p95 从当前基线降到 ≤300ms", "rationale": "SLA 影响架构选型，成本高，必须用户确认", "status": "must-ask" },
+      { "decision": "查询范围", "chosen": "标题 + 正文，默认模糊匹配（可后调）", "rationale": "低影响、可回填，先按最常见范围", "status": "assumed" },
+      { "decision": "优化手段方向", "chosen": "先加复合索引 + 结果缓存，暂不上全文检索引擎", "rationale": "按目标与规模由简到繁，避免过度工程", "status": "decided" }
+    ],
+    "open_questions": [
+      { "question": "目标延迟 SLA 取多少（p95 ≤300ms 可接受吗）？", "owner": "user", "blocking": true },
+      { "question": "当前搜索 p95 基线是多少？（自查慢查询日志）", "owner": "fact", "blocking": false },
+      { "question": "文档当前的数据规模与年增长率是多少？（自查库统计）", "owner": "fact", "blocking": false }
+    ],
+    "assumptions_defaulted": ["查询范围默认标题+正文，后续可扩到标签/作者"]
+  },
+  "expect": {
+    "activate": true,
+    "require_design_tree": true,
+    "implicit_assumptions": ["目标延迟", "基线", "数据规模", "查询范围"],
+    "decision_record_required_fields": ["decision", "chosen", "rationale", "status"],
+    "open_question_required_fields": ["question", "owner", "blocking"],
+    "min_decisions": 3,
+    "min_open_questions": 3,
+    "facts_self_checked": ["基线", "数据规模"],
+    "must_ask_decisions": ["目标延迟"],
+    "allow_defaulted_assumptions": true,
+    "max_questions": null
+  }
+}

@@ -164,3 +164,4 @@ node <本技能目录>/../../scripts/squad_validate.mjs ./bmad-output
 4. **交付前跑 Gate**：见上；不通过不算完成。
 5. **Lead 收尾**：整队目标达成时，Lead 跑一次校验并确保 0 警告，再向用户交付「可评审」。
 6. **跨角色通信须 CC Lead**：成员之间的协作 / 请示类消息必须同时 CC Lead（`send_message` 收件人包含 Lead），由 Lead 掌握全队状态并裁决；成员不得私下互相编排分工，派发仍只由 Lead 的 `delegate_*` 发起。
+7. **交接包（handoff）单一真源**：跨 agent / 跨角色的结构化交接包，其 schema 与模板的单一真源在 `capabilities/cap-task-coordination/references/handoff-contract.md` §B；本协议**只留这一行指针、不复述字段**。

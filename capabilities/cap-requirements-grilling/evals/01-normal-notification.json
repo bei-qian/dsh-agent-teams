@@ -1,0 +1,43 @@
+{
+  "fixture": "01-normal-notification",
+  "category": "normal",
+  "description": "典型模糊需求『做一个通知功能』：字面清楚但落地有大量隐含假设。期望展开设计树，逐轮澄清并覆盖 渠道/触发/受众/持久化/退订 五类假设，产出决策记录 + 未决问题清单。",
+  "input": {
+    "request": "给我们的产品做一个通知功能。",
+    "facts_lookup_hints": [
+      "现有技术栈是否已有消息通道/邮件服务（读 package.json 与依赖）",
+      "现有用户表是否有邮箱/联系方式字段（读 schema）"
+    ]
+  },
+  "output": {
+    "design_tree": true,
+    "direct_execute": false,
+    "question_count": 3,
+    "decision_record": [
+      { "decision": "通知渠道", "chosen": "站内信 + 邮件（首版不做短信）", "rationale": "复用现有邮件服务；短信需额外供应商合同", "status": "decided" },
+      { "decision": "触发事件", "chosen": "评论回复、@提及、系统公告三类", "rationale": "覆盖高频通知场景，先窄后扩", "status": "decided" },
+      { "decision": "受众范围", "chosen": "事件订阅者 + 被 @ 者", "rationale": "减少无关打扰", "status": "decided" },
+      { "decision": "持久化策略", "chosen": "通知存库保留 90 天（待用户确认合规删除要求）", "rationale": "涉及留存与合规，不可逆影响大，必须用户拍板", "status": "must-ask" },
+      { "decision": "退订入口", "chosen": "每类通知默认提供退订开关（可后改）", "rationale": "合规默认，低影响可回填", "status": "assumed" }
+    ],
+    "open_questions": [
+      { "question": "通知持久化保留多久？是否涉及合规删除要求？", "owner": "user", "blocking": true },
+      { "question": "现有技术栈是否已有消息通道/邮件服务？（自查）", "owner": "fact", "blocking": false },
+      { "question": "现有用户表是否有邮箱/联系方式字段？（自查）", "owner": "fact", "blocking": false }
+    ],
+    "assumptions_defaulted": ["退订入口默认提供，后续可按需调整"]
+  },
+  "expect": {
+    "activate": true,
+    "require_design_tree": true,
+    "implicit_assumptions": ["渠道", "触发", "受众", "持久化", "退订"],
+    "decision_record_required_fields": ["decision", "chosen", "rationale", "status"],
+    "open_question_required_fields": ["question", "owner", "blocking"],
+    "min_decisions": 4,
+    "min_open_questions": 3,
+    "facts_self_checked": ["消息通道", "联系方式"],
+    "must_ask_decisions": ["持久化"],
+    "allow_defaulted_assumptions": true,
+    "max_questions": null
+  }
+}

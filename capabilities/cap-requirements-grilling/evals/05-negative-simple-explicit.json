@@ -1,0 +1,30 @@
+{
+  "fixture": "05-negative-simple-explicit",
+  "category": "negative-trigger",
+  "description": "负路径：把按钮文案从『保存』改成『提交』，是简单明确任务。期望不展开设计树、提问数 ≤1、直接确认执行，证明本能力不过度提问、不被误触发为完整访谈。",
+  "input": {
+    "request": "把详情页那个按钮的文案从『保存』改成『提交』就行。",
+    "facts_lookup_hints": []
+  },
+  "output": {
+    "design_tree": false,
+    "direct_execute": true,
+    "question_count": 0,
+    "decision_record": [
+      { "decision": "按钮文案改名", "chosen": "保存 → 提交", "rationale": "需求已完全明确，无隐含假设", "status": "decided" }
+    ],
+    "open_questions": [],
+    "assumptions_defaulted": []
+  },
+  "expect": {
+    "activate": false,
+    "require_design_tree": false,
+    "negative_trigger_hit": "explicit simple task / single-field change",
+    "max_questions": 1,
+    "implicit_assumptions": [],
+    "decision_record_required_fields": ["decision", "chosen", "rationale", "status"],
+    "open_question_required_fields": ["question", "owner", "blocking"],
+    "min_decisions": 1,
+    "min_open_questions": 0
+  }
+}

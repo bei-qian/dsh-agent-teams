@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.3 — 2026-11-26
+
+- **story-035 · writing-for-agents authoring 参考（epic-012 / P0-2）**：新增非 `bmad-*` 参照型 skill `playbooks/authoring-for-agents/`（`SKILL.md` 六原理写作规范：context pointer / 信息层级·co-location·sprawl 控制 / 完成判据 / leading words / 否定→正面 / pruning·单一真源·no-ops，含 `SOURCE.md` provenance；渐进披露等加载规则只写一行指针指向 `capability-router`，不复制）；首个应用样例用该规范重写 `playbooks/bmad-build/SKILL.md`（保留 43 条后端模式决策表与全部硬规则，删除重复的协议/规范复述、收紧措辞，字节数 18970→18434）。文档 playbook 计数补记 `authoring-for-agents`（非 `bmad-*` 参照）；不改任何脚本 / 门禁。
+
+- **借鉴 Matt Pocock skills 的 P0/P1/P2 落地（零逐字改编，按能力名 + 一句话）**：新增 `capabilities/cap-requirements-grilling/`（grilling 访谈能力）、`playbooks/bmad-retro/`（复盘闭环：改进项→转票）、`playbooks/bmad-architecture/reference/deep-modules.md`（codebase-design 深模块词汇 + deletion test）、`capabilities/cap-code-review/references/smell-baseline.md`（code-review 12 味坏味道基线）；增强 `bmad-build` / `bmad-tickets` / `cap-task-coordination` / `cap-testing-strategy`（tdd / to-tickets / handoff / 测试反模式等）；`scripts/verify.mjs` 增补 playbook `SKILL.md` frontmatter `name` 校验（epic-015）；各 playbook / capability 补齐 `SOURCE` provenance（归属/署名）；refer：三个 review（独立评审记录）+ `task-001` minor/nit 尾巴清理。
+
 ## 0.2.2 — 2026-11-25
 
 - **epic-009 团队能力沉淀：上游更新吸收例程 + 漂移脚本**：新增 `playbooks/bmad-upstream-sync/` 上游更新吸收例程（四阶段：更新参考克隆 fetch+ff → `upstream_drift.mjs` 漂移表 → 差距分类 absorb/skip·ADR-A5 → 切票/实现/门禁/独立评审/发版；含源仓库→消费 skill 映射表与何时用/不用）；新增零依赖 `scripts/upstream_drift.mjs`（`--root` 漂移表 + `--self-test` 临时仓库自证 + `--json`/`--fetch` 可选、只读）；文档 playbook 技能计数 9→10（纳入 `bmad-upstream-sync`）。

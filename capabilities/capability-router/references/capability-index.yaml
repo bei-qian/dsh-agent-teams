@@ -2,7 +2,8 @@
 #
 # 只登记「元数据」，不放大段正文（满足渐进披露）。一行/能力。
 # 单一真源：字段应各 cap-*/SKILL.md 的 frontmatter(metadata) 对齐；Phase 6 可由脚本从
-# 各 SKILL.md 汇总生成，避免双维护。此处先手写登记 6 个 P0（P1/P2 暂不登记，控 token）。
+# 各 SKILL.md 汇总生成，避免双维护。此处手写登记 6 个 P0 + 新增需求访谈能力
+# cap-requirements-grilling（story-034，P0）；P1/P2 暂不登记，控 token。
 #
 # 字段：id(kebab) / domain / priority / activation / triggers / negative_triggers /
 #       depends_on / cost_tier / owner （security 为 risk-gated，附 risk_signals）
@@ -63,3 +64,12 @@ capabilities:
     depends_on: []
     cost_tier: medium
     owner: tea
+  - id: cap-requirements-grilling
+    domain: requirements-grilling
+    priority: P0
+    activation: auto
+    triggers: [requirements, "requirements elicitation", ambiguous, clarify, grilling, interview, 需求澄清, 歧义, 访谈]
+    negative_triggers: ["explicit simple task", "single-field change", docs-typo, trivial-edit]
+    depends_on: []
+    cost_tier: medium
+    owner: analyst

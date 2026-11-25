@@ -55,6 +55,7 @@ metadata:
 - 运行 `node scripts/run_evals.mjs`：原有 5 条 eval + 新增覆盖率「全覆盖 / 漏审」2 条均通过，并含**负向对照**（删/弱化记账 → 失败），全过 exit 0。
 - 报告样例含 severity 枚举 + 每个 blocker 证据命令；reviewer==author 被标红（`evaluateReviewMeta` 返回 `block:true`）；含 `coverage_rate` 与被跳过清单。
 - 清单/定级/覆盖细节见 `references/review-checklist.md`、`references/severity.md`、`references/coverage.md`。
+- 坏味道基线（判断辅助清单，非硬门）：`references/smell-baseline.md`（12 味坏味道=发现类型；severity 定级仍见 `references/severity.md`，二者正交、此处不复述）。
 
 ## 相关能力
 - 上游：`capability-router`（merge 前选中本能力）；`cap-debugging-systematic`（本能力 `depends_on` 它：修 bug 场景须先有「先红后绿」回归，评审再验未删测试）。

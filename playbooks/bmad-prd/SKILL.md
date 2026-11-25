@@ -33,6 +33,12 @@ description: Olympus Squad PRD 流程（Prometheus）。把已确认的想法/�
 ## 开放问题
 ```
 
+## 术语（GLOSSARY）纪律（指针）
+
+- PRD 内**同一术语只用一种含义**；模糊 / 过载术语先消歧再写，保证 PRD 术语前后一致。
+- 需要时在 `bmad-output/prd.md` 增设「术语」节，作为**产物 / 指针**；**术语表非票据真相**（不载实现细节、不进 `index.md` 票行）。
+- 完整 glossary 纪律与 ADR 三条触发的**单一真源见 `bmad-architecture/SKILL.md`〈术语与 ADR 纪律〉**，此处不复述。
+
 ## 收尾
 - 交付后提示 Lead 让 Themis 据此切 epic/story。
 - 交付后按 `bmad-squad-protocol` 阶段门跑校验器（你按固定位置写对即可，并对照本节自检清单）。

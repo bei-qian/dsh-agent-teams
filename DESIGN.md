@@ -264,7 +264,7 @@ Leader 的 persona 承载 Multica 的 *Operating Protocol + Roster + Instruction
 | 预设行不能从选择器隐藏 | 用户可能误选成员预设单干 | 名称/描述显式标注「供小队使用」 |
 | Agent Teams 成员共享工作区、无 worktree | 并行写会互相覆盖 | Leader 分配 `writeScopes`；构建任务串行/分目录；最终 diff 由 Leader 复核 |
 | BMad 技能来源 | 需能在任意机器随插件分发 | 已采用：**零依赖 playbooks + capabilities 均随包**（流程 playbook 在 `playbooks/`、能力库在 `capabilities/`，作为两个 `customSkillDirs` 根随包分发），**无需目标项目 `_bmad/`、Python/uv**；上游 BMad 技能**不随包、不留仓**；MIT 全文在根 `LICENSE-BMAD-METHOD.txt` 随包分发（issue-06 方案 B + issue #16 方案 C） |
-| Playbook 技能清单 | 使用者需知道有哪些流程 playbook | `playbooks/` 下共 **10 份 `bmad-*` 流程 playbook**（含新增 `bmad-upstream-sync` 上游更新吸收例程）+ `modern-web-guidance` 前端参照（非 `bmad-*`）；新增 playbook 靠 `customSkillDirs` 自动可见，无需改 preset |
+| Playbook 技能清单 | 使用者需知道有哪些流程 playbook | `playbooks/` 下共 **10 份 `bmad-*` 流程 playbook**（含新增 `bmad-upstream-sync` 上游更新吸收例程）+ `modern-web-guidance` 前端参照（非 `bmad-*`）+ `authoring-for-agents` 写作规范参照（非 `bmad-*`）；新增 playbook 靠 `customSkillDirs` 自动可见，无需改 preset |
 | 提示文件注入 | persona prefix 是字符串 | 用 `!!js` + `baseUrl` 从 `persona/*.md` 读取，安装后可迁移 |
 | KV cache | 预设组成变化会使缓存失效 | 预设保持稳定；成员/角色不频繁改 |
 | 安装 = 在 Host 进程执行插件代码 | 需 Full access / 审批 | 装前先 `plugin_manager list_*` 核对，再 `install_bundle` |

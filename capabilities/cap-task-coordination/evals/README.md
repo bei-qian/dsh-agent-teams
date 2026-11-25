@@ -27,6 +27,9 @@ node scripts/check_dag.mjs evals/02-boundary-dag-cycle.json # 有环用例（exi
 | 03 | `03-review-worker-claim-mismatch.json` | regression（worker 复核） | 自述全绿但 diff 不符，重推抓出 mismatch | `catch_mismatch`=true，`verdict`=block |
 | 04 | `04-negative-single-file.json` | negative-trigger | 单文件文案 typo，单 owner 小改 | `activate`=false（不启用协调） |
 | 05 | `05-ambiguous-vague-ac.json` | ambiguous | AC 不可断言且无 verify，需停机补 AC | `valid`=false，`requires_stop`=true |
+| 06 | `06-regression-expand-contract.json` | regression（wide refactor） | 机械改名爆炸半径横跨全仓，走 expand→migrate(按包分批)→contract；迁移批可并行、contract 汇总阻塞 | `valid`/`acyclic`/`parallel_safe`=true，`parallel_pairs=[[M1,M2]]` |
+
+> 06 是 expand-contract 序列的确定性样例（`references/decomposition.md` §F）：expand 为根、migrate 批次 `blocked_by: expand` 且互不依赖可并行、contract `blocked_by` 全部迁移批；`check_dag.mjs evals/06-regression-expand-contract.json` 应 exit 0。
 
 > 02 与 01 成对：01 证明合法 DAG 的 `check_dag` exit 0；02 证明成环被 exit 1 拒绝——「控制要能拒绝才算存在」。
 > 03 是「worker 自述 vs diff 复核」的对照：若照抄 `worker_self_report`（全 pass）会全部接受而漏掉两个缺陷；只有对 `rederived`（对 diff/重跑）逐条重推才 `catch_mismatch` 并 `block`。
