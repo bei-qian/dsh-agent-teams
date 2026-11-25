@@ -28,6 +28,15 @@ description: Olympus Squad 实现流程（Hephaestus）。端到端实现一个 
 - 不碰别人票据范围内的文件。
 - **遵循架构的安全 / 非功能决策**：动手实现前逐条通读 `bmad-output/architecture.md` 中与本 story 相关的安全 / 非功能 ADR，并在代码中逐条落实；实现前按架构安全 ADR + `cap-security-baseline` 的约束补确定性回归测试。确定性安全测试的具体门类（失败路径一致性、配置 / 输入边界、启动期不变量等）以 `cap-security-baseline` 为准，不在此重复。
 
+## Token 纪律（DEV 侧）
+
+总则见 `bmad-squad-protocol` 的「Token 纪律」；本节点出 DEV 最容易踩的几条：
+
+- **日志遵守 A / B**：构建、测试、dev-server 输出重定向到 `/tmp/<role>-build.log`，只回传状态行 + 错误行 + 行号，单次输出目标 ≤ 40 行；等构建 / 端口用后台 job + 一次有界等待，不写轮询循环、不连续多步 `tail` 同一日志。
+- **视觉证据最多 1 张终图**：DEV 最多看一张关键终图，且**优先复用 TEA 已产出的证据**；不自建截图工具链（Playwright / Puppeteer 抓图、多端口探测），不反复 `read_image` 比对。
+- **视觉 / E2E 证据归 TEA 产出**：需要截图做判断时，先看 TEA 证据是否已有；没有就请 Lead 派 TEA 补，不自己另起一套。
+- **临时脚本只写 `/tmp`、一次性**：探测 / 截图 / 断言类脚本用完即弃，不落进仓库、不变第二套工具链。
+
 ## 后端设计规范（取自 java-design-patterns 精选）
 
 > 本规范把 `reference/`（vendored 的 `iluwatar/java-design-patterns` 精选 43 篇）蒸馏成**可执行、可核对**的硬规则：先过原则层 → 按决策表查「问题→模式→参照路径」→ 过反模式警戒 → 遵循示例栈约定 → 守住与架构层的边界。**不是复述模式名，而是回答「该不该用、不用会怎样」。**
