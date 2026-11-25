@@ -1,0 +1,78 @@
+{
+  "fixture": "06-regression-expand-contract",
+  "kind": "decompose",
+  "description": "wide-refactor 回归：一次机械改名（Widget.amount → Widget.totalAmount）爆炸半径横跨全仓，硬切纵切片无一片能单独跑绿，故走 expand→migrate(按包分批)→contract 序列。E1 扩张新形态（旧形态并存）→ M1/M2 按包迁移且互不依赖、可并行 → C1 收缩删旧形态、blocked_by 全部迁移批。计划合法、DAG 无环。",
+  "expect": {
+    "valid": true,
+    "acyclic": true,
+    "parallel_safe": true,
+    "requires_stop": false,
+    "parallel_pairs": [["M1", "M2"]]
+  },
+  "plan": {
+    "plan_version": 1,
+    "goal": "把共享符号 Widget.amount 机械改名为 Widget.totalAmount（wide refactor）",
+    "units": [
+      {
+        "id": "E1",
+        "scope": "expand：新增 total_amount 列与 totalAmount 访问器，与旧 amount 并存，旧调用点不动（单点调度改共享契约文件）",
+        "interface": {
+          "inputs": ["widgets 表", "Widget 模型"],
+          "outputs": ["total_amount 列", "Widget.totalAmount 访问器"],
+          "touched_files": ["db/migrations/0007_expand_total_amount.sql", "src/model/Widget.ts"]
+        },
+        "acceptance_criteria": [
+          { "id": "AC1", "check": "新列与新访问器存在，旧 amount 列/访问器仍可用，全量测试绿", "verify": "npm run migrate && npm test" }
+        ],
+        "writeScopes": ["db/migrations/0007_expand_total_amount.sql", "src/model/Widget.ts"],
+        "blocked_by": [],
+        "role": "dev"
+      },
+      {
+        "id": "M1",
+        "scope": "migrate：把 package-a 内所有调用点由 Widget.amount 迁到 Widget.totalAmount",
+        "interface": {
+          "inputs": ["Widget.totalAmount"],
+          "outputs": ["package-a 无旧 amount 残留引用"],
+          "touched_files": ["src/pkgA/"]
+        },
+        "acceptance_criteria": [
+          { "id": "AC1", "check": "package-a 内不再引用 Widget.amount，单测绿（旧形态仍在，跨包仍可跑）", "verify": "npm test -- pkgA" }
+        ],
+        "writeScopes": ["src/pkgA/"],
+        "blocked_by": ["E1"],
+        "role": "dev"
+      },
+      {
+        "id": "M2",
+        "scope": "migrate：把 package-b 内所有调用点由 Widget.amount 迁到 Widget.totalAmount",
+        "interface": {
+          "inputs": ["Widget.totalAmount"],
+          "outputs": ["package-b 无旧 amount 残留引用"],
+          "touched_files": ["src/pkgB/"]
+        },
+        "acceptance_criteria": [
+          { "id": "AC1", "check": "package-b 内不再引用 Widget.amount，单测绿（旧形态仍在，跨包仍可跑）", "verify": "npm test -- pkgB" }
+        ],
+        "writeScopes": ["src/pkgB/"],
+        "blocked_by": ["E1"],
+        "role": "dev"
+      },
+      {
+        "id": "C1",
+        "scope": "contract：确认无调用方残留后删除旧 amount 列与 Widget.amount 访问器",
+        "interface": {
+          "inputs": ["全部迁移完成"],
+          "outputs": ["旧 amount 列/访问器被移除"],
+          "touched_files": ["db/migrations/0008_contract_drop_amount.sql", "src/model/Widget.ts"]
+        },
+        "acceptance_criteria": [
+          { "id": "AC1", "check": "删除旧形态后全量测试绿，grep 无 Widget.amount 残留", "verify": "npm run migrate && npm test && ! grep -rn 'Widget.amount' src" }
+        ],
+        "writeScopes": ["db/migrations/0008_contract_drop_amount.sql", "src/model/Widget.ts"],
+        "blocked_by": ["M1", "M2"],
+        "role": "dev"
+      }
+    ]
+  }
+}

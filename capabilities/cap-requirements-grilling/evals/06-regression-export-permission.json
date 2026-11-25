@@ -1,0 +1,42 @@
+{
+  "fixture": "06-regression-export-permission",
+  "category": "regression",
+  "description": "回归样本：过去加导出功能时未收敛『权限范围/数据范围』导致越权导出（P1 数据泄露）。本次必须把权限范围与数据范围作为必须问的假设覆盖，防止历史缺陷复发。",
+  "input": {
+    "request": "加一个导出用户列表为 CSV 的功能。",
+    "facts_lookup_hints": [
+      "现有导出接口与脱敏工具（读代码）"
+    ]
+  },
+  "output": {
+    "design_tree": true,
+    "direct_execute": false,
+    "question_count": 2,
+    "decision_record": [
+      { "decision": "权限范围", "chosen": "仅本人可见数据或按角色授权", "rationale": "历史越权事故回归点，必须用户确认授权收敛方式", "status": "must-ask" },
+      { "decision": "数据范围", "chosen": "当前筛选结果全集 vs 仅当前页（待定）", "rationale": "影响数据量与越权风险，必须确认", "status": "must-ask" },
+      { "decision": "导出字段", "chosen": "用户可见字段子集（可后调）", "rationale": "低影响、可回填", "status": "assumed" },
+      { "decision": "脱敏", "chosen": "手机号/邮箱脱敏后导出", "rationale": "合规默认，避免明文敏感数据外泄", "status": "decided" }
+    ],
+    "open_questions": [
+      { "question": "导出权限按什么收敛（本人 / 角色 / 租户）？", "owner": "user", "blocking": true },
+      { "question": "导出范围是全集还是当前筛选页？上限多少？", "owner": "user", "blocking": true },
+      { "question": "现有导出接口与脱敏工具是否可复用？（自查）", "owner": "fact", "blocking": false }
+    ],
+    "assumptions_defaulted": ["导出字段默认用户可见子集，后续可调"]
+  },
+  "expect": {
+    "activate": true,
+    "require_design_tree": true,
+    "regression_guards": ["权限范围", "数据范围"],
+    "implicit_assumptions": ["权限范围", "数据范围", "导出字段", "脱敏"],
+    "decision_record_required_fields": ["decision", "chosen", "rationale", "status"],
+    "open_question_required_fields": ["question", "owner", "blocking"],
+    "min_decisions": 4,
+    "min_open_questions": 3,
+    "facts_self_checked": [],
+    "must_ask_decisions": ["权限范围", "数据范围"],
+    "allow_defaulted_assumptions": true,
+    "max_questions": null
+  }
+}

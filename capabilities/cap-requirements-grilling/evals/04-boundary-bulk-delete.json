@@ -1,0 +1,41 @@
+{
+  "fixture": "04-boundary-bulk-delete",
+  "category": "boundary",
+  "description": "边界样本：同一需求里同时出现『必须问』与『可假设』与『事实自查』三种处置（软删除=不可逆必须问、审计日志=合规必须问、批量上限=可假设、权限=事实自查），验证门控在一条需求内的边界分流。",
+  "input": {
+    "request": "给内部用户管理页加一个批量删除用户功能。",
+    "facts_lookup_hints": [
+      "现有 RBAC 中间件是否已有管理员角色与权限点（读权限模块）"
+    ]
+  },
+  "output": {
+    "design_tree": true,
+    "direct_execute": false,
+    "question_count": 2,
+    "decision_record": [
+      { "decision": "软删除 vs 硬删除", "chosen": "软删除（标记 deleted 保留数据）", "rationale": "不可逆操作，需用户确认合规与恢复要求", "status": "must-ask" },
+      { "decision": "批量上限", "chosen": "单次最多 100 个（可后调）", "rationale": "低影响、可回填", "status": "assumed" },
+      { "decision": "审计日志", "chosen": "记录操作者/对象/时间，保留范围待确认", "rationale": "合规/安全边界，必须用户确认保留期与字段", "status": "must-ask" },
+      { "decision": "操作权限", "chosen": "限后台管理员角色", "rationale": "复用现有 RBAC 权限点", "status": "decided" }
+    ],
+    "open_questions": [
+      { "question": "删除采用软删除还是硬删除？保留/恢复策略如何？", "owner": "user", "blocking": true },
+      { "question": "审计日志保留多久、含哪些字段（合规要求）？", "owner": "user", "blocking": true },
+      { "question": "现有 RBAC 中间件是否已有管理员角色与权限点？（自查）", "owner": "fact", "blocking": false }
+    ],
+    "assumptions_defaulted": ["批量上限默认 100，后续可调"]
+  },
+  "expect": {
+    "activate": true,
+    "require_design_tree": true,
+    "implicit_assumptions": ["软删除", "批量上限", "审计日志", "权限"],
+    "decision_record_required_fields": ["decision", "chosen", "rationale", "status"],
+    "open_question_required_fields": ["question", "owner", "blocking"],
+    "min_decisions": 4,
+    "min_open_questions": 3,
+    "facts_self_checked": ["RBAC"],
+    "must_ask_decisions": ["软删除", "审计日志"],
+    "allow_defaulted_assumptions": true,
+    "max_questions": null
+  }
+}

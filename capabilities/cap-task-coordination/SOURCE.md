@@ -11,6 +11,7 @@
 | `wshobson/agents` · agent-team 模式 | `agents/` @ main `12bcec79ec7f24868bc75fe8cd21428ebf5e96d0`（pushed 2026-11-22） | **MIT**（`LICENSE`） | agent-team 六模式中的「任务协调=依赖图 + 负载均衡」「团队组成=sizing」；并行需去重/校准 | adapt（team 模式） |
 | `bmad-code-org/bmad-loop` | `bmad-loop/` @ main `8224d535e09a68c9ed5144e32e0842396acc646d`（pushed 2026-11-17） | **MIT**（`LICENSE`） | 确定性复验、单一写路径、消融（只借验证纪律思想，不引其 uv/tmux 工具链） | reference |
 | `bmad-code-org/BMAD-METHOD` | `BMAD-METHOD/` @ main `e435a22574fe55722841086e5566420178b98df3`（pushed 2026-11-22） | **MIT**（`LICENSE`） | story 的 AC 格式对齐（只对齐格式，不引 `_bmad` 机制） | reference |
+| **skills · productivity/handoff** | `skills/skills/productivity/handoff/SKILL.md`（本地快照，2026-11-26 复核） | **MIT**（`LICENSE`） | 结构化交接包（handoff packet）思想：把会话压缩成可续接文档、只留指针不复制既有产物、redact 敏感信息、给下一步开列建议 skill；字段模板自写（单一真源在 `references/handoff-contract.md` §B） | adapt（**思想改编·零逐字**；2026-11-26 增补） |
 
 > 说明：以上仓库/local snapshot 仅用于**阅读与思想提炼**；本模块的 `SKILL.md`、`references/*`、`scripts/check_dag.mjs`、`scripts/run_evals.mjs`、`evals/*` 均为**本项目自写**，未复制上述来源的正文、代码或脚本，不含任何逐字片段。`engineering-skills` 的 Markdown 为 CC BY 4.0——本模块采取「仅取思想 + 自写」策略，未逐字引用其表达；若未来需逐字引用，须署名 MatiDegli + 标注 CC BY 4.0 并附许可。`wstg`（CC BY-SA）/`multica`（source-available）等**未被本模块引用**。
 
@@ -19,6 +20,7 @@
 - **是否逐字**：**否**（零逐字；只取思想自写）。
 - **署名**：思想来源见上表（MatiDegli · engineering-skills；deepseek-ai · dsh-superagent-prototype；wshobson · agents；bmad-code-org · bmad-loop / BMAD-METHOD）。
 - **采纳日期**：2026-11-22
+- **增补（productivity/handoff 思想改编）**：2026-11-26（epic-013 P1），新增上游 `skills/skills/productivity/handoff/SKILL.md`（**MIT**）来源行；只取「结构化交接包 / 只留指针不复制 / redact 敏感信息」思想，零逐字自写，字段模板单一真源在 `references/handoff-contract.md`。
 - **owner**：Lead（决策 / 本模块维护）——见 `SKILL.md` metadata.owner
 - **复核日期**：2027-02-20（建议季度复核；上游规则变更或 DSH skill 发现契约变化时提前）
 - **许可**：本模块随 `dsh-olympus` 以 MIT 发布（见仓库 `LICENSE`）

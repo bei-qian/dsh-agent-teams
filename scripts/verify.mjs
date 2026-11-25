@@ -196,6 +196,18 @@ function main() {
     'bmad-ux', 'bmad-architecture', 'bmad-build', 'bmad-test-strategy']) {
     check(exists(join(playbooks, need, 'SKILL.md')), `missing playbook: ${need}`)
   }
+  // 4a. every playbooks/*/SKILL.md frontmatter name must exist, equal its dir name, and be
+  //     kebab-case — same judgment as the capabilities 4d block, reusing frontmatterText /
+  //     frontmatterField. Only `name` is asserted here; other frontmatter fields stay optional.
+  for (const pdir of pb) {
+    const fm = frontmatterText(join(playbooks, pdir, 'SKILL.md'))
+    const nm = fm !== null ? frontmatterField(fm, 'name') : null
+    check(nm !== null, `playbooks/${pdir}/SKILL.md missing frontmatter name`)
+    check(nm === pdir,
+      `playbooks/${pdir}/SKILL.md frontmatter name ${pyRepr(nm)} != dir name ${pyRepr(pdir)}`)
+    check(Boolean(nm) && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(nm || ''),
+      `playbooks/${pdir}/SKILL.md name ${pyRepr(nm)} is not kebab-case`)
+  }
   // 4b. bmad-project-context playbook (AGENTS.md capability) present + stays zero-dependency
   const pc = join(playbooks, 'bmad-project-context')
   check(exists(join(pc, 'SKILL.md')), 'missing playbooks/bmad-project-context/SKILL.md')
@@ -369,7 +381,7 @@ function main() {
   }
   check(exists(join(ROOT, 'icon.svg')), 'missing icon.svg')
   const pkg = JSON.parse(read(join(ROOT, 'package.json')))
-  check(pkg.version === '0.2.2', `unexpected version ${pkg.version} (expected 0.2.2)`)
+  check(pkg.version === '0.2.3', `unexpected version ${pkg.version} (expected 0.2.3)`)
   check(Boolean(pkg && pkg.dsh && pkg.dsh.bundle && pkg.dsh.bundle.patch),
     'package.json missing dsh.bundle.patch')
 
