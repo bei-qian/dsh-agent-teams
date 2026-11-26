@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- **story-050 · 委派命名修复（issue #29 / epic-017）**：`bmad-squad-protocol/SKILL.md` Roster 表第三列「命名前缀」改为「显示名」并给具体数字示例（`apollo-1`…`argus-1`，之后递增），表下补「`name` 必须传具体数字，首次 `-1`、第 k 次 `-k`，不要把 `-n` 占位当字面量」；`persona/squad-lead.md` Roster 7 行同步为 `-1` 示例；`cordis.patch.yml` 由 `npm run build:patch` 重建（禁手改）；`scripts/check_naming.mjs` 追加「命名元变量」门禁——扫 `persona/*.md`、`bmad-squad-protocol/SKILL.md`、`cordis.patch.yml` 出现反引号包围的 `[a-z]+-n` 字面量即 fail，并正向断言 Roster 表 7 个成员行、每行第三列含 `-1` 示例。纯人读层 / 门禁改动，无运行时行为变化。
+
 ## 0.2.3 — 2026-11-26
 
 - **story-035 · writing-for-agents authoring 参考（epic-012 / P0-2）**：新增非 `bmad-*` 参照型 skill `playbooks/authoring-for-agents/`（`SKILL.md` 六原理写作规范：context pointer / 信息层级·co-location·sprawl 控制 / 完成判据 / leading words / 否定→正面 / pruning·单一真源·no-ops，含 `SOURCE.md` provenance；渐进披露等加载规则只写一行指针指向 `capability-router`，不复制）；首个应用样例用该规范重写 `playbooks/bmad-build/SKILL.md`（保留 43 条后端模式决策表与全部硬规则，删除重复的协议/规范复述、收紧措辞，字节数 18970→18434）。文档 playbook 计数补记 `authoring-for-agents`（非 `bmad-*` 参照）；不改任何脚本 / 门禁。

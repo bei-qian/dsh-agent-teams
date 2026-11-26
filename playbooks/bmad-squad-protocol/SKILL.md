@@ -118,16 +118,18 @@ node <本技能目录>/../../scripts/squad_validate.mjs ./bmad-output
 
 **Roster 角色前缀**（与 `persona/squad-lead.md` 的 Roster 对齐）：
 
-| 角色 | 预设（preset id） | 命名前缀 |
+| 角色 | 预设（preset id） | 显示名 |
 |---|---|---|
 | 调度 / 负责人 Lead | `squad-lead` | （自身，不代为命名） |
-| 业务分析师 Apollo | `analyst` | `apollo-n` |
-| 产品经理 Prometheus | `pm` | `prometheus-n` |
-| 产品负责人 Themis | `po` | `themis-n` |
-| UX 设计师 Ariadne | `ux` | `ariadne-n` |
-| 架构师 Athena | `architect` | `athena-n` |
-| 开发者 Hephaestus | `dev` | `hephaestus-n` |
-| 测试架构师 Argus | `tea` | `argus-n` |
+| 业务分析师 Apollo | `analyst` | `apollo-1`（之后递增） |
+| 产品经理 Prometheus | `pm` | `prometheus-1`（之后递增） |
+| 产品负责人 Themis | `po` | `themis-1`（之后递增） |
+| UX 设计师 Ariadne | `ux` | `ariadne-1`（之后递增） |
+| 架构师 Athena | `architect` | `athena-1`（之后递增） |
+| 开发者 Hephaestus | `dev` | `hephaestus-1`（之后递增） |
+| 测试架构师 Argus | `tea` | `argus-1`（之后递增） |
+
+> `name` 必须传具体数字，首次 `-1`、第 k 次 `-k`，不要把 `-n` 占位当字面量。
 
 **命名规则**：
 
