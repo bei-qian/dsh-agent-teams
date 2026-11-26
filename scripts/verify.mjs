@@ -365,6 +365,17 @@ function main() {
     }
   }
 
+  // 4h. skill-catalog convergence gate (issue #28): offline structural check that every
+  //     shadows/targets.json active target has a disable-model-invocation placeholder and
+  //     that 'shadows' is wired into all 8 presets. The LIVE catalog assertion
+  //     (--assert against a real session) is a HUMAN release step, never CI (no session in CI).
+  const checkSkillCatalog = join(ROOT, 'scripts', 'check_skill_catalog.mjs')
+  check(exists(checkSkillCatalog), 'missing scripts/check_skill_catalog.mjs (skill-catalog gate)')
+  if (exists(checkSkillCatalog) && hasNode) {
+    const sc = spawnSync(process.execPath, [checkSkillCatalog, '--check-files'], { encoding: 'utf-8' })
+    check(sc.status === 0, 'check_skill_catalog.mjs --check-files failed ' + fmtExit(sc) + ': ' + tail(sc, 600))
+  }
+
   // 5. display metadata
   for (const loc of ['en', 'zh']) {
     const p = join(ROOT, 'locale', `${loc}.json`)

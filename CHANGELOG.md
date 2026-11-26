@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- **story-051 · 技能目录收敛（issue #28 / epic-018，Design A）**：新增独立 `shadows/` skill 根（第三个 `customSkillDirs`），放 6 个同名占位 `SKILL.md`（`office` / `office-docx` / `office-pptx` / `office-xlsx` / `official-plugins` / `personalized-pages`，均 `disable-model-invocation: true` + `user-invocable: false`），靠宿主「就近层同名覆盖 → 按 modelInvocable 过滤」把 DSH profile 全局层这 6 条噪声技能从 squad-lead/成员模型目录摘除；`shadows/targets.json` 为遮蔽目标单一真源；新增零依赖 `scripts/check_skill_catalog.mjs`（`--list` / `--assert` / `--check-files` / `--self-test`），`--check-files` 进 CI 钉住文件/接线漂移（targets schema、每个 active 占位 frontmatter 契约、无孤儿、`'shadows')` 接线 ×8），`verify.mjs` 新增 §4h 门禁；`cordis.patch.tmpl.yml` 8 preset 各接 `shadows` 根并 `npm run build:patch` 重建 `cordis.patch.yml`（禁手改）；`check_presets.mjs` `customSkillDirs` 恒等 3 条断言；`package.json#files` 加 `shadows`。**CI 只兜确定性层；宿主语义漂移（分层/合并/过滤）由真实会话 `--assert --expect 20` 作为发布前人工步骤兜底。** 不升版本。
+
 - **story-050 · 委派命名修复（issue #29 / epic-017）**：`bmad-squad-protocol/SKILL.md` Roster 表第三列「命名前缀」改为「显示名」并给具体数字示例（`apollo-1`…`argus-1`，之后递增），表下补「`name` 必须传具体数字，首次 `-1`、第 k 次 `-k`，不要把 `-n` 占位当字面量」；`persona/squad-lead.md` Roster 7 行同步为 `-1` 示例；`cordis.patch.yml` 由 `npm run build:patch` 重建（禁手改）；`scripts/check_naming.mjs` 追加「命名元变量」门禁——扫 `persona/*.md`、`bmad-squad-protocol/SKILL.md`、`cordis.patch.yml` 出现反引号包围的 `[a-z]+-n` 字面量即 fail，并正向断言 Roster 表 7 个成员行、每行第三列含 `-1` 示例。纯人读层 / 门禁改动，无运行时行为变化。
 
 ## 0.2.3 — 2026-11-26
