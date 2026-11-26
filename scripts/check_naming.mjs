@@ -18,8 +18,12 @@
  *   4) 上述文件的 meta.description 不含 bmad（白名单见 ALLOWED_TOKENS：这些是本次
  *      明确不动的「路径 / skill id 契约」）。
  *
+ * 另含「命名元变量」门禁（issue-29）：persona/*.md、bmad-squad-protocol/SKILL.md、
+ * cordis.patch.yml 不得出现反引号包围的 `[a-z]+-n` 占位字面量，且 Roster 表须有 7 个
+ * 成员行、每行第三列含 `-1` 示例。
+ *
  * 明确不做：不校验花名与 id 的对应关系（那是 scripts/verify.mjs 的 expectedRows
- * 精确等值断言）；不扫描 playbooks/ 与 skills/ 正文（本次范围外，见 issue 遗留清单）。
+ * 精确等值断言）；不扫描其它 playbooks/ 与 skills/ 正文（范围外，见 issue 遗留清单）。
  * 不检查生成物是否最新（verify.mjs 第 1 段负责）。
  *
  * Exit 0 = OK, 1 = 命中禁止字样 / 包名漂移 / 必备文件读不到。
@@ -124,6 +128,71 @@ for (const dir of localeTargets) {
   }
 }
 if (localeFiles !== 18) fail(`expected 18 locale cards (locale/*2 + presets/*2*8), parsed ${localeFiles}`)
+
+// ---- 5) 命名元变量：禁止把 `-n` 占位当字面量（issue #29） ------------------
+// 根因：Roster / 命名前缀表把序号元变量写成反引号字面量（如 `argus-n`），模型
+// 照抄导致委派传 name="argus-n"。把它变成确定性门禁：
+//   ① 扫描 persona/*.md、SKILL.md、cordis.patch.yml，命中反引号包围的
+//      `[a-z]+-n` 字面量即 fail；
+//   ② 正向断言 SKILL.md Roster 表 7 个成员行、每行第三列含 `-1` 示例。
+const META_VAR_NAME_SRC = '`[a-z]+-n`'
+
+function scanMetaVarLiteral(label, text) {
+  const re = new RegExp(META_VAR_NAME_SRC, 'g')
+  const hits = [...String(text == null ? '' : text).matchAll(re)].map((m) => m[0])
+  if (hits.length) {
+    fail(`${label}: 含命名元变量字面量 ${hits.join(', ')}（应写具体数字，如 \`apollo-1\`）`)
+  }
+}
+
+// 5a) persona/*.md
+const personaDir = path.join(ROOT, 'persona')
+if (isDir(personaDir)) {
+  for (const name of fs.readdirSync(personaDir).sort()) {
+    if (!name.endsWith('.md')) continue
+    const fp = path.join(personaDir, name)
+    scanMetaVarLiteral(path.relative(ROOT, fp), fs.readFileSync(fp, 'utf-8'))
+  }
+} else {
+  fail('persona/ 目录不存在，无法执行命名元变量门禁')
+}
+
+// 5b) SKILL.md（含正向断言：Roster 表 7 个成员行、第三列含 -1 示例）
+const PROTO_SKILL = path.join(ROOT, 'playbooks', 'bmad-squad-protocol', 'SKILL.md')
+let proto = ''
+try {
+  proto = fs.readFileSync(PROTO_SKILL, 'utf-8')
+  scanMetaVarLiteral(path.relative(ROOT, PROTO_SKILL), proto)
+} catch (e) {
+  fail(`cannot read ${path.relative(ROOT, PROTO_SKILL)}: ${e.message}`)
+}
+if (proto) {
+  const start = proto.indexOf('Roster 角色前缀')
+  const end = proto.indexOf('**命名规则**', start === -1 ? 0 : start)
+  if (start === -1 || end === -1) {
+    fail('SKILL.md: 找不到「Roster 角色前缀」表或「命名规则」分隔，无法执行正向断言')
+  } else {
+    const rows = proto
+      .slice(start, end)
+      .split('\n')
+      .filter((l) => /^\|.*\|$/.test(l.trim()))
+      .map((l) => l.trim().slice(1, -1).split('|').map((c) => c.trim()))
+    const memberRows = rows
+      .slice(2) // 跳过表头 + 分隔行
+      .filter((c) => c.length === 3 && c[2] && c[2] !== '（自身，不代为命名）')
+    if (memberRows.length !== 7) {
+      fail(`SKILL.md Roster: 期望 7 个成员行（第三列显示名含 -1 示例），实际 ${memberRows.length} 行`)
+    }
+    for (const c of memberRows) {
+      if (!c[2].includes('-1')) {
+        fail(`SKILL.md Roster 行 ${JSON.stringify(c[0])} 第三列 ${JSON.stringify(c[2])} 缺 -1 示例`)
+      }
+    }
+  }
+}
+
+// 5c) cordis.patch.yml
+if (patch) scanMetaVarLiteral('cordis.patch.yml', patch)
 
 // ---- report ----------------------------------------------------------------
 if (errors.length) {

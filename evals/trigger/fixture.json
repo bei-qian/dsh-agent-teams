@@ -1,0 +1,275 @@
+{
+  "version": 1,
+  "description": "仓库级 trigger 契约 fixture（离线/确定性，不跑模型）。每个 skill 一组 should_trigger + near-miss should_not_trigger；shadows/ 6 占位以 exempt 标注、不计入必需集。字段仅作文档/静态契约校验，不用于真实 trigger-rate 采样。",
+  "skills": [
+    {
+      "id": "bmad-architecture",
+      "type": "playbook",
+      "trigger_surface": "description",
+      "should_trigger": [
+        "为这个 epic 定架构方向和技术选型",
+        "产出 architecture.md 的架构脊和 ADR 摘要",
+        "模块边界和接口/数据流怎么定"
+      ],
+      "should_not_trigger": [
+        "把已确认的想法写成一份结构化 PRD",
+        "把这个 PRD 切成 epic 和 story 票据"
+      ]
+    },
+    {
+      "id": "bmad-build",
+      "type": "playbook",
+      "trigger_surface": "description",
+      "should_trigger": [
+        "端到端实现 story-053 并跑通测试",
+        "按验收标准把这张 story 做出来、自检并回填"
+      ],
+      "should_not_trigger": [
+        "把 initiative 切成 epic 与 story",
+        "做竞品和市场可行性调研"
+      ]
+    },
+    {
+      "id": "bmad-prd",
+      "type": "playbook",
+      "trigger_surface": "description",
+      "should_trigger": [
+        "把已确认的想法写成结构化 PRD",
+        "整理一份可据此实现的 PRD"
+      ],
+      "should_not_trigger": [
+        "做技术可行性调研并出一页 brief",
+        "按风险产出测试策略和门禁"
+      ]
+    },
+    {
+      "id": "bmad-research",
+      "type": "playbook",
+      "trigger_surface": "description",
+      "should_trigger": [
+        "做竞品分析写一份 brief",
+        "调研这个方向的技术可行性/市场"
+      ],
+      "should_not_trigger": [
+        "把调研结果写成结构化 PRD",
+        "把 PRD 拆成 epic 和 story"
+      ]
+    },
+    {
+      "id": "bmad-test-strategy",
+      "type": "playbook",
+      "trigger_surface": "description",
+      "should_trigger": [
+        "按风险产出测试策略和发布门禁",
+        "维护验收标准到测试的追溯表"
+      ],
+      "should_not_trigger": [
+        "端到端实现这个故事并写代码",
+        "产出 design.md 和 experience.md"
+      ]
+    },
+    {
+      "id": "bmad-tickets",
+      "type": "playbook",
+      "trigger_surface": "description",
+      "should_trigger": [
+        "把 PRD 切成 epic 和 story",
+        "更新 index.md 维护票据真相"
+      ],
+      "should_not_trigger": [
+        "做架构技术选型和模块边界",
+        "在 merge 前独立评审代码 diff"
+      ]
+    },
+    {
+      "id": "bmad-ux",
+      "type": "playbook",
+      "trigger_surface": "description",
+      "should_trigger": [
+        "产出 design.md 九段式和 token 契约",
+        "设计交互流程、状态与无障碍底线"
+      ],
+      "should_not_trigger": [
+        "确定数据库架构和接口数据流",
+        "为 story 写单元测试"
+      ]
+    },
+    {
+      "id": "bmad-squad-protocol",
+      "type": "playbook",
+      "trigger_surface": "description",
+      "should_trigger": [
+        "按小队零依赖运行协议开工",
+        "跑 squad_validate 阶段门校验 bmad-output"
+      ],
+      "should_not_trigger": [
+        "查前端 CSS 布局最佳实践",
+        "写一份结构化 PRD"
+      ]
+    },
+    {
+      "id": "bmad-project-context",
+      "type": "playbook",
+      "trigger_surface": "description",
+      "should_trigger": [
+        "为项目根 AGENTS.md 做 setup 或 adopt",
+        "refresh 项目级 agent 指令的受管 block"
+      ],
+      "should_not_trigger": [
+        "维护 index.md 票据清单",
+        "复盘这次会话并产出改进项"
+      ]
+    },
+    {
+      "id": "bmad-retro",
+      "type": "playbook",
+      "trigger_surface": "description",
+      "should_trigger": [
+        "复盘这次会话并产出改进项",
+        "把机械错误转成确定性检查"
+      ],
+      "should_not_trigger": [
+        "写一份结构化 PRD",
+        "端到端实现一张 story"
+      ]
+    },
+    {
+      "id": "bmad-upstream-sync",
+      "type": "playbook",
+      "trigger_surface": "description",
+      "should_trigger": [
+        "做上游更新吸收 upstream sync",
+        "跑上游漂移与差距分析"
+      ],
+      "should_not_trigger": [
+        "按风险产出测试策略",
+        "产出 UX 的 design.md 与 experience.md"
+      ]
+    },
+    {
+      "id": "modern-web-guidance",
+      "type": "playbook",
+      "trigger_surface": "description",
+      "should_trigger": [
+        "查前端 HTML/CSS 客户端 JS 最佳实践",
+        "按分类找 modern web guidance 的篇目"
+      ],
+      "should_not_trigger": [
+        "写后端 Java 设计模式代码",
+        "做竞品市场调研出 brief"
+      ]
+    },
+    {
+      "id": "authoring-for-agents",
+      "type": "playbook",
+      "trigger_surface": "description",
+      "should_trigger": [
+        "改 playbook 的写作规范",
+        "按 authoring 规范写 capability 文档"
+      ],
+      "should_not_trigger": [
+        "为 story 设计测试用例与追溯",
+        "产出架构 ADR 摘要"
+      ]
+    },
+    {
+      "id": "cap-code-review",
+      "type": "capability",
+      "trigger_surface": "whenToUse+metadata.triggers",
+      "should_trigger": [
+        "在 merge 前独立评审这个代码改动",
+        "复核 diff 是否契合需求、有没有删测试求绿"
+      ],
+      "should_not_trigger": [
+        "为这个新功能写测试",
+        "复现并定位这个 bug 的根因"
+      ]
+    },
+    {
+      "id": "cap-debugging-systematic",
+      "type": "capability",
+      "trigger_surface": "whenToUse+metadata.triggers",
+      "should_trigger": [
+        "复现并定位这个 bug 的根因",
+        "红测/回归出现后系统排查"
+      ],
+      "should_not_trigger": [
+        "在 merge 前做代码评审",
+        "决定测试层级与覆盖优先级"
+      ]
+    },
+    {
+      "id": "cap-requirements-grilling",
+      "type": "capability",
+      "trigger_surface": "whenToUse+metadata.triggers",
+      "should_trigger": [
+        "需求含糊需要逐轮澄清访谈",
+        "把歧义需求用设计树问清"
+      ],
+      "should_not_trigger": [
+        "评审一段代码 diff",
+        "按风险产出测试策略"
+      ]
+    },
+    {
+      "id": "cap-security-baseline",
+      "type": "capability",
+      "trigger_surface": "whenToUse+metadata.triggers",
+      "should_trigger": [
+        "给登录和 token 做威胁建模",
+        "检查认证授权与输入输出校验"
+      ],
+      "should_not_trigger": [
+        "纯文案改名的小改",
+        "为 story 写单元测试"
+      ]
+    },
+    {
+      "id": "cap-task-coordination",
+      "type": "capability",
+      "trigger_surface": "whenToUse+metadata.triggers",
+      "should_trigger": [
+        "把目标拆成多 agent 可并行单元",
+        "建依赖 DAG 并控 writeScopes 冲突"
+      ],
+      "should_not_trigger": [
+        "单文件文案小改",
+        "复现一个 bug 的根因"
+      ]
+    },
+    {
+      "id": "cap-testing-strategy",
+      "type": "capability",
+      "trigger_surface": "whenToUse+metadata.triggers",
+      "should_trigger": [
+        "为 story 设计测试层级与覆盖",
+        "诊断 flaky 测试"
+      ],
+      "should_not_trigger": [
+        "在 merge 前评审代码 diff",
+        "做安全威胁建模"
+      ]
+    },
+    {
+      "id": "capability-router",
+      "type": "capability",
+      "trigger_surface": "whenToUse+metadata.triggers",
+      "should_trigger": [
+        "派活前选出最小充分能力集",
+        "为任务做能力路由并记录选择理由"
+      ],
+      "should_not_trigger": [
+        "写具体的测试用例",
+        "端到端实现一张 story"
+      ]
+    }
+  ],
+  "exempt": [
+    { "id": "office", "type": "shadow", "exempt": true, "exempt_reason": "非 skill（issue-28 占位）" },
+    { "id": "office-docx", "type": "shadow", "exempt": true, "exempt_reason": "非 skill（issue-28 占位）" },
+    { "id": "office-pptx", "type": "shadow", "exempt": true, "exempt_reason": "非 skill（issue-28 占位）" },
+    { "id": "office-xlsx", "type": "shadow", "exempt": true, "exempt_reason": "非 skill（issue-28 占位）" },
+    { "id": "official-plugins", "type": "shadow", "exempt": true, "exempt_reason": "非 skill（issue-28 占位）" },
+    { "id": "personalized-pages", "type": "shadow", "exempt": true, "exempt_reason": "非 skill（issue-28 占位）" }
+  ]
+}

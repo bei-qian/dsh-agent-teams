@@ -37,13 +37,13 @@
                 你是一支软件交付小队的调度者。队员按古希腊神话花名命名（方法参考 BMad Method），各自负责产品生命周期的一个阶段。你不写代码、不改文件、不做技术调查；你读票据、判断这一刻该谁上、把活分派出去，然后停下等回报。
 
                 # 队员（Roster）
-                - 分析（Apollo，delegate_analyst，名 `apollo-n`）：调研、市场与竞品、brief、PRFAQ。适合「这值不值得做 / 帮我查清楚」。
-                - 产品（Prometheus，delegate_pm，名 `prometheus-n`）：PRD 与各类规划文档、就绪度检查。适合「把它写成 PRD / 规划文档」。
-                - 票据（Themis，delegate_po，名 `themis-n`）：写票据需求、切 epic 与 story、维护票板、变更重规划。适合「拆解成 epic/story / 更新票据」。
-                - 体验（Ariadne，delegate_ux，名 `ariadne-n`）：产品外观与行为（DESIGN.md / EXPERIENCE.md）。适合「界面长什么样、怎么交互」。
-                - 架构（Athena，delegate_architect，名 `athena-n`）：技术选型与架构脊（architecture spine）。适合「技术上怎么保持一致 / 定架构」。
-                - 开发（Hephaestus，delegate_dev，名 `hephaestus-n`）：实现 story、写测试、评审、回顾。适合「把它做出来 / 改代码 / 跑测试」。
-                - 测试（Argus，delegate_tea，名 `argus-n`）：测试策略、框架、自动化、发布门禁。适合「测试怎么设计 / 发布前检查」。
+                - 分析（Apollo，delegate_analyst，名 `apollo-1`（之后递增））：调研、市场与竞品、brief、PRFAQ。适合「这值不值得做 / 帮我查清楚」。
+                - 产品（Prometheus，delegate_pm，名 `prometheus-1`（之后递增））：PRD 与各类规划文档、就绪度检查。适合「把它写成 PRD / 规划文档」。
+                - 票据（Themis，delegate_po，名 `themis-1`（之后递增））：写票据需求、切 epic 与 story、维护票板、变更重规划。适合「拆解成 epic/story / 更新票据」。
+                - 体验（Ariadne，delegate_ux，名 `ariadne-1`（之后递增））：产品外观与行为（DESIGN.md / EXPERIENCE.md）。适合「界面长什么样、怎么交互」。
+                - 架构（Athena，delegate_architect，名 `athena-1`（之后递增））：技术选型与架构脊（architecture spine）。适合「技术上怎么保持一致 / 定架构」。
+                - 开发（Hephaestus，delegate_dev，名 `hephaestus-1`（之后递增））：实现 story、写测试、评审、回顾。适合「把它做出来 / 改代码 / 跑测试」。
+                - 测试（Argus，delegate_tea，名 `argus-1`（之后递增））：测试策略、框架、自动化、发布门禁。适合「测试怎么设计 / 发布前检查」。
 
                 # 运行协议（每个 turn 都遵守）
 
@@ -172,6 +172,7 @@
               customSkillDirs:
                 - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'playbooks')
                 - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'capabilities')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'shadows')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
           - id: compaction
@@ -256,6 +257,7 @@
               customSkillDirs:
                 - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'playbooks')
                 - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'capabilities')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'shadows')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
           - id: compaction
@@ -339,6 +341,7 @@
               customSkillDirs:
                 - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'playbooks')
                 - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'capabilities')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'shadows')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
           - id: compaction
@@ -418,6 +421,7 @@
               customSkillDirs:
                 - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'playbooks')
                 - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'capabilities')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'shadows')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
           - id: compaction
@@ -496,6 +500,7 @@
               customSkillDirs:
                 - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'playbooks')
                 - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'capabilities')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'shadows')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
           - id: compaction
@@ -581,6 +586,7 @@
               customSkillDirs:
                 - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'playbooks')
                 - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'capabilities')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'shadows')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
           - id: compaction
@@ -687,6 +693,7 @@
               customSkillDirs:
                 - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'playbooks')
                 - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'capabilities')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'shadows')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
           - id: compaction
@@ -789,6 +796,7 @@
               customSkillDirs:
                 - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'playbooks')
                 - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'capabilities')
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('dsh-olympus/package.json')), 'shadows')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
           - id: compaction

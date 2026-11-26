@@ -396,17 +396,19 @@ function main() {
       check(controlCount === 0, `${label} must NOT mount tool-subagent-control, found ${controlCount}`)
     }
 
-    // customSkillDirs must be exactly [playbooks, capabilities]
+    // customSkillDirs must be exactly [playbooks, capabilities, shadows] (issue #28)
     const skill = findByName(plugins, '@deepseek-ai/dsh-skill-filesystem')
     check(Boolean(skill), `${label} missing skill-filesystem plugin`)
     if (skill && isMap(skill.config)) {
       const dirsSeq = mapGet(skill.config, 'customSkillDirs')
       const entries = isSeq(dirsSeq) ? dirsSeq.items : []
-      check(entries.length === 2, `${label} customSkillDirs must have exactly 2 entries, found ${entries.length}`)
+      check(entries.length === 3, `${label} customSkillDirs must have exactly 3 entries, found ${entries.length}`)
       const s0 = String(entries[0] || '')
       const s1 = String(entries[1] || '')
+      const s2 = String(entries[2] || '')
       check(s0.includes("'playbooks')"), `${label} customSkillDirs[0] must reference 'playbooks'`)
       check(s1.includes("'capabilities')"), `${label} customSkillDirs[1] must reference 'capabilities'`)
+      check(s2.includes("'shadows')"), `${label} customSkillDirs[2] must reference 'shadows'`)
     } else if (skill) {
       check(false, `${label} skill-filesystem has no config.customSkillDirs`)
     }

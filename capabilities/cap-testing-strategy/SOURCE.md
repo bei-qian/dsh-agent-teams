@@ -7,7 +7,7 @@
 | 来源 | 本地快照 / commit | 许可 | 借鉴的**思想**（非逐字） | 采用方式 |
 |---|---|---|---|---|
 | **jerdaw/agentic-best-practices** | @ commit `a3e29458…67dcd3d4`（2026-07-29） | **MIT**（`LICENSE`） | 行为导向测试、证伪/变异思维、测试金字塔、风险/覆盖优先级 | adapt（思想） |
-| **BMad Test Architecture（TEA）** `bmad-method-test-architecture-enterprise` | @ commit `75dbfb83`（v4.5.0） | **MIT**（`LICENSE`） | 风险治理、测试层级框架、测试质量/evidence-integrity、置信门、索引式追溯（`tea-index` 思想）；v4.4.0 追加：零动作缺陷探针（zero-action defect probe）、覆盖排除显式登记（coverage exclusion）、证据按版本/材料摘要绑定、变更即 stale（evidence-digest binding）、发布前就绪清单（pre-PR readiness checklist）、弱化机制不得冒充保证（no-weak-guarantee）；v4.5.0 追加：**A 不可测验收标准的显式上报与受控降级**、**B 可配置门禁阈值 + 阈值来源溯源 + 非法即拒** | adapt（**思想改编·零逐字**；**已去 Playwright-Pact-uv 栈绑定**） |
+| **BMad Test Architecture（TEA）** `bmad-method-test-architecture-enterprise` | @ commit `c7dfa7cf`（v4.6.1） | **MIT**（`LICENSE`） | 风险治理、测试层级框架、测试质量/evidence-integrity、置信门、索引式追溯（`tea-index` 思想）；v4.4.0 追加：零动作缺陷探针（zero-action defect probe）、覆盖排除显式登记（coverage exclusion）、证据按版本/材料摘要绑定、变更即 stale（evidence-digest binding）、发布前就绪清单（pre-PR readiness checklist）、弱化机制不得冒充保证（no-weak-guarantee）；v4.5.0 追加：**A 不可测验收标准的显式上报与受控降级**、**B 可配置门禁阈值 + 阈值来源溯源 + 非法即拒**；v4.6.1 追加：**A1 失败归因分类** / **A2 缺陷登记+一次性处置纪律** | adapt（**思想改编·零逐字**；**已去 Playwright-Pact-uv 栈绑定**） |
 | **BMAD-METHOD** · `bmad-qa-generate-e2e` | @ commit `e435a225…178b98df3`（2026-11-22） | **MIT**（`LICENSE`） | E2E 生成与对齐方式 | reference（方法思想） |
 | **nexu-io/open-design** / **wshobson/agents** | open-design @ `e033aad1…d7fd32619`；wshobson @ `12bcec79…bf5e96d0` | Apache-2.0 / MIT | 渲染-截图验证思路（多数已内置，未新增实现） | reference（思想） |
 | **skills · engineering/tdd** | `skills/skills/engineering/tdd/SKILL.md`（本地快照，2026-11-26 复核） | **MIT**（`LICENSE`） | 「好测试=验证行为（经公共接口、非实现细节）」、TDD **纵向切片 / tracer bullet**、测试反模式（implementation-coupled / 断言脆弱等）识别；只取思想，判据与反模式清单自写 | adapt（**思想改编·零逐字**；2026-11-26 增补） |
@@ -17,6 +17,8 @@
 > **TEA v4.4.0（`85fda574`）增补说明**：本批「测试证据完整性」思想（零动作缺陷探针 / 覆盖排除显式登记 / 证据按版本-材料摘要绑定、变更即 stale / 发布前就绪清单 / 弱化机制不得冒充保证）均按 **思想改编·零逐字** 纪律自写、**已去 Playwright-Pact-uv 栈绑定**；未引入任何 TEA 评测引擎、CLI 或专有名词。
 >
 > **TEA v4.5.0（`75dbfb83`）增补说明**：本批 **A（不可测验收标准的显式上报与受控降级）/ B（可配置门禁阈值 + 阈值来源溯源 + 非法即拒）** 两条思想按 **思想改编·零逐字** 纪律自写、**已去 Playwright-Pact-uv 栈绑定**；仅文档口径，未引入任何 TEA 评测引擎、CLI、配置解析器或专有名词。
+>
+> **TEA v4.6.1（`c7dfa7cf`）增补说明（本批只取 A1/A2）**：本批只取 **A1 失败归因分类** / **A2 缺陷登记+一次性处置纪律** 两条通用测试架构方法论思想，按 **思想改编·零逐字** 纪律自写、**去栈去专有名词**；未引入任何 TEA 评测引擎、CLI、配置解析器或专有名词。
 
 ## 记录
 
@@ -24,6 +26,7 @@
 - **增补（TEA v4.4.0 思想改编）**：2026-11-23，TEA pin 由 `6fba06e8`（v4.3.1）更新为 `85fda574`（v4.4.0-2-g85fda574，即 v4.4.0 tag 后 2 个提交）；只取 5 条「测试证据完整性」思想（零动作缺陷探针 / 覆盖排除显式登记 / 证据摘要绑定与 stale / 发布前就绪清单 / 弱化机制不得冒充保证），零逐字自写、去 Playwright/Pact/uv 栈绑定。
 - **增补（TEA v4.5.0 思想改编）**：2026-11-25，TEA pin 由 `85fda574`（v4.4.0-2）更新为 `75dbfb83`（**v4.5.0**）；只取 **A（不可测验收标准的显式上报与受控降级）/ B（可配置门禁阈值 + 阈值来源溯源 + 非法即拒）** 两条思想，零逐字自写、去 Playwright/Pact/uv 栈绑定。
 - **增补（engineering/tdd 思想改编）**：2026-11-26（epic-013 P1），新增上游 `skills/skills/engineering/tdd/SKILL.md`（**MIT**）来源行；只取「好测试=行为 / 纵向切片 / 测试反模式识别」思想，零逐字自写。
+- **增补（TEA v4.6.1 思想改编）**：2026-11-26（epic-019 / story-052），TEA pin 由 `75dbfb83`（v4.5.0）更新为 `c7dfa7cf`（**v4.6.1**）；本批只取 **A1 失败归因分类 / A2 缺陷登记+一次性处置纪律** 两条思想，零逐字自写、去栈去专有名词。
 - **owner**：TEA（P，canonical owner）；Dev（P）、UX（C）联合——见 `SKILL.md` metadata.owner
 - **复核日期**：2027-02-20（建议季度复核；上游规则或团队测试框架变更时提前）
 - **许可**：本模块随 `dsh-olympus` 以 MIT 发布（见仓库 `LICENSE`）。

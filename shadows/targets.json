@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "description": "Shadow targets: DSH global-layer skills to keep OUT of Olympus squad model catalogs. One of these per entry: shadows/<name>/SKILL.md with disable-model-invocation:true.",
+  "targets": [
+    { "name": "office",              "source": "dsh-web-app:id=skill-office",             "status": "active", "reason": "Office 打包技能，全局层注入，与本小队无关", "added": "2026-11-26" },
+    { "name": "office-docx",         "source": "dsh-web-app:id=skill-office",             "status": "active", "reason": "同上", "added": "2026-11-26" },
+    { "name": "office-pptx",         "source": "dsh-web-app:id=skill-office",             "status": "active", "reason": "同上", "added": "2026-11-26" },
+    { "name": "office-xlsx",         "source": "dsh-web-app:id=skill-office",             "status": "active", "reason": "同上", "added": "2026-11-26" },
+    { "name": "official-plugins",    "source": "dsh-web-app:id=plugin-recommendations",   "status": "active", "reason": "插件推荐，全局层注入", "added": "2026-11-26" },
+    { "name": "personalized-pages",  "source": "dsh-web-app:id=creation-recommendations", "status": "active", "reason": "创作推荐，全局层注入", "added": "2026-11-26" }
+  ]
+}

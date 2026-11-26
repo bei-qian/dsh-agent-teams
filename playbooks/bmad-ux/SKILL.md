@@ -1,6 +1,6 @@
 ---
 name: bmad-ux
-description: Olympus Squad UX 流程（Ariadne）。产出 design.md（外观：9 段式 + token 契约）与 experience.md（行为：流程/状态/无障碍），内嵌五态/无障碍/反 AI 味硬 gate 勾选项，按 bmad-squad-protocol 的固定目录落盘。
+description: Olympus Squad UX 流程（Ariadne）。产出 design.md（外观：9 段式 + token 契约）与 experience.md（行为：流程/状态/无障碍），内嵌五态/无障碍/反 AI 味硬 gate 勾选项，按 bmad-squad-protocol 的固定目录落盘。当要产出 design.md（9 段式+token 契约）与 experience.md（流程/状态/无障碍）时使用（Use when…）。
 ---
 # UX：外观与行为（Ariadne）
 

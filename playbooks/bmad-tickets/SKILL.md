@@ -1,6 +1,6 @@
 ---
 name: bmad-tickets
-description: Olympus Squad 票据流程（Themis）。把 initiative/PRD 切成 epic 与 story，维护 index.md 票据真相，按 bmad-squad-protocol 的固定目录落盘。
+description: Olympus Squad 票据流程（Themis）。把 initiative/PRD 切成 epic 与 story，维护 index.md 票据真相，按 bmad-squad-protocol 的固定目录落盘。当要把 initiative/PRD 切成 epic 与 story、维护 index.md 票据真相时使用（Use when…）。
 ---
 # 票据：epic / story（Themis）
 

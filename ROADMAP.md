@@ -69,6 +69,7 @@ list_templates…）并调用兄弟技能，所以完整流程需要目标项目
 **思路（评什么，按成本从低到高分层）**：
 - **L0 协议不变量**（确定性、0 模型花费）：`bmad-output/` 结构与命名、`index.md` 票据真相一致、`scripts/squad_validate.mjs` 退出码、「Lead 不亲自实现」、单阶段对应单 artifact。
 - **L0 · 步数 / token 指标**（确定性、0 模型花费）：**步数 / token = R3 L0 确定性指标** —— 由 `scripts/session_tokens.mjs` 统计会话 `steps / inputTokens / cacheReadTokens / outputTokens / effectiveIn / peakContext`，其 `--self-test`（离线合成 zstd fixture）提供可回归断言，使「每次运行的 token 成本」可离线复算与回归。
+- **L0 · 技能目录指标**（确定性、0 模型花费，issue #28）：squad-lead / 成员会话的模型技能目录条数 = **20**，且 6 个 DSH 全局层噪声技能（`office` / `office-docx` / `office-pptx` / `office-xlsx` / `official-plugins` / `personalized-pages`）缺席 —— 由 `shadows/targets.json`（单一真源）+ `shadows/<name>/SKILL.md` 同名占位（`disable-model-invocation: true`）实现；`scripts/check_skill_catalog.mjs --check-files`（离线结构门禁，进 CI）钉住文件/接线漂移，真实会话 `--assert --expect 20` 作为发布前人工兜底（CI 无会话，抓不到宿主语义漂移）。
 - **L1 路由**：意图→正确首位队员+阶段；模糊→该提问；超范围→该拒绝。可把 TEA 的 `bmad-tea-routing` 意图集范式改造成「7 队员 + ask/decline」的 squad 路由套件，并配硬 0 的 controls（`maxConfidentRoutesOnAmbiguous/Unservable=0`、`maxUnroutedClearIntents=0`）。
 - **L2 阶段门**：validator 未过前是否拒绝推进、是否跳阶段（看调用序列）。
 - **L3 端到端场景**（少量 5–8 个）：模糊需求→可评审 artifact。

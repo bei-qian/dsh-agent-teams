@@ -1,6 +1,6 @@
 ---
 name: bmad-test-strategy
-description: Olympus Squad 测试流程（Argus）。按风险产出测试策略与门禁，维护测试用例与追溯，按 bmad-squad-protocol 的固定目录落盘。
+description: Olympus Squad 测试流程（Argus）。按风险产出测试策略与门禁，维护测试用例与追溯，按 bmad-squad-protocol 的固定目录落盘。当要按风险产出测试策略与门禁、维护用例与追溯时使用（Use when…）。
 ---
 # 测试策略与门禁（Argus）
 
@@ -44,6 +44,10 @@ description: Olympus Squad 测试流程（Argus）。按风险产出测试策略
 - [ ] 弱化机制检查：无「删测试 / 放宽断言 / 重试掩盖 / 弱隔离冒充隔离」换来的绿；若有则记 open item 并说明
 - [ ] 不可测 AC 显式处理：AC 标注可测/不可测；不可测项保留清单 + 具体理由，**默认 halt**，仅显式受控降级才 `skip-and-report` 并上报被跳过数量；完成前校验每个可测 AC 恰有一个可执行测试（细节见 `cap-testing-strategy` 的 `SKILL.md` 与 `references/test-design.md`）
 
+## 缺陷登记与报告分层（A2，口径以 `cap-testing-strategy` 正文为准）
+
+发现被测对象缺陷先登记为「待处置 finding」（**证据 + 拟改产物 + 严重度**），**不打断**本次测试主循环；收尾**成批拍板**处置（本 PR 修 / 另开 PR 移交 / 拒绝并记理由）并**成批一次验证**，不逐条 `fix-and-rerun`。报告分三层并显式写净改进（改前→改后数字，**抄录**实测、不重算）；无对象缺陷时写「**None found**」。
+
 ## test-strategy.md 模板（内联）
 ```markdown
 # Test Strategy · <范围>
@@ -55,6 +59,13 @@ description: Olympus Squad 测试流程（Argus）。按风险产出测试策略
 - 端到端：
 ## 验收标准 → 测试 追溯
 | 验收标准 | 测试 | 状态 |
+## 对象缺陷与处置（finding 登记 · 成批拍板）
+| 待处置 finding | 证据 | 拟改产物 | 严重度 | 处置（本 PR 修 / 另开 PR 移交 / 拒绝+理由） |
+## 报告分层
+- 对象错在哪：
+- 改进机会：
+- 净改进（改前→改后，抄录不重算）：
+- 无发现时：None found
 ## 门禁结论
 判定：PASS / CONCERNS / FAIL
 ### 发布前就绪清单（每项 = 命令 + 证据 + 阈值/来源）

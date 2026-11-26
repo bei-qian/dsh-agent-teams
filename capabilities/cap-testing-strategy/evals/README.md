@@ -13,6 +13,7 @@ Phase 6 评测前置 fixture（prompt + 期望行为）。覆盖 `CAPABILITY_ARC
 | 07 | `07-unusable-ac-controlled-degradation.json` | boundary（不可测 AC） | **激活**；识别可测/不可测、保留清单+理由、默认 halt、仅显式受控降级 `skip-and-report` 并上报被跳过数量、可测子集全覆盖（A 思想） |
 | 08 | `08-configurable-gate-thresholds.json` | normal（门禁阈值） | **激活**；阈值按风险分级可配置、记录生效阈值及其来源、非法策略显式拒绝不静默回退（B 思想） |
 | 09 | `09-unattended-red-halt-blocked.json` | regression（无人值守停摆） | **激活**；CI 红阶段停摆上报 blocked build/open item、不静默跳过/假装通过、恢复须显式 ticket / 歧义即停（C 思想） |
+| 10 | `10-failure-attribution-and-defect-register.json` | normal（A1/A2） | **激活**；失败先归因（装置 vs 对象，判据「一个正确的对象能否通过」）+ 对象缺陷登记待处置 finding、成批拍板处置、成批一次验证、报告分层、无发现写 None found（A1/A2 思想） |
 
 ## 如何用
 

@@ -16,7 +16,7 @@ been mounted (removed from the repo in issue #16).
   `docs/vendored-skills-baseline.md`):
   - `github:bmad-code-org/BMAD-METHOD` — 28 dirs, under its `core-tools` and `method` skill categories (`core-tools` 12 + `method` 16)
   - `github:bmad-code-org/bmad-method-test-architecture-enterprise` — the other 10 dirs (`bmad-tea`, `bmad-tea-*`, `bmod-tea`), flat layout under its skill root
-- **Upstream pins** (对照基线，2026-11-24 本机 clone 的 HEAD；**≠ 经 bisect 证实的快照来源**): `BMAD-METHOD` @ `e435a22574fe55722841086e5566420178b98df3`; `bmad-method-test-architecture-enterprise` @ `85fda574351f34c4f3ec2f9611b642c64b8601a0`. 这是在本机与仓库内快照抽检一致的上游状态，作为日后 diff 的**对照基线**，不是经 bisect 证实的快照来源 sha（issue 草稿曾记 `a2819f62…`，是本机 clone 的历史祖先）。
+- **Upstream pins** (对照基线，2026-11-24 本机 clone 的 HEAD；**≠ 经 bisect 证实的快照来源**): `BMAD-METHOD` @ `e435a22574fe55722841086e5566420178b98df3`; `bmad-method-test-architecture-enterprise` @ `c7dfa7cf`（v4.6.1）〔以 `capabilities/cap-testing-strategy/SOURCE.md` 为 TEA 归属单一真源〕. 这是在本机与仓库内快照抽检一致的上游状态，作为日后 diff 的**对照基线**，不是经 bisect 证实的快照来源 sha（issue 草稿曾记 `a2819f62…`，是本机 clone 的历史祖先）。
 - **License**: MIT — Copyright (c) 2025 BMad Code, LLC (full text in the repo-root `LICENSE-BMAD-METHOD.txt`, which is shipped in the package)
 - **Snapshot**: the repository no longer stores a copy; to rebuild the distillation
   baseline, clone the two upstream repositories and diff against the mapping in
