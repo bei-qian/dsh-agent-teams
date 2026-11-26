@@ -392,7 +392,7 @@ function main() {
   }
   check(exists(join(ROOT, 'icon.svg')), 'missing icon.svg')
   const pkg = JSON.parse(read(join(ROOT, 'package.json')))
-  check(pkg.version === '0.2.3', `unexpected version ${pkg.version} (expected 0.2.3)`)
+  check(pkg.version === '0.2.4', `unexpected version ${pkg.version} (expected 0.2.4)`)
   check(Boolean(pkg && pkg.dsh && pkg.dsh.bundle && pkg.dsh.bundle.patch),
     'package.json missing dsh.bundle.patch')
 

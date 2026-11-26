@@ -1,6 +1,6 @@
 ---
 name: bmad-research
-description: Olympus Squad 调研/简报流程（Apollo）。做市场/竞品/技术可行性调研，产出 brief 或 PRFAQ，按 bmad-squad-protocol 的固定目录落盘。
+description: Olympus Squad 调研/简报流程（Apollo）。做市场/竞品/技术可行性调研，产出 brief 或 PRFAQ，按 bmad-squad-protocol 的固定目录落盘。当要做市场/竞品/技术可行性调研、产出 brief 或 PRFAQ 时使用（Use when…）。
 ---
 # 调研 / Brief（Apollo）
 

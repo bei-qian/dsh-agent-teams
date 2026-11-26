@@ -1,6 +1,6 @@
 ---
 name: bmad-build
-description: Olympus Squad 实现流程（Hephaestus）。端到端实现一个 story：计划、编码、测试、自检，更新 story 文件与 index.md，按 bmad-squad-protocol 落盘并过校验。
+description: Olympus Squad 实现流程（Hephaestus）。端到端实现一个 story：计划、编码、测试、自检，更新 story 文件与 index.md，按 bmad-squad-protocol 落盘并过校验。当要把一张 story 端到端实现（计划/编码/测试/自检并回填 story+index）时使用（Use when…）。
 ---
 # 实现一个 story（Hephaestus）
 
