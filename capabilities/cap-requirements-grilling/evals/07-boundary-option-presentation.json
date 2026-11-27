@@ -1,0 +1,65 @@
+{
+  "fixture": "07-boundary-option-presentation",
+  "category": "boundary",
+  "description": "T1 选项呈现回归：把 seq117 事故那轮两选项原文作负例、改写后作正例。范围类选项『顺带修』必须把被隐藏的具体对象（平台标题文字）与后果写在 label/题面，让用户只看 label 就能判断后果；机制不得只藏在 description。负例（原文 label 只写范围、缺后果）见 negative_example，破坏正例 label 去掉后果后 run_evals 应变红。",
+  "input": {
+    "request": "把头部当前应用选择器加宽并改文案；1024 宽度下头部本来就溢出 176px（待核实），这次要不要一起处理？",
+    "facts_lookup_hints": [
+      "1024–1199 档 header 实际剩余宽度（读样式并实测全局基线）"
+    ]
+  },
+  "output": {
+    "design_tree": true,
+    "direct_execute": false,
+    "question_count": 1,
+    "negative_example": {
+      "label": "顺带修掉，同一张票（推荐）",
+      "question": "1024 宽度下头部本来就溢出 176px（既有问题），这次要不要一起处理？",
+      "description": "顺带把 1024–1199 隐藏平台标题文字（省 128px）…",
+      "why_bad": "label 只写范围、question 只写前提，删除机制只出现在 description；用户点『推荐』批准的是范围，不是内容消失。"
+    },
+    "option_presentation": [
+      {
+        "label": "顺带修掉，同一张票（推荐）——1024–1199 档『百源权限管理平台』标题文字会消失（用户将看不到该标题文字）",
+        "description": "省 128px；前提 176px 需先在真实全局基线下复现。"
+      },
+      {
+        "label": "只改选择器宽度与文案，平台标题文字保持可见（用户仍能看到标题）",
+        "description": "不动既有用户可见内容。"
+      }
+    ],
+    "decision_record": [
+      {
+        "decision": "1024–1199 平台标题处理（范围：顺带修 / 另开票 / 不动）",
+        "chosen": "顺带修（同一张票）",
+        "rationale": "范围选项须在 label 写明被隐藏的具体对象与后果，判据见 §D2",
+        "status": "must-ask"
+      },
+      {
+        "decision": "前提 176px 是否复现",
+        "chosen": "先实测全局基线再定",
+        "rationale": "以既有事实为前提，先证前提（§D 门控）",
+        "status": "fact-checked"
+      }
+    ],
+    "open_questions": [
+      {
+        "question": "请选择：A『顺带修掉，同一张票（推荐）——1024–1199 档『百源权限管理平台』标题文字会消失（用户将看不到该标题文字）』；B『只改选择器宽度与文案，平台标题文字保持可见（用户仍能看到标题）』。",
+        "owner": "user",
+        "blocking": true
+      }
+    ],
+    "assumptions_defaulted": []
+  },
+  "expect": {
+    "activate": true,
+    "require_design_tree": true,
+    "decision_record_required_fields": ["decision", "chosen", "rationale", "status"],
+    "open_question_required_fields": ["question", "owner", "blocking"],
+    "min_decisions": 2,
+    "min_open_questions": 1,
+    "implicit_assumptions": ["会消失", "看不到该标题", "仍能看到标题"],
+    "must_ask_decisions": ["平台标题"],
+    "max_questions": null
+  }
+}

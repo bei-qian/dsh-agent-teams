@@ -41,6 +41,7 @@ metadata:
 |---|---|
 | `decision` | 要拍板的点（一个决策节点） |
 | `chosen` | 选定/推荐的内容（用户 yes 即采纳） |
+| `mechanism` | 这项决策**实际会执行的动作**，写成用户可感知的结果（例：「1024–1199 隐藏平台标题文字」）。`chosen` 只记「做/不做」时字段不完整。 |
 | `rationale` | 理由与依据（事实来源或取舍） |
 | `status` | `decided` / `must-ask` / `assumed` / `fact-checked` |
 
@@ -69,8 +70,14 @@ metadata:
 6. **收敛产出**：当 frontier 为空（每个分支要么 decided、要么 assumed 且可回填、要么 fact-checked），产出决策记录 + 未决问题清单，请用户确认共识。
 7. **确认后交付**：用户确认达成共识前不动手实现。
 
+### 复述与转述纪律（引用原话 + 单向一致）
+
+- **复述回引**：向用户复述已定决策时，引用用户原话 + 写出 `mechanism`。例：「你说的『先给方案』我记下了；1024 那条你的选择是顺带修，会隐藏平台标题文字——这句我复述对了吗？」
+- **单向一致**：给内部成员的转述不得比给用户的多。凡只发给内部而没对用户说过的机制，视为未获授权。
+
 ## 必须问 vs 可假设（门控速记，全表见 references §D）
 - **必须问**：不可逆（删数据、改公开契约）、高影响（SLA、安全边界）、歧义会致返工、安全/合规相关。
+- **必须问（独立成题）**：移除或隐藏既有用户可见内容；**先证前提**：以事实为前提的整改，事实先可复现。
 - **可假设**：低影响、有行业/项目默认、可后改可回填。假设要在决策记录 `assumed` 行写明默认值与回填条件。
 
 ## 停机规则
@@ -86,5 +93,5 @@ metadata:
 - 与 `cap-task-coordination` 的区别：本能力澄清「要做什么」，后者拆「谁来做、怎么排期」。
 
 ## 验证 · 证据
-- 运行 `node scripts/run_evals.mjs`：6 条 fixture 覆盖 normal/boundary/ambiguous/negative-trigger/regression，断言决策记录覆盖隐含假设、字段齐全、事实/决策分工、门控命中与负路径不过度提问；全过打印 `[EVAL-OK]`，exit 0。
+- 运行 `node scripts/run_evals.mjs`：9 条 fixture 覆盖 normal/boundary/ambiguous/negative-trigger/regression，断言决策记录覆盖隐含假设、字段齐全（含 `mechanism`）、事实/决策分工、门控命中、选项呈现（label 含后果）与负路径不过度提问；全过打印 `[EVAL-OK]`，exit 0。
 - 细节判据见 `references/grilling-procedure.md`；来源与零逐字声明见 `SOURCE.md`。

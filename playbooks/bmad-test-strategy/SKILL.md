@@ -32,6 +32,13 @@ description: Olympus Squad 测试流程（Argus）。按风险产出测试策略
 
 统一底线：优先用**确定性断言**（调用计数、注入桩、状态快照）证明行为；对无法自动测试的残余风险显式记录理由与缓解 / 监控手段，不得以「人工看过」充当门禁证据。并遵守**「弱化机制不得冒充保证」**：删测试、放宽断言、重试掩盖、弱隔离冒充隔离换来的「绿」不是通过，必须显式记为 open item。
 
+### 布局 / 视觉类 AC 的两条硬要求
+
+布局 / 视觉类 AC 若只做「肉眼看着变好」或单层读数，会**假绿**（把疑似改善当通过、把元素消失当优化）。两条硬要求缺一不可：
+
+1. **逆向断言**：凡票面包含「收缩 / 压缩 / 降级 / 腾空间」类改动，AC 必须同时断言**未被要求删除的元素仍然可见**（例：`expect(el).toBeVisible()` 或 computed `display !== 'none'`），否则「变好了」可为「消失了」。
+2. **溢出双层量 + 镜像基线**：判「无横向滚动」不得只量 `documentElement`——`body{overflow-x:overlay}` 会把 body 层平移吃掉、宽内容会把盒宽钉住，只量 `documentElement` 时该值可恒等成立。AC 必须同时给 `body.scrollWidth <= clientWidth` **与** `documentElement.scrollWidth <= clientWidth`，并声明测量环境**镜像**了全局 `min-width` / `overflow-x` 基线；只写单层即视为**判据不完整**。
+
 ## 发布前就绪清单（门禁）
 
 门禁结论不是一句判定，而是**逐项就绪清单**：每项 = 已跑过的命令 + 证据（输出 / 文件路径）+ **生效阈值及其来源**。未满足项显式记为 `open item`，**不得静默 waiver**。整体判定仍取 PASS / CONCERNS / FAIL——存在 open item 至少 CONCERNS，关键项未满足即 FAIL。

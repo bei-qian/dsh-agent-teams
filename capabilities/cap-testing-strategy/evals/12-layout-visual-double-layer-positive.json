@@ -1,0 +1,29 @@
+{
+  "id": "12-layout-visual-double-layer-positive",
+  "category": "normal",
+  "description": "断言设计正例（story-3:41 改写后）：把单层判据改写成『溢出双层量 + 镜像基线 + 逆向断言』——同时量 `body.scrollWidth <= clientWidth` 与 `documentElement.scrollWidth <= clientWidth`，声明镜像全局 `min-width` / `overflow-x` 基线，并断言被保留的元素仍可见。合格测试设计应判其完整、可通过。",
+  "prompt": "评审这条布局 AC 的判据是否可交付：它同时断言 `body.scrollWidth <= body.clientWidth` 与 `documentElement.scrollWidth <= documentElement.clientWidth`，声明测量环境镜像了全局 `min-width` / `overflow-x` 基线，并对『隐藏标题』类收缩改动额外断言被保留元素仍可见（`expect(el).toBeVisible()`）。能判通过吗？",
+  "expect": {
+    "activate": true,
+    "must_produce": [
+      "判定判据完整：溢出为双层量（body + documentElement），单层不足以判『无横向滚动』",
+      "认可声明镜像全局 `min-width` / `overflow-x` 基线这一必要条件",
+      "认可对收缩类改动补了逆向断言（未被删除元素仍可见）——『变好了』不等于『消失了』"
+    ],
+    "must_not": [
+      "把完整的双层量 + 逆向断言判据误判为不完整",
+      "要求删减已具备的镜像基线声明或逆向断言"
+    ]
+  },
+  "expects": {
+    "activation": true,
+    "required_controls": ["负路径", "断言", "边界"],
+    "required_anti_patterns": ["只测 happy path"]
+  },
+  "assertion_design": {
+    "snippet": "const bodyOk = await page.evaluate(() => document.body.scrollWidth <= document.body.clientWidth); const docOk = await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth); expect(bodyOk && docOk).toBe(true); /* 镜像全局 min-width / overflow-x 基线 */ expect(await title.isVisible()).toBe(true)",
+    "verdict": "complete",
+    "why": "双层量（body + documentElement）+ 镜像基线声明 + 逆向断言（被保留元素 toBeVisible）。"
+  },
+  "notes": "断言设计 fixture · 正例（双层 + 逆向断言应通过）。语义判据负例见 11-*。对应 issue #31 · T7 / D6。"
+}
