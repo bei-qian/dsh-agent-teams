@@ -1,0 +1,30 @@
+{
+  "id": "11-layout-visual-single-layer-negative",
+  "category": "regression",
+  "description": "断言设计负例（改写自 story-3:41 原文）：AC-2 只用单层 `documentElement.scrollWidth <= clientWidth` 判『无横向滚动』，未量 `body` 层、无逆向断言。合格测试设计必须判其『判据不完整』——body 层在收缩/压缩档可被平移吃掉而 documentElement 恒等成立，单层读数会假绿。",
+  "prompt": "评审这条布局 AC 的判据是否可交付：`expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true)` —— 它判『无横向滚动』。同时票面是『隐藏标题以节省横向空间』。仅凭这条能判通过吗？",
+  "expect": {
+    "activate": true,
+    "must_produce": [
+      "判定单层 `documentElement` 判据『判据不完整』，不得据此判通过（假绿）",
+      "指出缺 `body.scrollWidth <= clientWidth`：body 层平移会被 `documentElement` 单层读数掩盖",
+      "指出缺逆向断言：『隐藏标题』类收缩改动必须同时断言被保留元素仍然可见（`toBeVisible()` 或 computed `display !== 'none'`）",
+      "要求声明测量环境镜像了全局 `min-width` / `overflow-x` 基线"
+    ],
+    "must_not": [
+      "接受单层 `documentElement` 判据为完整/通过",
+      "只凭『无横向滚动条』就判这条收缩类 AC 通过（未验证标题是否消失）"
+    ]
+  },
+  "expects": {
+    "activation": true,
+    "required_controls": ["负路径", "断言", "边界"],
+    "required_anti_patterns": ["只测 happy path"]
+  },
+  "assertion_design": {
+    "snippet": "expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true)",
+    "verdict": "incomplete",
+    "why": "单层 documentElement 判据 + 无逆向断言：body 层平移可被掩盖、被删元素是否消失未验证。"
+  },
+  "notes": "断言设计 fixture · 负例（单层判据应判『不完整』）。语义判据正/负例见 12-*。对应 issue #31 · T7 / D6。"
+}

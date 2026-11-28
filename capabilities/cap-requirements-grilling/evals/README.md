@@ -32,7 +32,14 @@ node scripts/run_evals.mjs
 | 04 | `04-boundary-bulk-delete.json` | boundary | 后台批量删除用户 | 同一需求内 must-ask（软删除/审计日志）+ assumed（批量上限）+ fact（权限）分流 |
 | 05 | `05-negative-simple-explicit.json` | negative-trigger | 按钮文案「保存」→「提交」 | **不激活**、不展开设计树、提问 ≤1、直接执行 |
 | 06 | `06-regression-export-permission.json` | regression | 导出用户列表 CSV | 回归守卫：权限范围/数据范围必须问（防历史越权复发） |
+| 07 | `07-boundary-option-presentation.json` | boundary | seq117 选项呈现（范围选项「顺带修」含隐藏平台标题） | 选项 label/题面必须写出被隐藏对象与后果（含「会消失 / 看不到该标题」关键词）；负例原文见 `negative_example` |
+| 08 | `08-regression-decision-mechanism.json` | regression | 决策记录含移除类机制 | 回归守卫：`decision_record` 必须含 `mechanism` 且非空（`decision_record_required_fields` 覆盖） |
+| 09 | `09-boundary-remove-visible-content.json` | boundary | 「腾空间」+ 品牌位 + 局部样式微调 | 移除品牌位→ must-ask 独立题且题面含被删对象；局部样式微调→ assumed（不升级为 must-ask） |
 
 > 05 与 01/02/03 成对照：同样「一句需求」，模糊→展开访谈、简单明确→直接执行，证明负触发真实约束过度提问。
 >
 > 04 是边界样本：门控不是「整体问/整体不问」，而是在**同一条需求内**按不可逆/合规/可回填/可自查分流。
+>
+> 07 复用了 `expect.implicit_assumptions` 的「关键词须出现在决策记录∪未决问题文本」判据来断言选项 label 含后果；其负例（seq117 原文）记录在 `negative_example` 字段，负向自测法：删掉正例 label/题面里的后果关键词 → `run_evals.mjs` exit 1 → 还原 → exit 0。
+>
+> 08/09 用 `expect.decision_record_required_fields` 追加 `mechanism` 来守卫决策记录必须含实际动作；08 拆 `mechanism` 后应失败，09 的局部样式微调记为 `assumed` 以证明低影响项不升级为 must-ask。

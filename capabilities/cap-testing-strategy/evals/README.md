@@ -14,6 +14,10 @@ Phase 6 评测前置 fixture（prompt + 期望行为）。覆盖 `CAPABILITY_ARC
 | 08 | `08-configurable-gate-thresholds.json` | normal（门禁阈值） | **激活**；阈值按风险分级可配置、记录生效阈值及其来源、非法策略显式拒绝不静默回退（B 思想） |
 | 09 | `09-unattended-red-halt-blocked.json` | regression（无人值守停摆） | **激活**；CI 红阶段停摆上报 blocked build/open item、不静默跳过/假装通过、恢复须显式 ticket / 歧义即停（C 思想） |
 | 10 | `10-failure-attribution-and-defect-register.json` | normal（A1/A2） | **激活**；失败先归因（装置 vs 对象，判据「一个正确的对象能否通过」）+ 对象缺陷登记待处置 finding、成批拍板处置、成批一次验证、报告分层、无发现写 None found（A1/A2 思想） |
+| 11 | `11-layout-visual-single-layer-negative.json` | regression（断言设计·负例） | **激活**；单层 `documentElement` 判据（story-3:41 原文）应被判『判据不完整』——缺 `body` 层双层量与逆向断言 |
+| 12 | `12-layout-visual-double-layer-positive.json` | normal（断言设计·正例） | **激活**；改写后『溢出双层量 + 镜像基线 + 逆向断言』判据应判完整、可通过 |
+
+> 11/12 是一对**断言设计 fixture**（同属 issue #31 · T7 / D6 的「布局 / 视觉类 AC 两条硬要求」）：负例演示单层判据应被拒（判『不完整』），正例演示双层量 + 逆向断言应通过。二者以 `assertion_design.snippet` 承载可被确定性判定的判据文本，`verdict` 标注期望判定（`incomplete` / `complete`）；正文标准落点为 `playbooks/bmad-test-strategy/SKILL.md` 的「布局 / 视觉类 AC 的两条硬要求」。
 
 ## 如何用
 

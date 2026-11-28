@@ -1,0 +1,51 @@
+{
+  "fixture": "08-regression-decision-mechanism",
+  "category": "regression",
+  "description": "T2 回归：决策记录必须含 mechanism（这项决策实际会执行、写成用户可感知结果的动作），防『顺带修 1024 隐藏平台标题文字』这类移除类机制只记做/不做（chosen）而丢机制。负例：把一条决策的 mechanism 去掉（只留『做/不做』）应失败——expect.decision_record_required_fields 已要求 mechanism 非空。",
+  "input": {
+    "request": "把头部当前应用选择器加宽并改文案；顺带修 1024–1199 平台标题文字隐藏。",
+    "facts_lookup_hints": [
+      "1024–1199 隐藏平台标题文字能省多少宽度（读样式并实测）"
+    ]
+  },
+  "output": {
+    "design_tree": true,
+    "direct_execute": false,
+    "question_count": 1,
+    "decision_record": [
+      {
+        "decision": "1024 溢出顺带修范围",
+        "chosen": "顺带修（同一张票）",
+        "mechanism": "1024–1199 隐藏平台标题文字（用户将看不到『百源权限管理平台』标题）",
+        "rationale": "移除既有用户可见内容，必须把实际动作与用户可感知结果记进 mechanism",
+        "status": "must-ask"
+      },
+      {
+        "decision": "应用选择器宽度与文案",
+        "chosen": "加宽并改文案",
+        "mechanism": "选择器加宽、文案改为完整应用名（用户仍可见）",
+        "rationale": "明确改动、可回填",
+        "status": "decided"
+      }
+    ],
+    "open_questions": [
+      {
+        "question": "1024 那条『顺带修』会隐藏平台标题文字（用户看不到该标题），确认要这么做吗？",
+        "owner": "user",
+        "blocking": true
+      }
+    ],
+    "assumptions_defaulted": []
+  },
+  "expect": {
+    "activate": true,
+    "require_design_tree": true,
+    "decision_record_required_fields": ["decision", "chosen", "mechanism", "rationale", "status"],
+    "open_question_required_fields": ["question", "owner", "blocking"],
+    "min_decisions": 2,
+    "min_open_questions": 1,
+    "implicit_assumptions": ["隐藏平台标题文字"],
+    "must_ask_decisions": ["顺带修"],
+    "max_questions": null
+  }
+}

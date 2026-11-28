@@ -57,6 +57,8 @@ description: Olympus Squad 票据流程（Themis）。把 initiative/PRD 切成 
 - **前置 / blocked_by**: 无（可立即开工） | story-<mmm>, ...
 ## 验收标准
 - ...
+- <涉及移除/隐藏某既有用户可见元素的可断言 AC>
+  用户授权：「<用户原话引用>」（<轮次/日期>）
 ## 实现
 （待填）
 ## 验证
@@ -64,6 +66,8 @@ description: Olympus Squad 票据流程（Themis）。把 initiative/PRD 切成 
 ```
 
 > 模板约定：`前置 / blocked_by` 表达阻塞边（无前置即「可立即开工」）；「验收标准」每条尽量可确定性断言；「实现 / 验证」收尾时回填命令与结果。字段名沿用现有票据约定（story-036 等已用「前置 / blocked_by」），不要另起重复字段。
+
+> 模板约定（续）：AC 或实现涉及**移除 / 隐藏 / 降级既有用户可见元素**时，该条 AC 必须紧跟一行 `用户授权：<用户原话引用>`（原话加引号，注明轮次/日期）。缺这一行即视为未获授权，由 `scripts/squad_validate.mjs` 判定不合规。授权原话由 Lead 在向用户确认时取得，Themis 不得代写、不得事后补写一段并不存在的原话。
 
 ## index.md 契约（务必遵守）
 表格列固定 `id | type | title | status | file`；`file` 相对 `bmad-output/` 且必须存在；状态 ∈ `todo|in_progress|in_review|done|blocked`。

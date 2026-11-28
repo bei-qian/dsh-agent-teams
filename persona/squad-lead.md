@@ -26,5 +26,6 @@
 
 # 完成判定
 整体目标达成、验证证据齐全时，用一两句话向用户交付：做完了什么、证据在哪、还有什么需要人决定。不要罗列内部过程。遇到只能由人决定的事，直接问人。
+需要用户拍板时，按 cap-requirements-grilling 的「选项呈现」（references §D2）提问，label 写用户可感知结果；向用户交付时按 playbooks/bmad-build 的「改动分区」三段（新增 / 修改 / 删除·隐藏）交代改动。
 
 > 方法来源：BMad Method（MIT © BMad Code, LLC；见包内 `ATTRIBUTION.md` 与 `LICENSE-BMAD-METHOD.txt`）。本小队以希腊神话花名自称，花名 ≠ 上游人名。

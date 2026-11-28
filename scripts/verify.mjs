@@ -392,7 +392,7 @@ function main() {
   }
   check(exists(join(ROOT, 'icon.svg')), 'missing icon.svg')
   const pkg = JSON.parse(read(join(ROOT, 'package.json')))
-  check(pkg.version === '0.2.4', `unexpected version ${pkg.version} (expected 0.2.4)`)
+  check(pkg.version === '0.2.5', `unexpected version ${pkg.version} (expected 0.2.5)`)
   check(Boolean(pkg && pkg.dsh && pkg.dsh.bundle && pkg.dsh.bundle.patch),
     'package.json missing dsh.bundle.patch')
 
@@ -491,6 +491,10 @@ function main() {
     const rr = spawnSync(process.execPath, [validator, join(ROOT, 'examples', 'bmad-output')],
       { encoding: 'utf-8' })
     check(rr.status === 0, 'squad_validate failed on examples/bmad-output: ' + (rr.stderr || rr.stdout || '').trim())
+    // removal/hide semantics ↔ 用户授权 rule self-test (story-055): red fixture MUST
+    // fail, green MUST pass — its own exit 0 means the red/green pair was asserted.
+    const st = spawnSync(process.execPath, [validator, '--self-test'], { encoding: 'utf-8' })
+    check(st.status === 0, 'squad_validate.mjs --self-test failed ' + fmtExit(st) + ': ' + tail(st, 600))
   }
 
   // 10. capability-boundary gate (issue-02b): per-preset fs/bash/jobs/web/control/subagent

@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.5 — 2026-11-27
+
+- **epic-021 / issue #31 · 用户可见内容移除必须先呈现「要删什么」+ 确定性检查兜底（story-054~057）**：从机制上堵住「AC 把移除/隐藏写成期望值、票面却无授权出处」的缺陷，按能力名分列——
+  - `cap-requirements-grilling`：选项呈现（`label` 写用户可感知结果，移除/隐藏机制不得只进 `description`）；决策记录新增 `mechanism` 字段 + 复述回引 / 单向一致；must-ask 新增「移除/隐藏既有用户可见内容（独立成题）」与「先证前提」门控（含新增 eval 07/08/09）。
+  - `bmad-tickets`：story 模板约定新增 AC `用户授权：<原话引用>` 行（Themis 不得代写 / 事后补写）。
+  - `squad_validate`：新增「移除语义 + 缺授权行 → exit 1」确定性检查 + `--self-test`（红/绿）+ `verify.mjs` 接线；`todo` 只 warn。
+  - `bmad-build`：交付报告 `Summary` 增「改动分区」三段硬栏（新增 / 修改 / 删除·隐藏，删除须附授权）。
+  - `bmad-test-strategy`：布局 / 视觉类 AC 两条硬要求——逆向断言 + 溢出双层量（`body.scrollWidth` + `documentElement.scrollWidth` + 镜像基线）＋对应断言设计 fixture（含新增 eval 07/08/09/11/12）。
+  - 参考：独立验证 `bmad-output/research/review-issue-031.md`。
+
 ## 0.2.4 — 2026-11-27
 
 - **story-053 · description 触发语（7 playbook）+ authoring 三节 + 零依赖 trigger 契约校验（epic-020 / P1-1）**：给 7 个纯功能式 playbook 的 frontmatter `description` 各补一句「何时用 / Use when…」触发语（**仅改 description 一行**，正文流程/标题/其它字段不动，均 ≤1024 字符）；`playbooks/authoring-for-agents/SKILL.md` 新增三节自写写作增量（**eval 驱动迭代 / description 触发质量 / 控制力校准**，零逐字、保持写作单一真源定位）；新增仓库级离线 trigger fixture `evals/trigger/`（覆盖 13 playbook + 7 capability = 20 skill，每条含 `should_trigger` + near-miss `should_not_trigger`，shadows 6 占位 `exempt:true` 不计入必需集）与零依赖确定性脚本 `scripts/check_skill_descriptions.mjs`（覆盖集合相等 / description ≤1024 / 7 目标 playbook 触发短语 / capability 的 whenToUse+metadata.triggers / 负例存在 / 负向自测；**不联网、不跑模型、不改 `verify.mjs`、不改 capability description、不加依赖、不 commit**）。

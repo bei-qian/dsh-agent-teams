@@ -1,0 +1,65 @@
+{
+  "fixture": "09-boundary-remove-visible-content",
+  "category": "boundary",
+  "description": "T3 边界：需求含『腾空间』语境 + 一处品牌位（品牌标题文字）。必须把『移除/隐藏既有用户可见内容』列为 must-ask 且独立成题、题面写明被删对象；同需求内低影响局部样式（按钮内边距微调）应 assumed，不升级为 must-ask，守住不过度提问。前提（1024 是否真不足）先归 fact 自查。",
+  "input": {
+    "request": "给头部腾点空间：1024 档把『百源权限管理平台』品牌标题处理掉，另外把按钮内边距微调一下。",
+    "facts_lookup_hints": [
+      "1024–1199 档 header 实际剩余宽度（实测全局基线）"
+    ]
+  },
+  "output": {
+    "design_tree": true,
+    "direct_execute": false,
+    "question_count": 1,
+    "decision_record": [
+      {
+        "decision": "品牌标题文字是否移除/隐藏",
+        "chosen": "待用户拍板",
+        "mechanism": "隐藏『百源权限管理平台』品牌标题文字（用户将看不到该标题）",
+        "rationale": "移除既有用户可见内容（品牌位），必须问且独立成题，写明被删对象",
+        "status": "must-ask"
+      },
+      {
+        "decision": "按钮内边距微调",
+        "chosen": "减小 2px（可回填）",
+        "mechanism": "按钮内边距 12px→10px（用户几乎无感知）",
+        "rationale": "低影响局部样式，可假设可回填，不升级为 must-ask",
+        "status": "assumed"
+      },
+      {
+        "decision": "前提：1024 档是否真的不足",
+        "chosen": "先实测全局基线再定",
+        "mechanism": "无（事实自查，不进方案）",
+        "rationale": "以既有事实为前提，先证前提（§D 门控）",
+        "status": "fact-checked"
+      }
+    ],
+    "open_questions": [
+      {
+        "question": "是否隐藏『百源权限管理平台』品牌标题文字（用户将看不到该标题）？这是移除用户可见内容，需单独确认。",
+        "owner": "user",
+        "blocking": true
+      },
+      {
+        "question": "1024–1199 档 header 实际剩余宽度是多少？（自查）",
+        "owner": "fact",
+        "blocking": false
+      }
+    ],
+    "assumptions_defaulted": ["按钮内边距默认减小 2px，后续可调"]
+  },
+  "expect": {
+    "activate": true,
+    "require_design_tree": true,
+    "decision_record_required_fields": ["decision", "chosen", "mechanism", "rationale", "status"],
+    "open_question_required_fields": ["question", "owner", "blocking"],
+    "min_decisions": 3,
+    "min_open_questions": 2,
+    "implicit_assumptions": ["品牌标题", "内边距"],
+    "must_ask_decisions": ["品牌标题"],
+    "facts_self_checked": ["剩余宽度"],
+    "allow_defaulted_assumptions": true,
+    "max_questions": null
+  }
+}
