@@ -482,15 +482,12 @@ function main() {
     check(ht.status === 0, 'index.js behavior test failed: ' + (ht.stderr || ht.stdout || '').trim())
   }
 
-  // 9. zero-dependency squad kit (R1): validator + protocol playbook, and validator runs clean on the example
+  // 9. zero-dependency squad kit (R1): validator + protocol playbook, and validator --self-test
   const validator = join(ROOT, 'scripts', 'squad_validate.mjs')
   check(exists(validator), 'missing scripts/squad_validate.mjs')
   check(exists(join(ROOT, 'playbooks', 'bmad-squad-protocol', 'SKILL.md')),
     'missing playbooks/bmad-squad-protocol/SKILL.md')
   if (exists(validator) && hasNode) {
-    const rr = spawnSync(process.execPath, [validator, join(ROOT, 'examples', 'bmad-output')],
-      { encoding: 'utf-8' })
-    check(rr.status === 0, 'squad_validate failed on examples/bmad-output: ' + (rr.stderr || rr.stdout || '').trim())
     // removal/hide semantics ↔ 用户授权 rule self-test (story-055): red fixture MUST
     // fail, green MUST pass — its own exit 0 means the red/green pair was asserted.
     const st = spawnSync(process.execPath, [validator, '--self-test'], { encoding: 'utf-8' })

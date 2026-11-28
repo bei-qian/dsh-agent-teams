@@ -101,9 +101,9 @@
 | 调用方（可复核） | 删掉后它得自己补什么 |
 |---|---|
 | `playbooks/bmad-squad-protocol/SKILL.md` 阶段门（每个成员 / Lead 每次收尾都跑） | 每个成员手工核对 index 表列 / 状态枚举 / 文件存在性 / 重复 id（重复劳动散到全体） |
-| `scripts/verify.mjs`（第 9 段，对 `examples/bmad-output` 冒烟跑） | verify 需内联一份同等契约检查 |
+| `scripts/verify.mjs`（第 9 段，跑 `squad_validate.mjs --self-test` 自检） | verify 需内联一份同等契约检查 |
 | `scripts/check_gate_cmd.mjs`（钉住阶段门命令：存在 + `--help` 退出 0 + 协议里引用路径不变） | 门禁命令失去被钉住的对象，路径漂移无人拦 |
-| `package.json`（`validate` / `validate:sample`）+ `.github/workflows/verify.yml`（经 verify.mjs 间接覆盖） | npm 脚本与 CI 失去可调用入口 / 覆盖对象 |
+| `package.json`（`validate`）+ `.github/workflows/verify.yml`（经 verify.mjs 间接覆盖） | npm 脚本与 CI 失去可调用入口 / 覆盖对象 |
 
 - **Deletion test 结论**：删掉后「固定目录契约 + index 表校验 + 枚举 / 存在性 / 重复 id 检查」**不会消失，而是重现在上述 ≥ 4 个调用方**（全体成员手工纪律 + verify 内联 + CI + npm scripts）→ 它在承担**真实深度**，值得保留。
 - **深化建议（理由）**：**已足够深，不建议再拆**。接口已是「单命令 + 退出码 + 状态行」的窄面；若把内部各项检查（如「index 列校验」「done 节警告」）拆成**公开子命令**，等于把实现细节暴露到接口 → 接口变宽 → 反而变浅。若确有变化需求，也只在**内部 seam**（私有函数）重构，**保持外部 CLI 接口不变**（interface = 测试面：测试只经 `node squad_validate.mjs <dir>` + 退出码就能验证行为）。
