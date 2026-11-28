@@ -2,12 +2,22 @@ diff --git a/src/util/math.js b/src/util/math.js
 index aaaaaaa..bbbbbbb 100644
 --- a/src/util/math.js
 +++ b/src/util/math.js
-@@ -1,5 +1,7 @@
+@@ -1,5 +1,18 @@
 +// utility: integer sum helpers
  export function sum(a, b) {
 -  return a + b
 +  return a + b;
  }
++
++// non-silent handling: log then rethrow (properly handled, not a bare catch)
++export function safeSum(a, b) {
++  try {
++    return sum(a, b);
++  } catch (e) {
++    logger.error('sum failed', e);
++    throw e;
++  }
++}
 +
 +export const zero = 0;
 diff --git a/src/util/math.test.js b/src/util/math.test.js

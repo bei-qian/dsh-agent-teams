@@ -1,3 +1,7 @@
 node_modules/
 .DS_Store
 *.log
+
+# 原始 session trace 副本（含潜在 PII / 体积大，不入库）— story-071
+# session_trace_manifest.mjs --copy 的落点；原始 zstd 全文仅本地/受控存储
+traces/

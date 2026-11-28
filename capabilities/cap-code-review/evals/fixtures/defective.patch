@@ -41,3 +41,15 @@ index 3333333..4444444 100644
      expect(r.ok).toBe(true);
    });
  });
+diff --git a/src/config.js b/src/config.js
+new file mode 100644
+index 0000000..1111111
+--- /dev/null
++++ b/src/config.js
+@@ -0,0 +1,6 @@
++// config loader
++function parseCfg(raw) {
++  try { return JSON.parse(raw); } catch (e) {}
++}
++
++module.exports = { parseCfg };
