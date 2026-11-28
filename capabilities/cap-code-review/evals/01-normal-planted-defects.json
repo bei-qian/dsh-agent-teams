@@ -1,7 +1,7 @@
 {
   "fixture": "01-normal-planted-defects",
   "category": "normal",
-  "description": "典型评审：diff 埋 3 个缺陷（删测试 / 明文密钥 / 裸异常吞错）。期望全部检出为 blocker，检出率 3/3、漏报 0。",
+  "description": "典型评审：diff 埋 3 个缺陷（删测试 / 明文密钥 / 裸异常吞错）。裸异常吞错含两处静默吞错（loginBatch 记录+重抛被删只剩注释；src/config.js 空 catch (e) {} 无记录/无重抛），均须判 blocker（锁定 severity.md 错误处理判据 blocker 分支）。期望全部检出为 blocker，检出率 3/3、漏报 0；若把 swallowed-exception 弱化为 major，则 blockers=2≠3 会失败。",
   "input": { "diff": "evals/fixtures/defective.patch", "reviewer": "winston", "author": "amelia" },
   "expect": {
     "activate": true,

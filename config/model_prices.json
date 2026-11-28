@@ -1,0 +1,35 @@
+{
+  "_comment": "模型单价表（占位 / 可配置）。本文件仅用于 session_tokens_by_session.mjs --cost 的本地派生，不是 provider 实时账单。请按实际采购 / 合同单价替换。",
+  "_source": "placeholder (configurable) — 数值为示意占位，非官方报价",
+  "_unit": "USD per 1,000,000 tokens",
+  "_currency": "USD",
+  "_disclaimer": "按配置单价派生，非 provider 实时账单",
+  "_updated": "2026-11-28",
+  "_schema": {
+    "models": {
+      "<model-id>": {
+        "inputPer1M": "number — 每 1,000,000 输入 token 单价",
+        "cacheReadPer1M": "number — 每 1,000,000 缓存命中(cacheRead) token 单价",
+        "outputPer1M": "number — 每 1,000,000 输出 token 单价"
+      }
+    },
+    "note": "模型 id 取自会话 request/header.data.header.config.model；表内不存在的模型在 --cost 时明确报错（不静默回退默认价）。"
+  },
+  "models": {
+    "workbuddy/deepseek-v4.1-flash": {
+      "inputPer1M": 0.14,
+      "cacheReadPer1M": 0.014,
+      "outputPer1M": 0.28
+    },
+    "workbuddy/deepseek-v4.1-pro": {
+      "inputPer1M": 0.55,
+      "cacheReadPer1M": 0.055,
+      "outputPer1M": 2.2
+    },
+    "anthropic/claude-sonnet-4.5": {
+      "inputPer1M": 3.0,
+      "cacheReadPer1M": 0.3,
+      "outputPer1M": 15.0
+    }
+  }
+}
