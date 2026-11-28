@@ -122,7 +122,7 @@ node scripts/review_coverage.mjs \
   --files src/a.js src/b.js src/c.js
 
 # 3) 走 git 变更集（本分支相对 main 改了什么，merge-base 语义）
-node scripts/review_coverage.mjs --from main --ledger review-ledger.json
+node scripts/review_coverage.mjs --from master --ledger review-ledger.json
 
 # 4) 显式文件列表 + 从文件读
 node scripts/review_coverage.mjs --files-from changed.txt --ledger review-ledger.json

@@ -23,7 +23,7 @@ Payment processing for Acme storefronts. TypeScript/Node, pnpm, Postgres. Planni
 
 ## Policy
 
-- Never push to main; PRs only, one approval.
+- Never push to master; PRs only, one approval.
 - Never modify `legacy/` — frozen, being replaced. New work goes in `src/`.
 - Never hand-edit `src/generated/` — run `pnpm codegen`.
 
