@@ -1,7 +1,7 @@
 {
   "fixture": "02-boundary-clean-diff",
   "category": "boundary",
-  "description": "边界：无缺陷的良性重构 diff（改名 / 加注释 / 补合法测试）。期望零 blocker、零误报（false positive = 0）。",
+  "description": "边界：无缺陷的良性重构 diff（改名 / 加注释 / 补合法测试 / 记录+重抛的正确错误处理）。safeSum 的 catch 记录了 logger.error 并 rethrow（非静默吞错），不得判为 swallowed-exception。期望零 blocker、零误报（false positive = 0），锁定 severity.md 错误处理判据的 major/非静默边界不被误升为 blocker。",
   "input": { "diff": "evals/fixtures/clean.patch", "reviewer": "winston", "author": "amelia" },
   "expect": {
     "activate": true,

@@ -23,8 +23,8 @@ node scripts/run_evals.mjs                                                      
 
 | # | 文件 | category | 场景 | 期望 |
 |---|---|---|---|---|
-| 01 | `01-normal-planted-defects.json` | normal | `fixtures/defective.patch` 埋 3 缺陷（删测试 + 明文密钥 + 裸异常吞错） | 检出 **3/3** blocker，漏报 0 |
-| 02 | `02-boundary-clean-diff.json` | boundary | `fixtures/clean.patch` 良性重构 | 检出 **0**，零误报 |
+| 01 | `01-normal-planted-defects.json` | normal | `fixtures/defective.patch` 埋 3 缺陷（删测试 + 明文密钥 + 裸异常吞错〔含空 `catch (e) {}` 静默吞错〕） | 检出 **3/3** blocker，漏报 0；弱化 swallowed-exception→major 即失败 |
+| 02 | `02-boundary-clean-diff.json` | boundary | `fixtures/clean.patch` 良性重构（含 `logger.error` + `throw` 的记录+重抛） | 检出 **0**，零误报（记录+重抛不误升为 swallowed-exception blocker） |
 | 03 | `03-ambiguous-style-vs-behavior.json` | ambiguous | 仅命名/注释风格问题 | 不加 blocker，仅 nit/minor，结论 accept |
 | 04 | `04-negative-docs-typo.json` | negative-trigger | 纯文档 typo | **不激活**完整评审（docs-typo） |
 | 05 | `05-regression-reviewer-equals-author.json` | regression | `reviewer==author`（self-review 唯一门，GAP#17） | 红标 `block:true`、severity blocker |
@@ -32,7 +32,9 @@ node scripts/run_evals.mjs                                                      
 | 07 | `07-boundary-coverage-full.json` | boundary | 3 分母文件全部有终态（2 reviewed + 1 skipped 带理由） | **exit 0**，`coverage_rate=0.6667` |
 | 08 | `08-boundary-coverage-trivial-reason.json` | boundary | 3 文件全 skip 但理由为平凡词（`n/a`/`later`/`skip`，无具体依据） | **exit≠0**，视同未记账（防假通过） |
 
-> 01 的 3 个缺陷对应任务要求的「埋 3 个缺陷含 1 个删测试」；检出/漏报由 `detect_review_defects.mjs` 的 `summary{detected,expected,missed}` 可算。02 与 01 成对照，证明「控制能拒绝违规」且不误报。06/07/08 是覆盖率账本硬门的**正反向对照**：07 全覆盖通过、06 漏审被拦截、08 空洞理由被拦截（`skipped` 的 `reason` 命中平凡词表视同未记账），`run_evals.mjs` 另用 07 的账本做「删记账 / 清理由」两种破坏做负向对照，证明门非恒过。
+> 01 的 3 个缺陷对应任务要求的「埋 3 个缺陷含 1 个删测试」；检出/漏报由 `detect_review_defects.mjs` 的 `summary{detected,expected,missed}` 可算。02 与 01 成对照，证明「控制能拒绝违规」且不误报。
+>
+> **裸 except 吞异常 severity 双向锁定（story-069）**：01 内 `src/config.js` 空 `catch (e) {}`（无记录/无重抛）→ `swallowed-exception` blocker（锁定 severity.md「静默吞错恒 blocker」，与 SKILL「四类一律 blocker」一致）；02 内 `safeSum` 的 `catch (e) { logger.error(...); throw e; }`（记录+重抛，已非静默吞错）→ 零命中（锁定 major/非静默边界不被误升为 blocker）。弱化 `swallowed-exception` severity→`major` 会使 01 的 `blockers==3` 断言失败（`run_evals.mjs` 负向锁定）。06/07/08 是覆盖率账本硬门的**正反向对照**：07 全覆盖通过、06 漏审被拦截、08 空洞理由被拦截（`skipped` 的 `reason` 命中平凡词表视同未记账），`run_evals.mjs` 另用 07 的账本做「删记账 / 清理由」两种破坏做负向对照，证明门非恒过。
 
 ## 与 Phase 6 的衔接
 
