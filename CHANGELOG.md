@@ -93,7 +93,7 @@
 - 修复 Plugins 列表显示：8 个预设行不再统一显示 `@deepseek-ai/dsh-agent-preset` 的模块文案（「Agent 预设定义 / 声明一个 Agent 预设及其使用的插件组合。」）。每个预设改挂自己的薄模块 `dsh-agent-teams/rows/<role>`（re-export `@deepseek-ai/dsh-agent-preset`），并随行提供 `locale/en|zh.json` 与图标（各角色共用同一小队图标），列表与详情因此显示各自的角色名与说明（如「〔内部成员〕BMad · Mary 业务分析师」）。`package.json` 增加 `./rows/*` 导出与 `@deepseek-ai/dsh-agent-preset` peer 依赖，`scripts/verify.py` 增加对应校验。
 - 评审后硬化与一致性：`client.js` 改为显式 7 个成员 id 集合（不再用 `bmad-` 前缀，避免误伤未来非成员 `bmad-*` 预设）、`defineProperty` 包 try/catch 且仅包装可配置自有属性、二次 `apply` 幂等、仅在包装仍生效时还原、形状异常一次性告警、补 `isDefault` 兜底；8 份 `rows/*/locale/{en,zh}.json` 文案与预设口径对齐（含「内部成员 / 请勿直接选择」）；`@deepseek-ai/dsh-agent-preset` 由可选 peer 改为非可选并钉 `^0.2.2-rc.5`（rows 硬 import 它）；`verify.py` 增补 client 半边装配断言、每行 title 精确比对 / description 非空 / 标题去重、`node --check client.js`。
 - 零依赖 playbook 版：新增 `playbooks/`（协议 + 7 角色自包含技能），成员预设改扫 `playbooks/`（`includeDefaultRoots:false`）；完整 BMad 技能保留在 `skills/` 但不再启用。
-- 确定性校验器 `scripts/squad_validate.mjs`（Node，零依赖）+ `examples/bmad-output/` 示例；阶段门由 Lead 执行。
+- 确定性校验器 `scripts/squad_validate.mjs`（Node，零依赖，自带 `--self-test` 以临时目录自造红/绿夹具自检）；阶段门由 Lead 执行。（早期随附的外部示例夹具目录已移除，校验不再依赖外部示例。）
 - Lead 预设加 shell 以运行校验器；`scripts/verify.py` 与 CI 覆盖 playbook 与校验器。
 - 修复：为 7 个成员预设补齐 `tool-fs-search.sampleOverCapGlobResults: false` 与 `tool-todo.allowParallelInProgress: true` 必填配置（与 Lead 预设一致），解决新版 DSH 下 `delegate_*` 因成员预设配置校验失败而无法拉起队员的问题；`cordis.patch.yml` 已按模板重新生成。
 - 初始版本：BMad 小队（1 名负责人 + 7 名 BMad 专家）作为 DSH agent 预设，构建在内置 Agent Teams 之上。

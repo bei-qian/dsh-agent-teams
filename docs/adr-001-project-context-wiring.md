@@ -22,7 +22,7 @@
 | F7 | **构建/校验链路**：`cordis.patch.yml` 由 `node scripts/build_patch.mjs` 从 `cordis.patch.tmpl.yml` + `persona/*.md` 内联生成；`node scripts/verify.mjs` 会重新生成到临时目录比对，并断言 8 preset/7 delegate/playbook/skills/元数据；`node scripts/squad_validate.mjs` 只校验 `bmad-output/`。 | `scripts/build_patch.mjs:1-58`；`scripts/verify.mjs:37-48,75-89,202-212`；`scripts/squad_validate.mjs:24-99` | **改 playbook 不需 build；改 `persona/*.md` 必须 build_patch.mjs 再 verify.mjs**。 |
 | F8 | **协议固定契约是「一切产出写进 `bmad-output/`、不自创路径」，而 `AGENTS.md` 在项目根、天然在 `bmad-output/` 之外**。 | `playbooks/bmad-squad-protocol/SKILL.md`（输出目录契约 + 规则 3「不自创路径」）；`references/template.md`（AGENTS.md 在 repo root） | 协议需要为 `AGENTS.md` 明确开一个「唯一例外」，否则与纪律冲突。 |
 | F9 | **文档不一致（待顺手修正）**：`verify.mjs` 顶部 docstring 说「the 7 member presets wire the bundled `skills/` dir」，与正文「not wired」矛盾。 | `scripts/verify.mjs:8-9` vs `:74-89` | 易误导后续实现者以为 `skills/` 已接线；建议在改造中修正 docstring。 |
-| F10 | `examples/bmad-output` 存在，`verify.mjs` 会用它跑校验器。 | `scripts/verify.mjs:208-212`；`examples/bmad-output/{initiative,index}.md` 等 | 校验命令可落到 `examples/bmad-output`，不污染真实项目。 |
+| F10 | 原有一条「外部示例夹具目录供校验器冒烟跑」的现状，`verify.mjs` 曾对该目录跑一遍校验器。**已移除**：该外部示例目录与 `verify.mjs` 中对应的冒烟调用均已删除，`verify.mjs` 现仅跑 `squad_validate.mjs --self-test`。 | —（原 `scripts/verify.mjs` 示例段等，均已删除） | 校验改由 `--self-test` 用临时目录自造红/绿夹具覆盖，不再依赖外部示例，也不污染真实项目。 |
 
 > **与你假设可能不符的点（重点）**：你倾向「挂到架构（Winston）最贴（命令验证/约定/边界）」。核实后——Winston **没有 shell、没有 ask-user**。所以「命令验证」只能是**读脚本/配置核对**（不能实跑），provenance 的 **SHA / `git log` 刷新 / 真实命令验证需要 Lead（有 shell）代跑**；而「访谈用户 / 写前批准」这种对话必须由 **Lead 用 ask_user 中介**。结论方向（挂 architect）仍成立：architect 负责分析、决策与**写** `AGENTS.md`，但**人机交互与命令执行外包给 Lead**。
 
@@ -169,7 +169,7 @@
 - 因改了 `persona/*.md`（真相源），必须：
   1. `node scripts/build_patch.mjs` — 重新生成 `cordis.patch.yml`（把新的 architect/lead persona 内联进去）。
   2. `node scripts/verify.mjs` — 校验生成物同步 + 8 preset/7 delegate/playbook/skills/元数据。
-  3. `node scripts/squad_validate.mjs examples/bmad-output` — 冒烟跑阶段门（或对真实 `bmad-output` 跑）。
+  3. `node scripts/squad_validate.mjs --self-test` — 校验器自检（红/绿夹具）；阶段门可对真实 `bmad-output` 跑 `node scripts/squad_validate.mjs ./bmad-output`。
 - **注意**：**只改 playbook / protocol 时不需要 `build_patch.mjs`**（playbooks 不内联进 patch）；只有改 `persona/*.md` 才需要。任何改动后都建议跑一次 `verify.mjs`。
 - **验收标准**：三条命令均退出 0；`node scripts/build_patch.mjs` 后 `git diff cordis.patch.yml` 仅含预期 persona 变化。
 
@@ -186,7 +186,7 @@
 3. **改两处 prompt（2.6、2.7）**：依赖 2.5 定的「第 0 步」话术与 playbook 名。
 4. **（可选）verify.mjs（2.10）与文档（2.13）**。
 5. **跑生成/校验（2.12）**：`build_patch.mjs` → `verify.mjs` → `squad_validate.mjs`。**这一步是阶段门**。
-6. **真机验证**：开一个 architect 会话，确认 `tool-skill` 里能看到 `bmad-project-context`；对一个**无 `AGENTS.md` 的测试目录**走一遍 setup（Lead 访谈 + 用户批准后由 architect 写），检查产物标记、6 小节（有内容才写）、provenance。建议在临时目录/`examples` 验证，不污染真实项目。
+6. **真机验证**：开一个 architect 会话，确认 `tool-skill` 里能看到 `bmad-project-context`；对一个**无 `AGENTS.md` 的测试目录**走一遍 setup（Lead 访谈 + 用户批准后由 architect 写），检查产物标记、6 小节（有内容才写）、provenance。建议在临时目录验证，不污染真实项目。
 
 依赖关系：`2.6/2.7` →（`build_patch.mjs`）→ `2.12.verify`；`2.5` 依赖 `2.1`；`2.8/2.9` 明确不改，作为对比基线。
 
